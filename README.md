@@ -1,2 +1,4 @@
-# full-stack-open
-Exercises of the Full Stack Open course.
+# Exercises of the Full Stack Open course
+
+Aleksi Lukkarinen 2021
+
