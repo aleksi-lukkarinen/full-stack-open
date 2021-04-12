@@ -12,7 +12,7 @@ const CounterButton = ({counterConfig}) => {
   return <Button title={counterConfig.label} handleClick={clickHandler} />
 }
 
-const LabelValueDisplay = ({label, value, separator}) => (
+const StatisticLine  = ({label, value, separator}) => (
     <div>
       <span>{label}</span>
       <span>{separator}</span>
@@ -20,8 +20,8 @@ const LabelValueDisplay = ({label, value, separator}) => (
     </div>
   )
 
-const CounterDisplay = ({counterConfig, separator}) =>
-  <LabelValueDisplay
+const CounterLine = ({counterConfig, separator}) =>
+  <StatisticLine
       label={counterConfig.label}
       value={counterConfig.counter}
       separator={separator} />
@@ -60,13 +60,13 @@ const StatisticsSection = ({config}) => {
     <>
       {title}
 
-      <CounterDisplay counterConfig={config.ratingGood} separator={kvSep} />
-      <CounterDisplay counterConfig={config.ratingNeutral} separator={kvSep} />
-      <CounterDisplay counterConfig={config.ratingBad} separator={kvSep} />
+      <CounterLine counterConfig={config.ratingGood} separator={kvSep} />
+      <CounterLine counterConfig={config.ratingNeutral} separator={kvSep} />
+      <CounterLine counterConfig={config.ratingBad} separator={kvSep} />
 
-      <LabelValueDisplay label={lbls.numOfFeedbacks} separator={kvSep} value={totFeedbackCount} />
-      <LabelValueDisplay label={lbls.avgOfFeedbacks} separator={kvSep} value={average} />
-      <LabelValueDisplay label={lbls.positiveFeedbacks} separator={kvSep} value={percentageOfPositives + " %"} />
+      <StatisticLine label={lbls.numOfFeedbacks} separator={kvSep} value={totFeedbackCount} />
+      <StatisticLine label={lbls.avgOfFeedbacks} separator={kvSep} value={average} />
+      <StatisticLine label={lbls.positiveFeedbacks} separator={kvSep} value={percentageOfPositives + " %"} />
     </>
   )
 }
