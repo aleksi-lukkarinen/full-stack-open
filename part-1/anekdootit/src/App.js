@@ -16,20 +16,43 @@ function randomAnecdoteIndex(numAvailable, currentlySelected) {
 
 const NextAnecdoteButton = ({config}) => {
   const clickHandler = () => {
-    let r = randomAnecdoteIndex(config.anecdotes.length, config.currentlySelected)
-    config.selectedSetter(r)
+    const nextState = {
+      anecdoteVotes: [...config.state.anecdoteVotes],
+      visibleAnecdote: randomAnecdoteIndex(
+          config.anecdotes.length,
+          config.state.visibleAnecdote),
+    }
+    config.updateState(nextState)
   }
 
   return <button onClick={clickHandler}>{config.labelNextAnecdote}</button>
 }
 
+const VoteAnecdoteButton = ({config}) => {
+  const clickHandler = () => {
+    const nextState = {
+      ...config.state,
+      anecdoteVotes: [...config.state.anecdoteVotes]
+    }
+    nextState.anecdoteVotes[nextState.visibleAnecdote] += 1
+    config.updateState(nextState)
+  }
+
+  return <button onClick={clickHandler}>{config.labelVoteAnecdote}</button>
+}
+
 const RandomAnecdoteDisplay = ({config}) => {
   let anecdote = config.labelNoAnecdotes
   if (config.anecdotes.length > 0) {
-    anecdote = config.anecdotes[config.currentlySelected]
+    anecdote = config.anecdotes[config.state.visibleAnecdote]
   }
 
   return <span>{anecdote}</span>
+}
+
+const AnecdoteVotesDisplay = ({config}) => {
+  const v = config.state.anecdoteVotes[config.state.visibleAnecdote]
+  return <div>Has {v} votes</div>
 }
 
 const App = () => {
@@ -41,21 +64,32 @@ const App = () => {
     'Premature optimization is the root of all evil.',
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
   ]
-
-  const [selected, setSelected] = useState(0)
+  const [currentState, updateState] = useState({
+    visibleAnecdote: 0,
+    anecdoteVotes: Array(anecdotes.length).fill(0),
+  })
   const config = {
     anecdotes: anecdotes,
-    currentlySelected: selected,
-    selectedSetter: setSelected,
-    labelNoAnecdotes: "<no anecdotes>",
     labelNextAnecdote: "Next Anecdote",
+    labelVoteAnecdote: "Vote",
+    labelNoAnecdotes: "<no anecdotes>",
+    state: currentState,
+    updateState: updateState,
   }
 
-  const buttonNextAnecdote = anecdotes.length > 0 ? <NextAnecdoteButton config={config} /> : "";
+  let controls = "";
+  if (anecdotes.length > 0) {
+    controls =
+      <>
+        <NextAnecdoteButton config={config} />
+        <VoteAnecdoteButton config={config} />
+        <AnecdoteVotesDisplay config={config} />
+      </>
+  }
 
   return (
     <>
-      {buttonNextAnecdote}
+      {controls}
       <div><RandomAnecdoteDisplay config={config} /></div>
     </>
   )
