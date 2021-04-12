@@ -39,20 +39,27 @@ const FeedbackSection = ({config}) => {
 }
 
 const StatisticsSection = ({config}) => {
-  let lbls = config.labels
-  let kvSep = lbls.keyValueSeparator
-  let totFeedbackCount =
+  const lbls = config.labels
+  const title = <SectionHeader content={lbls.sectionTitleStatistics} />
+  const kvSep = lbls.keyValueSeparator
+
+  const totFeedbackCount =
         config.ratingGood.counter +
         config.ratingNeutral.counter +
         config.ratingBad.counter
-  let average = totFeedbackCount === 0 ? 0 :
+  const average = totFeedbackCount === 0 ? 0 :
         (config.ratingGood.counter - config.ratingBad.counter) / totFeedbackCount
-  let percentageOfPositives = totFeedbackCount === 0 ? 0 :
+  const percentageOfPositives = totFeedbackCount === 0 ? 0 :
         100 * (config.ratingGood.counter / totFeedbackCount)
+
+  if (totFeedbackCount < 1) {
+    return <> {title} <div>{lbls.noFeedbackNotification}</div> </>
+  }
 
   return (
     <>
-      <SectionHeader content={lbls.sectionTitleStatistics} />
+      {title}
+
       <CounterDisplay counterConfig={config.ratingGood} separator={kvSep} />
       <CounterDisplay counterConfig={config.ratingNeutral} separator={kvSep} />
       <CounterDisplay counterConfig={config.ratingBad} separator={kvSep} />
@@ -77,6 +84,7 @@ const App = () => {
       numOfFeedbacks: "Number of feedbacks",
       avgOfFeedbacks: "Average of feedbacks",
       positiveFeedbacks: "Positive feedbacks",
+      noFeedbackNotification: "No feedback given",
     },
     ratingGood: {
       counter: counterGood,
