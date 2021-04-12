@@ -1,17 +1,32 @@
 import React, { useState } from 'react'
 
-const RandomAnecdote = ({config}) => {
-  let anecdote = config.labelNoAnecdotes;
+function randomAnecdoteIndex(numAvailable, currentlySelected) {
+  if (numAvailable < 1)
+    throw Error("No anecdotes available");
 
-  if (config.anecdotes.length > 1) {
-    let r = config.currentlySelected
-    while (r === config.currentlySelected) {
-      r = Math.floor(Math.random() * config.anecdotes.length)
-    }
-    anecdote = config.anecdotes[r]
+  if (numAvailable === 1)
+    return 0;
+
+  let r = currentlySelected
+  while (r === currentlySelected) {
+    r = Math.floor(Math.random() * numAvailable)
   }
-  else if (config.anecdotes.length === 1) {
-    anecdote = config.anecdotes[0]
+  return r
+}
+
+const NextAnecdoteButton = ({config}) => {
+  const clickHandler = () => {
+    let r = randomAnecdoteIndex(config.anecdotes.length, config.currentlySelected)
+    config.selectedSetter(r)
+  }
+
+  return <button onClick={clickHandler}>{config.labelNextAnecdote}</button>
+}
+
+const RandomAnecdoteDisplay = ({config}) => {
+  let anecdote = config.labelNoAnecdotes
+  if (config.anecdotes.length > 0) {
+    anecdote = config.anecdotes[config.currentlySelected]
   }
 
   return <span>{anecdote}</span>
@@ -33,9 +48,17 @@ const App = () => {
     currentlySelected: selected,
     selectedSetter: setSelected,
     labelNoAnecdotes: "<no anecdotes>",
+    labelNextAnecdote: "Next Anecdote",
   }
 
-  return <RandomAnecdote config={config} />
+  const buttonNextAnecdote = anecdotes.length > 0 ? <NextAnecdoteButton config={config} /> : "";
+
+  return (
+    <>
+      {buttonNextAnecdote}
+      <div><RandomAnecdoteDisplay config={config} /></div>
+    </>
+  )
 }
 
 export default App
