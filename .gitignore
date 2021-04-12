@@ -27,4 +27,6 @@
 **/*.log
 **/*.min.js
 **/*.tmp
+**/*.vpp.bak_*
+**/*.vpp.lck
 **/*~
