@@ -18,11 +18,15 @@ const STR_EMPTY = ""
 const App = () => {
   const config = {
     errAddingEmptyName: "An empty name cannot be added to the phonebook.",
-    errAddingDuplicateEntry: "A person with name {} has already been added to the phonebook; another one cannot be added."
+    errAddingDuplicateEntry: "A person with name {} has already been added to the phonebook; another one cannot be added.",
   }
   const [entries, setEntries] = useState(initialEntryList)
   const [newName, setNewName] = useState(STR_EMPTY)
   const [newPhoneNumber, setNewPhoneNumber] = useState(STR_EMPTY)
+  const [nameFilter, setNameFilter] = useState({
+    text: STR_EMPTY,
+    filter: STR_EMPTY,
+  })
 
   const addEntry = (event) => {
     event.preventDefault()
@@ -68,9 +72,20 @@ const App = () => {
     setNewPhoneNumber(event.target.value)
   }
 
+  const updateNameFilter = (event) => {
+    const newState = {text: event.target.value}
+    newState.filter = newState.text.trim().toUpperCase()
+
+    setNameFilter(newState)
+  }
+
+  const entryFilterFunc = e =>
+    e.name.toUpperCase().includes(nameFilter.filter)
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <h3>Add a New Entry</h3>
       <form onSubmit={addEntry}>
         <div>
           Name: <input value={newName} onChange={updateName} />
@@ -82,8 +97,12 @@ const App = () => {
           <button type="submit">Add</button>
         </div>
       </form>
-      <h2>Numbers</h2>
-      {entries.map(p => <NumberListLine entry={p} key={p.name} />)}
+      <h3>Numbers</h3>
+      <div>Filter with: <input value={nameFilter.text} onChange={updateNameFilter} /></div>
+      <div>
+        {entries.filter(entryFilterFunc)
+            .map(e => <NumberListLine entry={e} key={e.name} />)}
+      </div>
     </div>
   )
 
