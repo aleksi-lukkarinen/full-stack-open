@@ -1,15 +1,16 @@
 import React from 'react';
 import CourseHeader from './CourseHeader';
 import CourseContent from './CourseContent';
-//import Total from './Total';
+import CourseTotalParts from './CourseTotalParts';
 
 export const Course = ({course}) => {
   return (
     <div>
       <CourseHeader content={course.name} />
       <CourseContent parts={course.parts} />
+      <CourseTotalParts parts={course.parts} />
     </div>
-  ) // <Total parts={course.parts} />
+  )
 }
 
 export default Course
