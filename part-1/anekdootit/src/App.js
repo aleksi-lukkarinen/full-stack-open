@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+
 function randomAnecdoteIndex(numAvailable, currentlySelected) {
   if (numAvailable < 1)
     throw Error("No anecdotes available");
@@ -14,9 +15,12 @@ function randomAnecdoteIndex(numAvailable, currentlySelected) {
   return r
 }
 
+const SectionTitle = ({content}) => <h1>{content}</h1>
+
 const NextAnecdoteButton = ({config}) => {
   const clickHandler = () => {
     const nextState = {
+      ...config.state,
       anecdoteVotes: [...config.state.anecdoteVotes],
       visibleAnecdote: randomAnecdoteIndex(
           config.anecdotes.length,
@@ -34,7 +38,17 @@ const VoteAnecdoteButton = ({config}) => {
       ...config.state,
       anecdoteVotes: [...config.state.anecdoteVotes]
     }
-    nextState.anecdoteVotes[nextState.visibleAnecdote] += 1
+
+    const increasedVotesNumber =
+            nextState.anecdoteVotes[nextState.visibleAnecdote] + 1
+
+    nextState.anecdoteVotes[nextState.visibleAnecdote] = increasedVotesNumber
+
+    if (increasedVotesNumber > config.state.largestNumberOfVotes) {
+      nextState.largestNumberOfVotes = increasedVotesNumber
+      nextState.anecdoteWithLargestNumberOfVotes = config.state.visibleAnecdote
+    }
+
     config.updateState(nextState)
   }
 
@@ -55,6 +69,44 @@ const AnecdoteVotesDisplay = ({config}) => {
   return <div>Has {v} votes</div>
 }
 
+const SectionAnecdoteOfTheDay = ({config}) => {
+  let controls = "";
+  if (config.anecdotes.length > 0) {
+    controls =
+      <>
+        <NextAnecdoteButton config={config} />
+        <VoteAnecdoteButton config={config} />
+        <AnecdoteVotesDisplay config={config} />
+      </>
+  }
+
+  return (
+    <>
+      <SectionTitle content={config.sectionTitleAnecdoteOfTheDay} />
+      {controls}
+      <div><RandomAnecdoteDisplay config={config} /></div>
+    </>
+  )
+}
+
+const MostVotedAnecdoteDisplay = ({config}) => {
+  let anecdote = config.labelNoAnecdotes
+  if (config.anecdotes.length > 0) {
+    anecdote = config.anecdotes[config.state.anecdoteWithLargestNumberOfVotes]
+  }
+
+  return <span>{anecdote}</span>
+}
+
+const SectionMostVotedAnecdote = ({config}) => {
+  return (
+    <>
+      <SectionTitle content={config.sectionTitleMostVotedAnecdote} />
+      <MostVotedAnecdoteDisplay config={config} />
+    </>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -67,9 +119,13 @@ const App = () => {
   const [currentState, updateState] = useState({
     visibleAnecdote: 0,
     anecdoteVotes: Array(anecdotes.length).fill(0),
+    largestNumberOfVotes: 0,
+    anecdoteWithLargestNumberOfVotes: 0,
   })
   const config = {
     anecdotes: anecdotes,
+    sectionTitleAnecdoteOfTheDay: "Anecdote of the Day",
+    sectionTitleMostVotedAnecdote: "Anecdote with Most Votes",
     labelNextAnecdote: "Next Anecdote",
     labelVoteAnecdote: "Vote",
     labelNoAnecdotes: "<no anecdotes>",
@@ -77,20 +133,15 @@ const App = () => {
     updateState: updateState,
   }
 
-  let controls = "";
+  let sectionMostVoted = ""
   if (anecdotes.length > 0) {
-    controls =
-      <>
-        <NextAnecdoteButton config={config} />
-        <VoteAnecdoteButton config={config} />
-        <AnecdoteVotesDisplay config={config} />
-      </>
+    sectionMostVoted = <SectionMostVotedAnecdote config={config} />
   }
 
   return (
     <>
-      {controls}
-      <div><RandomAnecdoteDisplay config={config} /></div>
+      <SectionAnecdoteOfTheDay config={config} />
+      {sectionMostVoted}
     </>
   )
 }
