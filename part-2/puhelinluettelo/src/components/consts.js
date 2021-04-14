@@ -1,6 +1,8 @@
 export const TEMPLATE_MARK = "{}"
 export const STR_EMPTY = ""
 
+export const SERVER_URL = "http://localhost:3001/persons"
+
 export const APP_TITLE = "Phonebook"
 export const SECTION_TITLE_NEW_ENTRY = "Add a New Entry"
 export const SECTION_TITLE_SAVED_ENTRIES = "Saved Entries"
