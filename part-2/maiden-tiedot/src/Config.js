@@ -4,6 +4,7 @@ export const MSG_RETRIEVING_COUNTRY_DATA="Retrieving country data..."
 export const MSG_TOO_MANY_MATCHES="Too many matches. Please adjust the criterion."
 
 export const FIELD_LABEL_SEARCH="Search for countries"
+export const BUTTON_LABEL_SHOW="Show"
 
 export const LABEL_CAPITAL="Capital"
 export const LABEL_POPULATION="Population"
