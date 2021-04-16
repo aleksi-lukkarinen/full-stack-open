@@ -1,7 +1,12 @@
-import React from 'react'
+import * as conf from "../consts"
 
-const NumberListLine = ({entry}) => {
-  return <div>{entry.name}: {entry.phoneNumber}</div>
+const NumberListLine = ({entry, deleteHandler}) => {
+  return <div>
+      {entry.name}{conf.STR_KEY_VALUE_SEP} {entry.phoneNumber}
+      <button
+          data-id={entry.id}
+          onClick={deleteHandler}>Delete</button>
+    </div>
 }
 
 export default NumberListLine

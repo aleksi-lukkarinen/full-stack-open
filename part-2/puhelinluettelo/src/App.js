@@ -24,7 +24,8 @@ const App = () => {
 
       <EntryList
         title={conf.SECTION_TITLE_SAVED_ENTRIES}
-        entries={entries} />
+        entries={entries}
+        setEntries={setEntries} />
     </>
   )
 
