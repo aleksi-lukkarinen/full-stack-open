@@ -49,6 +49,16 @@
       "name": "Donald Duck",
       "phoneNumber": "DUCKBURG-313 1313",
       "id": 10
+    },
+    {
+      "name": "Gyro Gearloose",
+      "phoneNumber": "DUCKBURG-999 1243 6978",
+      "id": 11
+    },
+    {
+      "name": "Roger Rabbit",
+      "phoneNumber": "TOONTOWN-1928 7364",
+      "id": 12
     }
   ]
 }

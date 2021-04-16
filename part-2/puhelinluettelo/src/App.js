@@ -1,17 +1,15 @@
-import * as conf from "./components/consts"
-import axios from "axios"
+import * as conf from "./consts"
 import React, { useState, useEffect } from "react"
 import PageHeader from "./components/PageHeader"
 import EntryList from "./components/EntryList"
 import EntryAddingForm from "./components/EntryAddingForm"
+import PersonsService from "./services/persons"
 
 const App = () => {
   const [entries, setEntries] = useState([])
 
   const loadDB = () => {
-    axios
-      .get(conf.SERVER_URL_PERSONS)
-      .then(response => setEntries(response.data))
+    PersonsService.getAll().then(data => setEntries(data))
   }
   useEffect(loadDB, [])
 

@@ -1,7 +1,7 @@
-import * as conf from "./consts"
+import * as conf from "../consts"
 import React, {useState} from 'react'
-import axios from "axios"
 import SectionHeader from "./SectionHeader"
+import PersonsService from "../services/persons"
 
 const EntryAddingForm = ({title, entries, setEntries}) => {
   const [newName, setNewName] = useState(conf.STR_EMPTY)
@@ -36,11 +36,9 @@ const EntryAddingForm = ({title, entries, setEntries}) => {
         phoneNumber: newPhoneNumber.trim()
       }
 
-      axios
-        .post(conf.SERVER_URL_PERSONS, entryToAdd)
-        .then(response => {
-          setEntries(entries.concat(response.data))
-        })
+      PersonsService
+        .create(entryToAdd)
+        .then(data => setEntries(entries.concat(data)))
     }
 
     clearFields()
