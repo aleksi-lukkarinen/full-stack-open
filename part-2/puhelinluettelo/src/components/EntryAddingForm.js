@@ -1,5 +1,6 @@
 import * as conf from "./consts"
 import React, {useState} from 'react'
+import axios from "axios"
 import SectionHeader from "./SectionHeader"
 
 const EntryAddingForm = ({title, entries, setEntries}) => {
@@ -35,7 +36,11 @@ const EntryAddingForm = ({title, entries, setEntries}) => {
         phoneNumber: newPhoneNumber.trim()
       }
 
-      setEntries(entries.concat(entryToAdd))
+      axios
+        .post(conf.SERVER_URL_PERSONS, entryToAdd)
+        .then(response => {
+          setEntries(entries.concat(response.data))
+        })
     }
 
     clearFields()

@@ -10,7 +10,7 @@ const App = () => {
 
   const loadDB = () => {
     axios
-      .get(conf.SERVER_URL)
+      .get(conf.SERVER_URL_PERSONS)
       .then(response => setEntries(response.data))
   }
   useEffect(loadDB, [])
