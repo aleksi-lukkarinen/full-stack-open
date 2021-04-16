@@ -1,4 +1,4 @@
-import * as conf from "./consts"
+import * as conf from "./conf"
 import React, { useState, useEffect } from "react"
 import PageHeader from "./components/PageHeader"
 import EntryList from "./components/EntryList"

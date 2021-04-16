@@ -1,4 +1,4 @@
-import * as conf from "../consts"
+import * as conf from "../conf"
 import React, { useState } from "react"
 import SectionHeader from "./SectionHeader"
 import NumberListLine from "./NumberListLine"

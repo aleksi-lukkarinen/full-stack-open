@@ -1,4 +1,4 @@
-import * as conf from "../consts"
+import * as conf from "../conf"
 
 const NumberListLine = ({entry, deleteHandler}) => {
   return <div>
