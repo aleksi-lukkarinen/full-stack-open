@@ -15,7 +15,13 @@ function userDisagreesToDeleteEntry(name) {
   return !agreement
 }
 
-const EntryList = ({title, entries, setEntries}) => {
+const EntryList = ({
+        title,
+        entries,
+        setEntries,
+        setInfoMessage,
+        setErrorMessage}) => {
+
   const [nameFilter, setNameFilter] = useState(initialFilterState)
 
   function deleteEntry(event) {
@@ -27,10 +33,16 @@ const EntryList = ({title, entries, setEntries}) => {
 
     PersonsService
       .delete(idToDelete)
+      .then(() => {
+        const msg = `Entry "${entryToDelete.name}" was successfully deleted.`
+        setInfoMessage(msg)
+        setTimeout(() => setInfoMessage(null), 5000)
+      })
       .catch(reason => {
         let msg = `Unable to delete entry ${idToDelete} (${entryToDelete.name}) from the server. ` +
           "Maybe it was deleted earlier or did never exist."
-        console.error(msg)
+        setErrorMessage(msg)
+        setTimeout(() => setErrorMessage(null), 5000)
       })
       .finally(setEntries(entries.filter(e => e.id !== idToDelete)))
   }

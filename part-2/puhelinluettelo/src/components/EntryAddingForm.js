@@ -3,7 +3,13 @@ import React, {useState} from 'react'
 import SectionHeader from "./SectionHeader"
 import PersonsService from "../services/persons"
 
-const EntryAddingForm = ({title, entries, setEntries}) => {
+const EntryAddingForm = ({
+        title,
+        entries,
+        setEntries,
+        setInfoMessage,
+        setErrorMessage}) => {
+
   const [newName, setNewName] = useState(conf.STR_EMPTY)
   const [newPhoneNumber, setNewPhoneNumber] = useState(conf.STR_EMPTY)
 
@@ -13,7 +19,8 @@ const EntryAddingForm = ({title, entries, setEntries}) => {
     const trimmedName = newName.trim()
     if (trimmedName.length < 1) {
       const errMsg = conf.ERR_ADDING_EMPTY_NAME
-      alert(errMsg)
+      setErrorMessage(errMsg)
+      setTimeout(() => setErrorMessage(null), 5000)
     }
     else {
       const ucaseName = trimmedName.toUpperCase()
@@ -37,6 +44,10 @@ const EntryAddingForm = ({title, entries, setEntries}) => {
               const newEntries = entries.map(e =>
                       e.id !== entryToUpdate.id ? e : data)
               setEntries(newEntries)
+
+              const msg = `Entry "${entryToUpdate.name}" was successfully updated.`
+              setInfoMessage(msg)
+              setTimeout(() => setInfoMessage(null), 5000)
             })
         }
       }
@@ -48,7 +59,13 @@ const EntryAddingForm = ({title, entries, setEntries}) => {
 
         PersonsService
           .create(entryToAdd)
-          .then(data => setEntries(entries.concat(data)))
+          .then(data => {
+            setEntries(entries.concat(data))
+
+            const msg = `Entry "${entryToAdd.name}" was successfully added.`
+            setInfoMessage(msg)
+            setTimeout(() => setInfoMessage(null), 5000)
+          })
       }
     }
     clearFields()
