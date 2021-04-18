@@ -25,7 +25,7 @@ const EntryList = ({
   const [nameFilter, setNameFilter] = useState(initialFilterState)
 
   function deleteEntry(event) {
-    const idToDelete = parseInt(event.target.dataset.id)
+    const idToDelete = Number(event.target.dataset.id)
     const entryToDelete = entries.find(n => n.id === idToDelete)
 
     if (userDisagreesToDeleteEntry(entryToDelete.name))

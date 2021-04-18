@@ -27,45 +27,51 @@ const EntryAddingForm = ({
       const testIfNameExists = e => e.name.toUpperCase() === ucaseName
 
       const trimmedPhoneNumber = newPhoneNumber.trim()
+      if (trimmedPhoneNumber.length < 1) {
+        const errMsg = conf.ERR_ADDING_EMPTY_PHONENUMBER
+        setErrorMessage(errMsg)
+        setTimeout(() => setErrorMessage(null), 5000)
+      }
+      else {
+        const existingEntry = entries.find(testIfNameExists)
+        if (existingEntry) {
+          const msg = conf.MSG_DUP_ENTRY_UPDATE.replace(
+            conf.TEMPLATE_MARK, existingEntry.name)
+          const userAgrees = window.confirm(msg)
+          if (userAgrees) {
+            const entryToUpdate = {
+              ...existingEntry,
+              phoneNumber: trimmedPhoneNumber,
+            }
+            PersonsService
+              .update(entryToUpdate)
+              .then(data => {
+                const newEntries = entries.map(e =>
+                        e.id !== entryToUpdate.id ? e : data)
+                setEntries(newEntries)
 
-      const existingEntry = entries.find(testIfNameExists)
-      if (existingEntry) {
-        const msg = conf.MSG_DUP_ENTRY_UPDATE.replace(
-          conf.TEMPLATE_MARK, existingEntry.name)
-        const userAgrees = window.confirm(msg)
-        if (userAgrees) {
-          const entryToUpdate = {
-            ...existingEntry,
+                const msg = `Entry "${entryToUpdate.name}" was successfully updated.`
+                setInfoMessage(msg)
+                setTimeout(() => setInfoMessage(null), 5000)
+              })
+          }
+        }
+        else {
+          const entryToAdd = {
+            name: trimmedName,
             phoneNumber: trimmedPhoneNumber,
           }
-          PersonsService
-            .update(entryToUpdate)
-            .then(data => {
-              const newEntries = entries.map(e =>
-                      e.id !== entryToUpdate.id ? e : data)
-              setEntries(newEntries)
 
-              const msg = `Entry "${entryToUpdate.name}" was successfully updated.`
+          PersonsService
+            .create(entryToAdd)
+            .then(data => {
+              setEntries(entries.concat(data))
+
+              const msg = `Entry "${entryToAdd.name}" was successfully added.`
               setInfoMessage(msg)
               setTimeout(() => setInfoMessage(null), 5000)
             })
         }
-      }
-      else {
-        const entryToAdd = {
-          name: trimmedName,
-          phoneNumber: trimmedPhoneNumber,
-        }
-
-        PersonsService
-          .create(entryToAdd)
-          .then(data => {
-            setEntries(entries.concat(data))
-
-            const msg = `Entry "${entryToAdd.name}" was successfully added.`
-            setInfoMessage(msg)
-            setTimeout(() => setInfoMessage(null), 5000)
-          })
       }
     }
     clearFields()
