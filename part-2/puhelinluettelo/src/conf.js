@@ -2,7 +2,9 @@ export const TEMPLATE_MARK = "{}"
 export const STR_EMPTY = ""
 export const STR_KEY_VALUE_SEP = ":"
 
-export const SERVER_URL_BASE = "http://localhost:3001/"
+export const SERVER_URL_BASE =
+        process.env.REACT_APP_PHONEBOOK_SERVER_URL ||
+        "http://localhost:3001/api/"
 export const SERVER_URL_PERSONS = SERVER_URL_BASE + "persons"
 
 export const APP_TITLE = "Phonebook"
