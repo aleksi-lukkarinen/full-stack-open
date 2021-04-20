@@ -13,65 +13,99 @@ const EntryAddingForm = ({
   const [newName, setNewName] = useState(conf.STR_EMPTY)
   const [newPhoneNumber, setNewPhoneNumber] = useState(conf.STR_EMPTY)
 
+  function showInfoMessage(content) {
+    setInfoMessage(content)
+    setTimeout(() => setInfoMessage(null), 5000)
+  }
+
+  function showErrorMessage(content) {
+    setErrorMessage(content)
+    setTimeout(() => setErrorMessage(null), 5000)
+  }
+
   function addEntry(event) {
     event.preventDefault()
 
+    // Are trim() and toUpperCase() *exactly* the same
+    // on the client and the server? If not, this will fail
+    // and the existence of an entry should be queried from
+    // the server.
+
     const trimmedName = newName.trim()
     if (trimmedName.length < 1) {
-      const errMsg = conf.ERR_ADDING_EMPTY_NAME
-      setErrorMessage(errMsg)
-      setTimeout(() => setErrorMessage(null), 5000)
+      showErrorMessage(conf.ERR_ADDING_EMPTY_NAME)
     }
     else {
       const ucaseName = trimmedName.toUpperCase()
       const testIfNameExists = e => e.name.toUpperCase() === ucaseName
-
-      const trimmedPhoneNumber = newPhoneNumber.trim()
-      if (trimmedPhoneNumber.length < 1) {
-        const errMsg = conf.ERR_ADDING_EMPTY_PHONENUMBER
-        setErrorMessage(errMsg)
-        setTimeout(() => setErrorMessage(null), 5000)
-      }
-      else {
-        const existingEntry = entries.find(testIfNameExists)
-        if (existingEntry) {
-          const msg = conf.MSG_DUP_ENTRY_UPDATE.replace(
-            conf.TEMPLATE_MARK, existingEntry.name)
-          const userAgrees = window.confirm(msg)
-          if (userAgrees) {
-            const entryToUpdate = {
-              ...existingEntry,
-              phoneNumber: trimmedPhoneNumber,
-            }
-            PersonsService
-              .update(entryToUpdate)
-              .then(data => {
-                const newEntries = entries.map(e =>
-                        e.id !== entryToUpdate.id ? e : data)
-                setEntries(newEntries)
-
-                const msg = `Entry "${entryToUpdate.name}" was successfully updated.`
-                setInfoMessage(msg)
-                setTimeout(() => setInfoMessage(null), 5000)
-              })
+      const existingEntry = entries.find(testIfNameExists)
+      if (existingEntry) {
+        const msg = conf.MSG_DUP_ENTRY_UPDATE.replace(
+                      conf.TEMPLATE_MARK, existingEntry.name)
+        const userAgrees = window.confirm(msg)
+        if (userAgrees) {
+          const entryToUpdate = {
+            ...existingEntry,
+            phoneNumber: newPhoneNumber,
           }
-        }
-        else {
-          const entryToAdd = {
-            name: trimmedName,
-            phoneNumber: trimmedPhoneNumber,
-          }
-
           PersonsService
-            .create(entryToAdd)
+            .update(entryToUpdate)
             .then(data => {
-              setEntries(entries.concat(data))
+              const newEntries = entries.map(e =>
+                      e.id !== entryToUpdate.id ? e : data)
+              setEntries(newEntries)
 
-              const msg = `Entry "${entryToAdd.name}" was successfully added.`
-              setInfoMessage(msg)
-              setTimeout(() => setInfoMessage(null), 5000)
+              showInfoMessage(
+                `Entry "${entryToUpdate.name}" was successfully updated.`)
             })
         }
+      }
+      else {
+        const entryToAdd = {
+          name: newName,
+          phoneNumber: newPhoneNumber,
+        }
+
+        PersonsService
+          .create(entryToAdd)
+          .then(data => {
+            setEntries(entries.concat(data))
+
+            showInfoMessage(
+              `Entry "${entryToAdd.name}" was successfully added.`)
+          })
+          .catch(error => {
+            let msg = `Adding entry ${entryToAdd.name} failed`
+
+            try {
+              if (error.request.status === 400) {
+                const responseData =
+                          JSON.parse(error.request.response)
+                if (responseData.errors &&
+                      Array.isArray(responseData.errors)) {
+                  msg += " for the following reason"
+                  if (responseData.errors.length === 1) {
+                    msg += ": " + responseData.errors[0].message
+                    if (!msg.endsWith("."))
+                      msg += "."
+                  }
+                  else {
+                    msg += "s:"
+                    for (let i=0; i<responseData.errors.length; i++) {
+                      msg += ` (${i + 1}) ` + responseData.errors[i].message
+                      if (!msg.endsWith("."))
+                        msg += "."
+                    }
+                  }
+                }
+              }
+            }
+            catch {
+              msg += " for an unexpected reason"
+            }
+
+            showErrorMessage(msg)
+          })
       }
     }
     clearFields()
