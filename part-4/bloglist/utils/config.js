@@ -9,7 +9,7 @@ const MONGO_DATABASE_NAME = process.env.MONGO_DATABASE_NAME
 
 const URL_BASE = "/"
 const URL_API_ROOT = URL_BASE + "api/"
-const URL_BLOGS = URL_API_ROOT + "blogs"
+const URL_API_BLOGS = URL_API_ROOT + "blogs"
 
 const EXIT_CODE_FAILURE = 1
 
@@ -29,7 +29,7 @@ module.exports = {
 
   URL_BASE,
   URL_API_ROOT,
-  URL_BLOGS,
+  URL_API_BLOGS,
 
   EXIT_CODE_FAILURE,
 

@@ -2,6 +2,8 @@ const config = require("./utils/config")
 const logger = require("./utils/logger")
 const express = require("express")
 const cors = require("cors")
+const blogsRouter = require("./controllers/blogs")
+const middleware = require("./utils/middleware")
 const mongoose = require("mongoose")
 
 
@@ -14,8 +16,13 @@ function buildMongoConnUrl(userName, password, clusterName, databaseName) {
   return url
 }
 
-const MONGO_CNN_URL = buildMongoConnUrl(
-  config.MONGO_USER_NAME, config.MONGO_PASSWORD, config.MONGO_CLUSTER_NAME, config.MONGO_DATABASE_NAME)
+const MONGO_CNN_URL =
+  buildMongoConnUrl(
+    config.MONGO_USER_NAME,
+    config.MONGO_PASSWORD,
+    config.MONGO_CLUSTER_NAME,
+    config.MONGO_DATABASE_NAME)
+
 const mongoCnnOpts = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -23,51 +30,36 @@ const mongoCnnOpts = {
   useCreateIndex: true,
 }
 
-logger.info("Trying to connect to the database...")
+logger.info("Connecting to Mongo database")
+logger.info(`  - Cluster: ${config.MONGO_CLUSTER_NAME}`)
+logger.info(`  - Database: ${config.MONGO_DATABASE_NAME}`)
+logger.info(`  - User: ${config.MONGO_USER_NAME}`)
 mongoose
   .connect(MONGO_CNN_URL, mongoCnnOpts)
+  .then(() => {
+    const msg = "Connection to Mongo database succeeded"
+    logger.error(msg)
+  })
   .catch(error => {
-    console.error("Connecting to Mongo database failed: ", error.message)
+    const msg = "Connection to Mongo database failed: "
+    logger.error(msg, error.message)
     process.exit(config.EXIT_CODE_FAILURE)
   })
 
-logger.info("Setting up database schemata...")
-const blogSchema = mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
-})
-
-const Blog = mongoose.model("Blog", blogSchema)
 
 
-logger.info("Setting up HTTP server...")
+logger.info("Setting up HTTP server")
 
+logger.info(`  - Initializing Express`)
 const app = express()
-
-
 app.use(cors())
+app.use(express.static("build"))
 app.use(express.json())
+app.use(middleware.requestLogger)
 
-app.get(config.URL_BLOGS, (request, response) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
-})
+app.use(config.URL_API_BLOGS, blogsRouter)
 
-app.post(config.URL_BLOGS, (request, response) => {
-  const blog = new Blog(request.body)
-
-  blog
-    .save()
-    .then(result => {
-      response
-        .status(config.HTTP_STATUS_CREATED)
-        .json(result)
-    })
-})
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app
