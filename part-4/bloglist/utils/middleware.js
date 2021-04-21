@@ -3,7 +3,7 @@ const logger = require("./logger")
 
 const requestLogger = (request, response, next) => {
   const msg =
-  `\nRequest:\n` +
+  "\nRequest:\n" +
   `  - method: ${request.method}\n` +
   `  - path:   ${request.path}\n`
 
@@ -17,6 +17,7 @@ const unknownEndpoint = (request, response, next) => {
   next(error)
 }
 
+/* eslint-disable-next-line no-unused-vars */
 const errorHandler = (error, request, response, next) => {
   const timestamp = new Date()
 

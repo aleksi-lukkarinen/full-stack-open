@@ -13,7 +13,7 @@ server.on("error", error => {
 })
 
 server.on("close", () => {
-  const msg = `\nBlogList Server is shutting down\n`
+  const msg = "\nBlogList Server is shutting down\n"
   logger.info(msg)
 })
 

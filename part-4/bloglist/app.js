@@ -50,7 +50,7 @@ mongoose
 
 logger.info("Setting up HTTP server")
 
-logger.info(`  - Initializing Express`)
+logger.info("  - Initializing Express")
 const app = express()
 app.use(cors())
 app.use(express.static("build"))
