@@ -1,4 +1,15 @@
+const _ = require("lodash")
+
 const SUM_OF_LIKES = 36
+
+const testFavoriteBlog = {
+  _id: "5a422b3a1b54a676234d17f9",
+  title: "Canonical string reduction",
+  author: "Edsger W. Dijkstra",
+  url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+  likes: 12,
+  __v: 0
+}
 
 const testBlogs = [
   {
@@ -9,20 +20,13 @@ const testBlogs = [
     likes: 7,
     __v: 0
   },
+  testFavoriteBlog,
   {
     _id: "5a422aa71b54a676234d17f8",
     title: "Go To Statement Considered Harmful",
     author: "Edsger W. Dijkstra",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 5,
-    __v: 0
-  },
-  {
-    _id: "5a422b3a1b54a676234d17f9",
-    title: "Canonical string reduction",
-    author: "Edsger W. Dijkstra",
-    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-    likes: 12,
     __v: 0
   },
   {
@@ -71,8 +75,29 @@ describe("total likes", () => {
     const result = listHelper.totalLikes([testBlogs[0]])
     expect(result).toBe(testBlogs[0].likes)
   })
-  test("of a bigger list is calculated right", () => {
+  test("of a bigger list is calculated correctly", () => {
     const result = listHelper.totalLikes(testBlogs)
     expect(result).toBe(SUM_OF_LIKES)
+  })
+})
+
+describe("favorite blog", () => {
+  test("of an empty list is undefined", () => {
+    const result = listHelper.favoriteBlog([])
+    expect(result).toEqual(undefined)
+  })
+  test("when list has only one blog equals that blog", () => {
+    const result = listHelper.favoriteBlog([testBlogs[0]])
+    const expected = _.pick(testBlogs[0],
+      listHelper.FAVORITE_BLOG_FIELD_NAMES)
+
+    expect(result).toEqual(expected)
+  })
+  test("of a bigger list is correct", () => {
+    const result = listHelper.favoriteBlog(testBlogs)
+    const expected = _.pick(testFavoriteBlog,
+      listHelper.FAVORITE_BLOG_FIELD_NAMES)
+
+    expect(result).toEqual(expected)
   })
 })
