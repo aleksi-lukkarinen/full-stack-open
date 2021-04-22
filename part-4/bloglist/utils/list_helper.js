@@ -8,7 +8,7 @@ function dummy(blogs) {
 }
 
 function favoriteBlog(blogs) {
-  const favorite = _.maxBy(blogs, b => b.likes)
+  const favorite = _.maxBy(blogs, "likes")
   if (!favorite)
     return undefined
 
@@ -18,15 +18,31 @@ function favoriteBlog(blogs) {
 }
 
 function mostBlogs(blogs) {
-  const blogCounts = _.countBy(blogs, b => b.author)
+  const blogCounts = _.countBy(blogs, "author")
   const mostBlogsInfo =
-    _.maxBy(Object.entries(blogCounts), x => x[1])
+    _.maxBy(_.toPairs(blogCounts), x => x[1])
   if (!mostBlogsInfo)
     return undefined
 
   return {
     author: mostBlogsInfo[0],
     blogs: mostBlogsInfo[1],
+  }
+}
+
+function mostLikes(blogs) {
+  const likeCounts = _.mapValues(
+    _.groupBy(blogs, "author"),
+    x => _.sumBy(x, "likes"))
+
+  const mostLikesInfo =
+    _.maxBy(_.toPairs(likeCounts), x => x[1])
+  if (!mostLikesInfo)
+    return undefined
+
+  return {
+    author: mostLikesInfo[0],
+    likes: mostLikesInfo[1],
   }
 }
 
@@ -40,5 +56,6 @@ module.exports = {
   favoriteBlog,
   FAVORITE_BLOG_FIELD_NAMES,
   mostBlogs,
+  mostLikes,
   totalLikes,
 }

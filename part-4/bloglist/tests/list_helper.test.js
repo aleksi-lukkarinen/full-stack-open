@@ -8,6 +8,10 @@ const mostBlogsInfoFromTestBlogs = {
   author: TEST_AUTHOR_1,
   blogs: 3
 }
+const mostLikesInfoFromTestBlogs = {
+  author: TEST_AUTHOR_2,
+  likes: 17
+}
 
 const testFavoriteBlog = {
   _id: "5a422b3a1b54a676234d17f9",
@@ -109,7 +113,7 @@ describe("favorite blog", () => {
   })
 })
 
-describe("most liked author", () => {
+describe("author with most blogs", () => {
   test("of an empty list is undefined", () => {
     const result = listHelper.mostBlogs([])
     expect(result).toEqual(undefined)
@@ -125,11 +129,28 @@ describe("most liked author", () => {
   })
   test("of a bigger list is correct", () => {
     const result = listHelper.mostBlogs(testBlogs)
+    const expected = mostBlogsInfoFromTestBlogs
+    expect(result).toEqual(expected)
+  })
+})
+
+describe("most liked author", () => {
+  test("of an empty list is undefined", () => {
+    const result = listHelper.mostLikes([])
+    expect(result).toEqual(undefined)
+  })
+  test("when list has only one blog results in the author of that blog", () => {
+    const result = listHelper.mostLikes([testBlogs[0]])
     const expected = {
-      author: mostBlogsInfoFromTestBlogs.author,
-      blogs: mostBlogsInfoFromTestBlogs.blogs,
+      author: testBlogs[0].author,
+      likes: testBlogs[0].likes,
     }
 
+    expect(result).toEqual(expected)
+  })
+  test("of a bigger list is correct", () => {
+    const result = listHelper.mostLikes(testBlogs)
+    const expected = mostLikesInfoFromTestBlogs
     expect(result).toEqual(expected)
   })
 })
