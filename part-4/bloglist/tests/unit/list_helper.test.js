@@ -66,7 +66,7 @@ const testBlogs = [
   },
 ]
 
-const listHelper = require("../utils/list_helper")
+const listHelper = require("../../utils/list_helper")
 
 
 
