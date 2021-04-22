@@ -7,9 +7,18 @@ const app = require("./app")
 const server = http.createServer(app)
 
 server.on("error", error => {
-  const msg = "\nBlogList Server encountered an error:\n"
+  let msg = "\nBlogList Server encountered an error:\n"
   logger.error(msg)
-  logger.error(error)
+
+  if (error.code === "EADDRINUSE") {
+    msg = "The defined TCP port is in use already.\n"
+    logger.error(msg)
+  }
+  else {
+    logger.error(error)
+  }
+
+  process.exit(config.EXIT_CODE_FAILURE)
 })
 
 server.on("close", () => {
