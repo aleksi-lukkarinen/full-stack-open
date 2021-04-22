@@ -1,87 +1,11 @@
 const config = require("../../utils/config")
-const logger = require("../../utils/logger")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
+const BF = require("../blog_fixture")
 const _ = require("lodash")
 const app = require("../../app")
 const api = supertest(app)
-const Blog = require("../../models/blog")
 
-const TEST_AUTHOR_1 = "Robert C. Martin"
-const TEST_AUTHOR_2 = "Edsger W. Dijkstra"
-
-const testBlogs = [
-  {
-    title: "React patterns",
-    author: "Michael Chan",
-    url: "https://reactpatterns.com/",
-    likes: 7,
-  },
-  {
-    title: "Canonical string reduction",
-    author: TEST_AUTHOR_2,
-    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-    likes: 12,
-  },
-  {
-    title: "Go To Statement Considered Harmful",
-    author: TEST_AUTHOR_2,
-    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-    likes: 5,
-  },
-  {
-    title: "First class tests",
-    author: TEST_AUTHOR_1,
-    url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-    likes: 10,
-  },
-  {
-    title: "TDD harms architecture",
-    author: TEST_AUTHOR_1,
-    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-    likes: 0,
-  },
-  {
-    title: "Type wars",
-    author: TEST_AUTHOR_1,
-    url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-    likes: 2,
-  },
-]
-
-async function clearBlogCollection() {
-  try {
-    await Blog.deleteMany({})
-  }
-  catch (error) {
-    const msg = "Error while clearing blog database: "
-    logger.error(msg, error)
-  }
-}
-
-async function insertFirstTestBlogToDB() {
-  try  {
-    const blogInfo = new Blog(testBlogs[0])
-    await blogInfo.save()
-  }
-  catch (error) {
-    const msg = "Error while inserting a test blog to database: "
-    logger.error(msg, error)
-  }
-}
-
-async function insertAllTestBlogsToDB() {
-  try  {
-    for (let i=0; i<testBlogs.length; i++) {
-      const blogInfo = new Blog(testBlogs[i])
-      await blogInfo.save()
-    }
-  }
-  catch (error) {
-    const msg = "Error while inserting test blogs to database: "
-    logger.error(msg, error)
-  }
-}
 
 afterAll(() => {
   mongoose.connection.close()
@@ -94,51 +18,63 @@ test("Blogs are returned as JSON", async () => {
     .expect("Content-Type", /application\/json/)
 })
 
+
 describe("When blog collection is empty", () => {
-  beforeEach(async () => { await clearBlogCollection() })
+  beforeEach(async () => { await BF.clearBlogCollection() })
 
   test("getting blogs results in an empty list", async () => {
-    await clearBlogCollection()
-    const response = await api.get(config.URL_API_BLOGS)
-    expect(response.body).toHaveLength(0)
+    await BF.clearBlogCollection()
+    const blogs = await BF.allBlogsFromCollectionUsingGET(api)
+    expect(blogs).toHaveLength(0)
   })
 })
+
 
 describe("When blog collection contains one entry", () => {
   beforeEach(async () => {
-    await clearBlogCollection()
-    await insertFirstTestBlogToDB()
+    await BF.clearBlogCollection()
+    await BF.insertFirstTestBlogToCollection()
   })
 
   test("only one entry returned", async () => {
-    const response = await api.get(config.URL_API_BLOGS)
-    expect(response.body).toHaveLength(1)
-  })
-
-  test("the returned entry has a property \"id\"", async () => {
-    const response = await api.get(config.URL_API_BLOGS)
-    expect(_.keys(response.body[0])).toContain("id")
-  })
-
-  test("the returned entry does not have a property \"_id\"", async () => {
-    const response = await api.get(config.URL_API_BLOGS)
-    expect(_.keys(response.body[0])).not.toContain("_id")
-  })
-
-  test("the returned entry does not have a property \"__v\"", async () => {
-    const response = await api.get(config.URL_API_BLOGS)
-    expect(_.keys(response.body[0])).not.toContain("__v")
+    const blogs = await BF.allBlogsFromCollectionUsingGET(api)
+    expect(blogs).toHaveLength(1)
   })
 })
 
+
+describe("A blog entry returned from the collection", () => {
+  let entryKeys = undefined
+
+  beforeEach(async () => {
+    await BF.clearBlogCollection()
+    await BF.insertFirstTestBlogToCollection()
+    const blogs = await BF.allBlogsFromCollectionUsingGET(api)
+    entryKeys = _.keys(blogs[0])
+  })
+
+  test("has a property \"id\"", async () => {
+    expect(entryKeys).toContain("id")
+  })
+
+  test("does not have a property \"_id\"", async () => {
+    expect(entryKeys).not.toContain("_id")
+  })
+
+  test("does not have a property \"__v\"", async () => {
+    expect(entryKeys).not.toContain("__v")
+  })
+})
+
+
 describe("When blog collection contains several entries", () => {
   beforeEach(async () => {
-    await clearBlogCollection()
-    await insertAllTestBlogsToDB()
+    await BF.clearBlogCollection()
+    await BF.insertAllTestBlogsToCollection()
   })
 
   test("all the blogs in the collection are returned", async () => {
-    const response = await api.get(config.URL_API_BLOGS)
-    expect(response.body).toHaveLength(testBlogs.length)
+    const blogs = await BF.allBlogsFromCollectionUsingGET(api)
+    expect(blogs).toHaveLength(BF.NUMBER_OF_TEST_BLOGS)
   })
 })
