@@ -53,15 +53,31 @@ describe("A blog entry returned from the collection", () => {
     entryKeys = _.keys(blogs[0])
   })
 
-  test("has a property \"id\"", async () => {
+  test("has a property called \"id\"", async () => {
     expect(entryKeys).toContain("id")
   })
 
-  test("does not have a property \"_id\"", async () => {
+  test("does not have a property called \"_id\"", async () => {
     expect(entryKeys).not.toContain("_id")
   })
 
-  test("does not have a property \"__v\"", async () => {
+  test("has a property called \"title\"", async () => {
+    expect(entryKeys).toContain("title")
+  })
+
+  test("has a property called \"author\"", async () => {
+    expect(entryKeys).toContain("author")
+  })
+
+  test("has a property called \"likes\"", async () => {
+    expect(entryKeys).toContain("likes")
+  })
+
+  test("has a property called \"url\"", async () => {
+    expect(entryKeys).toContain("url")
+  })
+
+  test("does not have a property called \"__v\"", async () => {
     expect(entryKeys).not.toContain("__v")
   })
 })
