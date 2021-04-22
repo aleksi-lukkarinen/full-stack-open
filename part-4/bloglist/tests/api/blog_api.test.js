@@ -2,6 +2,7 @@ const config = require("../../utils/config")
 const logger = require("../../utils/logger")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
+const _ = require("lodash")
 const app = require("../../app")
 const api = supertest(app)
 const Blog = require("../../models/blog")
@@ -107,6 +108,26 @@ describe("When blog collection contains one entry", () => {
   beforeEach(async () => {
     await clearBlogCollection()
     await insertFirstTestBlogToDB()
+  })
+
+  test("only one entry returned", async () => {
+    const response = await api.get(config.URL_API_BLOGS)
+    expect(response.body).toHaveLength(1)
+  })
+
+  test("the returned entry has a property \"id\"", async () => {
+    const response = await api.get(config.URL_API_BLOGS)
+    expect(_.keys(response.body[0])).toContain("id")
+  })
+
+  test("the returned entry does not have a property \"_id\"", async () => {
+    const response = await api.get(config.URL_API_BLOGS)
+    expect(_.keys(response.body[0])).not.toContain("_id")
+  })
+
+  test("the returned entry does not have a property \"__v\"", async () => {
+    const response = await api.get(config.URL_API_BLOGS)
+    expect(_.keys(response.body[0])).not.toContain("__v")
   })
 })
 
