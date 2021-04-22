@@ -1,11 +1,25 @@
 require("dotenv").config()
 
+const ENVIRONMENT_CLASS = process.env.NODE_ENV
+const IS_TEST_ENVIRONMENT = ENVIRONMENT_CLASS === "test"
+
 const PORT_TO_LISTEN = process.env.PORT
 
-const MONGO_USER_NAME = process.env.MONGO_USER_NAME
-const MONGO_PASSWORD = process.env.MONGO_PASSWORD
-const MONGO_CLUSTER_NAME = process.env.MONGO_CLUSTER_NAME
-const MONGO_DATABASE_NAME = process.env.MONGO_DATABASE_NAME
+const MONGO_USER_NAME = IS_TEST_ENVIRONMENT
+  ? process.env.TEST_MONGO_USER_NAME
+  : process.env.MONGO_USER_NAME
+
+const MONGO_PASSWORD = IS_TEST_ENVIRONMENT
+  ? process.env.TEST_MONGO_PASSWORD
+  : process.env.MONGO_PASSWORD
+
+const MONGO_CLUSTER_NAME = IS_TEST_ENVIRONMENT
+  ? process.env.TEST_MONGO_CLUSTER_NAME
+  : process.env.MONGO_CLUSTER_NAME
+
+const MONGO_DATABASE_NAME = IS_TEST_ENVIRONMENT
+  ? process.env.TEST_MONGO_DATABASE_NAME
+  : process.env.MONGO_DATABASE_NAME
 
 const URL_BASE = "/"
 const URL_API_ROOT = URL_BASE + "api/"
