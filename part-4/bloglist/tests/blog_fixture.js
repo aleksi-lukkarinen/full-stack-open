@@ -1,6 +1,9 @@
 const config = require("../utils/config")
 const logger = require("../utils/logger")
+const supertest = require("supertest")
 const Blog = require("../models/blog")
+const app = require("../app")
+const supertestApi = supertest(app)
 
 
 const dummyBlogData = {
@@ -83,10 +86,7 @@ async function insertFirstTestBlogToCollection() {
 
 async function insertAllTestBlogsToCollection() {
   try  {
-    for (let i=0; i<testBlogs.length; i++) {
-      const blogInfo = new Blog(testBlogs[i])
-      await blogInfo.save()
-    }
+    await Blog.insertMany(testBlogs)
   }
   catch (error) {
     const msg = "Error while inserting test blogs to database: "
@@ -94,10 +94,19 @@ async function insertAllTestBlogsToCollection() {
   }
 }
 
-async function allBlogsFromCollectionUsingGET(api) {
-  return await api
-    .get(config.URL_API_BLOGS)
-    .then(response => response.body)
+async function allBlogsFromCollectionUsingGET() {
+  const response =
+    await supertestApi.get(config.URL_API_BLOGS)
+
+  return response.body
+}
+
+async function addBlogToCollectionUsingPOST(blogToAdd) {
+  await supertestApi
+    .post(config.URL_API_BLOGS)
+    .send(blogToAdd)
+    .expect(config.HTTP_STATUS_CREATED)
+    .expect("Content-Type", /application\/json/)
 }
 
 async function nonExistingBlogId() {
@@ -120,9 +129,13 @@ module.exports = {
   testBlogs,
   dummyBlogData,
 
+  application: app,
+  supertestApi,
+
   clearBlogCollection,
   insertFirstTestBlogToCollection,
   insertAllTestBlogsToCollection,
   allBlogsFromCollectionUsingGET,
+  addBlogToCollectionUsingPOST,
   nonExistingBlogId,
 }
