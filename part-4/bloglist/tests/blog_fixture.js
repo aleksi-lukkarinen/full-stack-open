@@ -3,8 +3,25 @@ const logger = require("../utils/logger")
 const Blog = require("../models/blog")
 
 
+const dummyBlogData = {
+  title: "will-remove-this-soon",
+  author: "dummy-author",
+  likes: 9999,
+  url: "http://dummies.com/",
+}
+
 const AUTHOR_WITH_MOST_BLOGS = "Robert C. Martin"
+const N_OF_BLOGS_OF_AUTHOR_WITH_MOST_BLOGS = 3
 const AUTHOR_WITH_MOST_LIKES = "Edsger W. Dijkstra"
+const N_OF_LIKES_OF_AUTHOR_WITH_MOST_BLOGS = 17
+const SUM_OF_LIKES_IN_TEST_BLOGS = 36
+
+const favoriteTestBlog = {
+  title: "Canonical string reduction",
+  author: AUTHOR_WITH_MOST_LIKES,
+  url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+  likes: 12,
+}
 
 const testBlogs = [
   {
@@ -13,12 +30,7 @@ const testBlogs = [
     url: "https://reactpatterns.com/",
     likes: 7,
   },
-  {
-    title: "Canonical string reduction",
-    author: AUTHOR_WITH_MOST_LIKES,
-    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-    likes: 12,
-  },
+  favoriteTestBlog,
   {
     title: "Go To Statement Considered Harmful",
     author: AUTHOR_WITH_MOST_LIKES,
@@ -89,12 +101,6 @@ async function allBlogsFromCollectionUsingGET(api) {
 }
 
 async function nonExistingBlogId() {
-  const dummyBlogData = {
-    title: "will-remove-this-soon",
-    author: "dummy-author",
-    likes: 9999,
-    url: "http://dummies.com/",
-  }
   const note = new Blog(dummyBlogData)
   await note.save()
   await note.remove()
@@ -103,10 +109,16 @@ async function nonExistingBlogId() {
 }
 
 module.exports = {
-  TEST_AUTHOR_1: AUTHOR_WITH_MOST_BLOGS,
-  TEST_AUTHOR_2: AUTHOR_WITH_MOST_LIKES,
+  AUTHOR_WITH_MOST_BLOGS,
+  AUTHOR_WITH_MOST_LIKES,
+  N_OF_BLOGS_OF_AUTHOR_WITH_MOST_BLOGS,
+  N_OF_LIKES_OF_AUTHOR_WITH_MOST_BLOGS,
   NUMBER_OF_TEST_BLOGS,
+  SUM_OF_LIKES_IN_TEST_BLOGS,
+
+  favoriteTestBlog,
   testBlogs,
+  dummyBlogData,
 
   clearBlogCollection,
   insertFirstTestBlogToCollection,

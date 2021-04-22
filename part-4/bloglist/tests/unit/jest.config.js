@@ -3,4 +3,5 @@ module.exports = {
     name: "SERVER UNIT",
     color: "cyanBright",
   },
+  testEnvironment: "node",
 }
