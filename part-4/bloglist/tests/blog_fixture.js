@@ -100,24 +100,22 @@ async function nonExistingBlogId() {
 }
 
 function httpUtils(supertestApi) {
-  async function allBlogsFromCollectionUsingGET() {
+  async function getAllBlogsFromCollection() {
     const response =
       await supertestApi.get(config.URL_API_BLOGS)
 
     return response.body
   }
 
-  async function addBlogToCollectionUsingPOST(blogToAdd) {
-    await supertestApi
+  function postBlogAddingRequest(blogToAdd) {
+    return supertestApi
       .post(config.URL_API_BLOGS)
       .send(blogToAdd)
-      .expect(config.HTTP_STATUS_CREATED)
-      .expect("Content-Type", /application\/json/)
   }
 
   return {
-    allBlogsFromCollectionUsingGET,
-    addBlogToCollectionUsingPOST,
+    getAllBlogsFromCollection,
+    postBlogAddingRequest,
   }
 }
 

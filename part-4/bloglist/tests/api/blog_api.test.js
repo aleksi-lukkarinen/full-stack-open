@@ -25,7 +25,7 @@ describe("When the blog collection is empty", () => {
 
   test("retrieving all blogs results in an empty list", async () => {
     await BF.clearBlogCollection()
-    const blogs = await BFH.allBlogsFromCollectionUsingGET()
+    const blogs = await BFH.getAllBlogsFromCollection()
     expect(blogs).toHaveLength(0)
   })
 })
@@ -38,7 +38,7 @@ describe("When the blog collection contains one blog", () => {
   })
 
   test("only one blog is returned", async () => {
-    const blogs = await BFH.allBlogsFromCollectionUsingGET()
+    const blogs = await BFH.getAllBlogsFromCollection()
     expect(blogs).toHaveLength(1)
   })
 })
@@ -50,7 +50,7 @@ describe("A blog returned from the collection", () => {
   beforeEach(async () => {
     await BF.clearBlogCollection()
     await BF.insertFirstTestBlogToCollection()
-    const blogs = await BFH.allBlogsFromCollectionUsingGET()
+    const blogs = await BFH.getAllBlogsFromCollection()
     entryKeys = _.keys(blogs[0])
   })
 
@@ -91,7 +91,7 @@ describe("When the blog collection contains several blogs", () => {
   })
 
   test("all the blogs in the collection are returned", async () => {
-    const blogs = await BFH.allBlogsFromCollectionUsingGET()
+    const blogs = await BFH.getAllBlogsFromCollection()
     expect(blogs).toHaveLength(BF.NUMBER_OF_TEST_BLOGS)
   })
 })
@@ -105,8 +105,9 @@ describe("When a blog is added to the collection", () => {
     beforeAll(async () => {
       await BF.clearBlogCollection()
       await BF.insertFirstTestBlogToCollection()
-      await BFH.addBlogToCollectionUsingPOST(blogInfoToAdd)
-      blogs = await BFH.allBlogsFromCollectionUsingGET()
+      await BFH.postBlogAddingRequest(blogInfoToAdd)
+        .expect(config.HTTP_STATUS_CREATED)
+      blogs = await BFH.getAllBlogsFromCollection()
     })
 
     test("the number of blogs in the collection increases by 1", async () => {
@@ -124,10 +125,28 @@ describe("When a blog is added to the collection", () => {
 
   describe("without setting the \"likes\" field of the blog", () => {
     test("the value of the field will be set to zero", async () => {
+      const blogToAdd = { title: "test blog", url: "http://dummy-land/" }
       await BF.clearBlogCollection()
-      await BFH.addBlogToCollectionUsingPOST({ title: "test blog" })
-      const blogs = await BFH.allBlogsFromCollectionUsingGET()
+      await BFH.postBlogAddingRequest(blogToAdd)
+        .expect(config.HTTP_STATUS_CREATED)
+      const blogs = await BFH.getAllBlogsFromCollection()
       expect(blogs[0].likes).toBe(0)
     })
+  })
+})
+
+describe("Trying to add a blog to the collection results in HTTP 400 when", () => {
+  test("the title field is not set", async () => {
+    const blogToAdd = { likes: 300, url: "http://dummy/", author: "Someone" }
+    await BF.clearBlogCollection()
+    await BFH.postBlogAddingRequest(blogToAdd)
+      .expect(config.HTTP_STATUS_BAD_REQUEST)
+  })
+
+  test("the url field is not set", async () => {
+    const blogToAdd = { likes: 300, title: "Dummy title", author: "Someone" }
+    await BF.clearBlogCollection()
+    await BFH.postBlogAddingRequest(blogToAdd)
+      .expect(config.HTTP_STATUS_BAD_REQUEST)
   })
 })

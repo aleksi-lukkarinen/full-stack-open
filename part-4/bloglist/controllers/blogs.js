@@ -11,6 +11,11 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const blogToAdd = new Blog(request.body)
 
+  if (!blogToAdd.title || !blogToAdd.url) {
+    response.status(config.HTTP_STATUS_BAD_REQUEST).end()
+    return
+  }
+
   if (!blogToAdd.likes)
     blogToAdd.likes = 0
 
