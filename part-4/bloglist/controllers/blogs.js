@@ -9,28 +9,32 @@ blogsRouter.get("/", async (request, response) => {
 })
 
 blogsRouter.post("/", async (request, response) => {
-  const blogToAdd = new Blog(request.body)
+  const { body } = request
 
-  if (!blogToAdd.title || !blogToAdd.url) {
+  if (!body.title || !body.url) {
     response.status(config.HTTP_STATUS_BAD_REQUEST).end()
     return
   }
 
-  if (!blogToAdd.likes)
-    blogToAdd.likes = 0
+  const blogToAdd = new Blog({
+    title: body.title,
+    author: body.author,
+    likes: body.likes || 0,
+    url: body.url,
+  })
 
   const savedBlog = await blogToAdd.save()
 
   response
     .status(config.HTTP_STATUS_CREATED)
-    .json(savedBlog.toJSON())
+    .json(savedBlog)
 })
 
 blogsRouter.get("/:id", async (request, response) => {
   const idOfBlogToRetrieve = request.params.id
   const blog = await Blog.findById(idOfBlogToRetrieve)
   if (blog)
-    response.json(blog.toJSON())
+    response.json(blog)
   else
     response.status(config.HTTP_STATUS_NOT_FOUND).end()
 })
