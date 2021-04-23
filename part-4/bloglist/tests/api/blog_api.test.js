@@ -100,26 +100,31 @@ describe("When the blog collection contains several blogs", () => {
 describe("When a blog is added to the collection", () => {
   describe("in general", () => {
     const blogInfoToAdd = BF.testBlogs[1]
-    let blogs = undefined
+    let addedBlogs = undefined
+    let addedBlog = undefined
 
     beforeAll(async () => {
       await BF.clearBlogCollection()
       await BF.insertFirstTestBlogToCollection()
       await BFH.postBlogAddingRequest(blogInfoToAdd)
         .expect(config.HTTP_STATUS_CREATED)
-      blogs = await BFH.getAllBlogsFromCollection()
+      addedBlogs = await BFH.getAllBlogsFromCollection()
+      addedBlog = addedBlogs.find(b => b.author === blogInfoToAdd.author)
     })
 
     test("the number of blogs in the collection increases by 1", async () => {
-      expect(blogs).toHaveLength(1 + 1)
+      expect(addedBlogs).toHaveLength(1 + 1)
+    })
+
+    test("the added blog has an id", async () => {
+      expect(addedBlog.id).toBeDefined()
     })
 
     test("the added blog has correct information", async () => {
-      const blog = blogs.find(b => b.author === blogInfoToAdd.author)
-      expect(blog).toBeDefined()
-      expect(blog.title).toBe(blogInfoToAdd.title)
-      expect(blog.likes).toBe(blogInfoToAdd.likes)
-      expect(blog.url).toBe(blogInfoToAdd.url)
+      expect(addedBlog).toBeDefined()
+      expect(addedBlog.title).toBe(blogInfoToAdd.title)
+      expect(addedBlog.likes).toBe(blogInfoToAdd.likes)
+      expect(addedBlog.url).toBe(blogInfoToAdd.url)
     })
   })
 
