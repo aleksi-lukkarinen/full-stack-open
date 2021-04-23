@@ -1,5 +1,7 @@
 require("dotenv").config()
 
+const SALT_ROUNDS = 10
+
 const ENVIRONMENT_CLASS = process.env.NODE_ENV
 const IS_TEST_ENVIRONMENT = ENVIRONMENT_CLASS === "test"
 
@@ -24,6 +26,7 @@ const MONGO_DATABASE_NAME = IS_TEST_ENVIRONMENT
 const URL_BASE = "/"
 const URL_API_ROOT = URL_BASE + "api/"
 const URL_API_BLOGS = URL_API_ROOT + "blogs"
+const URL_API_USERS = URL_API_ROOT + "users"
 
 const EXIT_CODE_FAILURE = 1
 
@@ -35,6 +38,8 @@ const HTTP_STATUS_NOT_FOUND = 404
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
 
 module.exports = {
+  SALT_ROUNDS,
+
   ENVIRONMENT_CLASS,
   IS_TEST_ENVIRONMENT,
 
@@ -48,6 +53,7 @@ module.exports = {
   URL_BASE,
   URL_API_ROOT,
   URL_API_BLOGS,
+  URL_API_USERS,
 
   EXIT_CODE_FAILURE,
 
