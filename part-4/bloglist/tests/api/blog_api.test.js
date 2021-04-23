@@ -5,12 +5,13 @@ const app = require("../../app")
 const sApi = supertest(app)
 const _ = require("lodash")
 const BF = require("../blog_fixture")
-const BFH = BF.httpUtils(sApi)
+const BFHttp = BF.httpUtils(sApi)
 
 
 afterAll(async () => {
   await mongoose.connection.close()
 })
+
 
 test("Blogs are returned as JSON", async () => {
   await sApi
@@ -25,7 +26,7 @@ describe("When the blog collection is empty", () => {
 
   test("retrieving all blogs results in an empty list", async () => {
     await BF.clearBlogCollection()
-    const blogs = await BFH.getAllBlogsFromCollection()
+    const blogs = await BFHttp.getAllBlogs()
     expect(blogs).toHaveLength(0)
   })
 })
@@ -38,7 +39,7 @@ describe("When the blog collection contains one blog", () => {
   })
 
   test("only one blog is returned", async () => {
-    const blogs = await BFH.getAllBlogsFromCollection()
+    const blogs = await BFHttp.getAllBlogs()
     expect(blogs).toHaveLength(1)
   })
 })
@@ -50,7 +51,7 @@ describe("A blog returned from the collection", () => {
   beforeEach(async () => {
     await BF.clearBlogCollection()
     await BF.insertFirstTestBlogToCollection()
-    const blogs = await BFH.getAllBlogsFromCollection()
+    const blogs = await BFHttp.getAllBlogs()
     entryKeys = _.keys(blogs[0])
   })
 
@@ -91,8 +92,20 @@ describe("When the blog collection contains several blogs", () => {
   })
 
   test("all the blogs in the collection are returned", async () => {
-    const blogs = await BFH.getAllBlogsFromCollection()
+    const blogs = await BFHttp.getAllBlogs()
     expect(blogs).toHaveLength(BF.NUMBER_OF_TEST_BLOGS)
+  })
+
+  test("a single blog can be deleted by its ID", async () => {
+    const blogsAtStart = await BFHttp.getAllBlogs()
+    const blogToRemove = blogsAtStart[0]
+
+    await BFHttp.deleteBlogById(blogToRemove.id)
+      .expect(config.HTTP_STATUS_NO_CONTENT)
+
+    const blogsAtEnd = await BFHttp.getAllBlogs()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
+    expect(blogsAtEnd).not.toContain(blogToRemove)
   })
 })
 
@@ -106,9 +119,9 @@ describe("When a blog is added to the collection", () => {
     beforeAll(async () => {
       await BF.clearBlogCollection()
       await BF.insertFirstTestBlogToCollection()
-      await BFH.postBlogAddingRequest(blogInfoToAdd)
+      await BFHttp.postBlogAddingRequest(blogInfoToAdd)
         .expect(config.HTTP_STATUS_CREATED)
-      addedBlogs = await BFH.getAllBlogsFromCollection()
+      addedBlogs = await BFHttp.getAllBlogs()
       addedBlog = addedBlogs.find(b => b.author === blogInfoToAdd.author)
     })
 
@@ -132,26 +145,44 @@ describe("When a blog is added to the collection", () => {
     test("the value of the field will be set to zero", async () => {
       const blogToAdd = { title: "test blog", url: "http://dummy-land/" }
       await BF.clearBlogCollection()
-      await BFH.postBlogAddingRequest(blogToAdd)
+      await BFHttp.postBlogAddingRequest(blogToAdd)
         .expect(config.HTTP_STATUS_CREATED)
-      const blogs = await BFH.getAllBlogsFromCollection()
+      const blogs = await BFHttp.getAllBlogs()
       expect(blogs[0].likes).toBe(0)
     })
   })
 })
 
+
 describe("Trying to add a blog to the collection results in HTTP 400 when", () => {
   test("the title field is not set", async () => {
     const blogToAdd = { likes: 300, url: "http://dummy/", author: "Someone" }
     await BF.clearBlogCollection()
-    await BFH.postBlogAddingRequest(blogToAdd)
+    await BFHttp.postBlogAddingRequest(blogToAdd)
       .expect(config.HTTP_STATUS_BAD_REQUEST)
   })
 
   test("the url field is not set", async () => {
     const blogToAdd = { likes: 300, title: "Dummy title", author: "Someone" }
     await BF.clearBlogCollection()
-    await BFH.postBlogAddingRequest(blogToAdd)
+    await BFHttp.postBlogAddingRequest(blogToAdd)
+      .expect(config.HTTP_STATUS_BAD_REQUEST)
+  })
+})
+
+
+describe("Trying to delete a single blog by its ID results in", () => {
+  test("HTTP 204 when the ID is unknown", async () => {
+    const idOfBlogToDelete = await BF.nonExistingBlogId()
+
+    await BFHttp.deleteBlogById(idOfBlogToDelete)
+      .expect(config.HTTP_STATUS_NO_CONTENT)
+  })
+
+  test("HTTP 400 when the ID is malformatted", async () => {
+    const invalidBlogId = "$$$....@@@"
+
+    await BFHttp.deleteBlogById(invalidBlogId)
       .expect(config.HTTP_STATUS_BAD_REQUEST)
   })
 })

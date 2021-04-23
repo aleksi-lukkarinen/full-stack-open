@@ -21,8 +21,6 @@ const unknownEndpoint = (request, response, next) => {
 const errorHandler = (error, request, response, next) => {
   const timestamp = new Date()
 
-  console.error(error)
-
   let responseStatus = undefined
   let responseData = {}
   if (error.name === "UnknownEndpointError") {
@@ -32,8 +30,6 @@ const errorHandler = (error, request, response, next) => {
       errors: [
         {
           message: error.message,
-          method: request.method,
-          path: request.url,
         }
       ]
     }
@@ -71,6 +67,10 @@ const errorHandler = (error, request, response, next) => {
   let result = undefined
   if (responseStatus) {
     responseData.timestamp = timestamp
+    responseData.method = request.method
+    responseData.path = request.url
+
+    logger.error(responseData)
 
     result = response
       .status(responseStatus)
@@ -80,6 +80,8 @@ const errorHandler = (error, request, response, next) => {
     result = response
       .status(config.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       .end()
+
+    logger.error(error)
   }
 
   return result

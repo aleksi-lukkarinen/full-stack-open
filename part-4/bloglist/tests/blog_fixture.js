@@ -100,7 +100,7 @@ async function nonExistingBlogId() {
 }
 
 function httpUtils(supertestApi) {
-  async function getAllBlogsFromCollection() {
+  async function getAllBlogs() {
     const response =
       await supertestApi.get(config.URL_API_BLOGS)
 
@@ -113,9 +113,15 @@ function httpUtils(supertestApi) {
       .send(blogToAdd)
   }
 
+  function deleteBlogById(idOfBlogToDelete) {
+    return supertestApi
+      .delete(`${config.URL_API_BLOGS}/${idOfBlogToDelete}`)
+  }
+
   return {
-    getAllBlogsFromCollection,
+    getAllBlogs,
     postBlogAddingRequest,
+    deleteBlogById,
   }
 }
 
