@@ -45,6 +45,50 @@ describe("When the blog collection contains one blog", () => {
 })
 
 
+describe("A blog can be modified by", () => {
+  let existingBlog
+
+  beforeEach(async () => {
+    await BF.clearBlogCollection()
+    await BF.insertFirstTestBlogToCollection()
+    const blogs = await BFHttp.getAllBlogs()
+    existingBlog = blogs[0]
+  })
+
+  test("updating its title", async () => {
+    const updatedBlogData = { title: "A new title" }
+    await BFHttp.putBlogUpdateById(existingBlog.id, updatedBlogData)
+    const blogsAfterUpdate = await BFHttp.getAllBlogs()
+    const updatedBlog = blogsAfterUpdate.find(b => b.id === existingBlog.id)
+    expect(updatedBlog.title).toBe(updatedBlogData.title)
+  })
+
+  test("updating its author", async () => {
+    const updatedBlogData = { author: "A new author" }
+    await BFHttp.putBlogUpdateById(existingBlog.id, updatedBlogData)
+    const blogsAfterUpdate = await BFHttp.getAllBlogs()
+    const updatedBlog = blogsAfterUpdate.find(b => b.id === existingBlog.id)
+    expect(updatedBlog.author).toBe(updatedBlogData.author)
+  })
+
+  test("updating its likes", async () => {
+    const updatedBlogData = { likes: 987654321 }
+    await BFHttp.putBlogUpdateById(existingBlog.id, updatedBlogData)
+    const blogsAfterUpdate = await BFHttp.getAllBlogs()
+    const updatedBlog = blogsAfterUpdate.find(b => b.id === existingBlog.id)
+    expect(updatedBlog.likes).toBe(updatedBlogData.likes)
+  })
+
+  test("updating its url", async () => {
+    const updatedBlogData = { url: "A new url" }
+    await BFHttp.putBlogUpdateById(existingBlog.id, updatedBlogData)
+    const blogsAfterUpdate = await BFHttp.getAllBlogs()
+    const updatedBlog = blogsAfterUpdate.find(b => b.id === existingBlog.id)
+    expect(updatedBlog.url).toBe(updatedBlogData.url)
+  })
+})
+
+
 describe("A blog returned from the collection", () => {
   let entryKeys = undefined
 

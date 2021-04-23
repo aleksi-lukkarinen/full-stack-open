@@ -99,7 +99,12 @@ async function nonExistingBlogId() {
   return note._id.toString()
 }
 
+function blogPathFrom(blogId) {
+  return `${config.URL_API_BLOGS}/${blogId}`
+}
+
 function httpUtils(supertestApi) {
+
   async function getAllBlogs() {
     const response =
       await supertestApi.get(config.URL_API_BLOGS)
@@ -113,14 +118,21 @@ function httpUtils(supertestApi) {
       .send(blogToAdd)
   }
 
+  function putBlogUpdateById(idOfBlogToUpdate, updatedBlogData) {
+    return supertestApi
+      .put(blogPathFrom(idOfBlogToUpdate))
+      .send(updatedBlogData)
+  }
+
   function deleteBlogById(idOfBlogToDelete) {
     return supertestApi
-      .delete(`${config.URL_API_BLOGS}/${idOfBlogToDelete}`)
+      .delete(blogPathFrom(idOfBlogToDelete))
   }
 
   return {
     getAllBlogs,
     postBlogAddingRequest,
+    putBlogUpdateById,
     deleteBlogById,
   }
 }
