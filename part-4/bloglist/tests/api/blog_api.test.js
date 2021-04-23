@@ -1,16 +1,19 @@
 const config = require("../../utils/config")
 const mongoose = require("mongoose")
-const BF = require("../blog_fixture")
-const api = BF.supertestApi
+const supertest = require("supertest")
+const app = require("../../app")
+const sApi = supertest(app)
 const _ = require("lodash")
+const BF = require("../blog_fixture")
+const BFH = BF.httpUtils(sApi)
 
 
-afterAll(() => {
-  mongoose.connection.close()
+afterAll(async () => {
+  await mongoose.connection.close()
 })
 
 test("Blogs are returned as JSON", async () => {
-  await api
+  await sApi
     .get(config.URL_API_BLOGS)
     .expect(config.HTTP_STATUS_OK)
     .expect("Content-Type", /application\/json/)
@@ -22,7 +25,7 @@ describe("When the blog collection is empty", () => {
 
   test("retrieving all blogs results in an empty list", async () => {
     await BF.clearBlogCollection()
-    const blogs = await BF.allBlogsFromCollectionUsingGET()
+    const blogs = await BFH.allBlogsFromCollectionUsingGET()
     expect(blogs).toHaveLength(0)
   })
 })
@@ -35,7 +38,7 @@ describe("When the blog collection contains one blog", () => {
   })
 
   test("only one blog is returned", async () => {
-    const blogs = await BF.allBlogsFromCollectionUsingGET()
+    const blogs = await BFH.allBlogsFromCollectionUsingGET()
     expect(blogs).toHaveLength(1)
   })
 })
@@ -47,7 +50,7 @@ describe("A blog returned from the collection", () => {
   beforeEach(async () => {
     await BF.clearBlogCollection()
     await BF.insertFirstTestBlogToCollection()
-    const blogs = await BF.allBlogsFromCollectionUsingGET()
+    const blogs = await BFH.allBlogsFromCollectionUsingGET()
     entryKeys = _.keys(blogs[0])
   })
 
@@ -88,32 +91,43 @@ describe("When the blog collection contains several blogs", () => {
   })
 
   test("all the blogs in the collection are returned", async () => {
-    const blogs = await BF.allBlogsFromCollectionUsingGET()
+    const blogs = await BFH.allBlogsFromCollectionUsingGET()
     expect(blogs).toHaveLength(BF.NUMBER_OF_TEST_BLOGS)
   })
 })
 
 
 describe("When a blog is added to the collection", () => {
-  const blogInfoToAdd = BF.testBlogs[1]
-  let blogs = undefined
+  describe("in general", () => {
+    const blogInfoToAdd = BF.testBlogs[1]
+    let blogs = undefined
 
-  beforeAll(async () => {
-    await BF.clearBlogCollection()
-    await BF.insertFirstTestBlogToCollection()
-    await BF.addBlogToCollectionUsingPOST(blogInfoToAdd)
-    blogs = await BF.allBlogsFromCollectionUsingGET()
+    beforeAll(async () => {
+      await BF.clearBlogCollection()
+      await BF.insertFirstTestBlogToCollection()
+      await BFH.addBlogToCollectionUsingPOST(blogInfoToAdd)
+      blogs = await BFH.allBlogsFromCollectionUsingGET()
+    })
+
+    test("the number of blogs in the collection increases by 1", async () => {
+      expect(blogs).toHaveLength(1 + 1)
+    })
+
+    test("the added blog has correct information", async () => {
+      const blog = blogs.find(b => b.author === blogInfoToAdd.author)
+      expect(blog).toBeDefined()
+      expect(blog.title).toBe(blogInfoToAdd.title)
+      expect(blog.likes).toBe(blogInfoToAdd.likes)
+      expect(blog.url).toBe(blogInfoToAdd.url)
+    })
   })
 
-  test("the number of blogs in the collection increases by 1", async () => {
-    expect(blogs).toHaveLength(1 + 1)
-  })
-
-  test("the added blog has correct information", async () => {
-    const blog = blogs.find(b => b.author === blogInfoToAdd.author)
-    expect(blog).toBeDefined()
-    expect(blog.title).toBe(blogInfoToAdd.title)
-    expect(blog.likes).toBe(blogInfoToAdd.likes)
-    expect(blog.url).toBe(blogInfoToAdd.url)
+  describe("without setting the \"likes\" field of the blog", () => {
+    test("the value of the field will be set to zero", async () => {
+      await BF.clearBlogCollection()
+      await BFH.addBlogToCollectionUsingPOST({ title: "test blog" })
+      const blogs = await BFH.allBlogsFromCollectionUsingGET()
+      expect(blogs[0].likes).toBe(0)
+    })
   })
 })

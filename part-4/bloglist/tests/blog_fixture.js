@@ -1,9 +1,6 @@
 const config = require("../utils/config")
 const logger = require("../utils/logger")
-const supertest = require("supertest")
 const Blog = require("../models/blog")
-const app = require("../app")
-const supertestApi = supertest(app)
 
 
 const dummyBlogData = {
@@ -94,27 +91,34 @@ async function insertAllTestBlogsToCollection() {
   }
 }
 
-async function allBlogsFromCollectionUsingGET() {
-  const response =
-    await supertestApi.get(config.URL_API_BLOGS)
-
-  return response.body
-}
-
-async function addBlogToCollectionUsingPOST(blogToAdd) {
-  await supertestApi
-    .post(config.URL_API_BLOGS)
-    .send(blogToAdd)
-    .expect(config.HTTP_STATUS_CREATED)
-    .expect("Content-Type", /application\/json/)
-}
-
 async function nonExistingBlogId() {
   const note = new Blog(dummyBlogData)
   await note.save()
   await note.remove()
 
   return note._id.toString()
+}
+
+function httpUtils(supertestApi) {
+  async function allBlogsFromCollectionUsingGET() {
+    const response =
+      await supertestApi.get(config.URL_API_BLOGS)
+
+    return response.body
+  }
+
+  async function addBlogToCollectionUsingPOST(blogToAdd) {
+    await supertestApi
+      .post(config.URL_API_BLOGS)
+      .send(blogToAdd)
+      .expect(config.HTTP_STATUS_CREATED)
+      .expect("Content-Type", /application\/json/)
+  }
+
+  return {
+    allBlogsFromCollectionUsingGET,
+    addBlogToCollectionUsingPOST,
+  }
 }
 
 module.exports = {
@@ -129,13 +133,9 @@ module.exports = {
   testBlogs,
   dummyBlogData,
 
-  application: app,
-  supertestApi,
-
   clearBlogCollection,
   insertFirstTestBlogToCollection,
   insertAllTestBlogsToCollection,
-  allBlogsFromCollectionUsingGET,
-  addBlogToCollectionUsingPOST,
   nonExistingBlogId,
+  httpUtils,
 }
