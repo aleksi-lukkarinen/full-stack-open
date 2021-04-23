@@ -112,6 +112,13 @@ function httpUtils(supertestApi) {
     return response.body
   }
 
+  async function getBlog(idOfBlogToRetrieve) {
+    const response =
+      await supertestApi.get(blogPathFrom(idOfBlogToRetrieve))
+
+    return response.body
+  }
+
   function postBlogAddingRequest(blogToAdd) {
     return supertestApi
       .post(config.URL_API_BLOGS)
@@ -131,6 +138,7 @@ function httpUtils(supertestApi) {
 
   return {
     getAllBlogs,
+    getBlog,
     postBlogAddingRequest,
     putBlogUpdateById,
     deleteBlogById,

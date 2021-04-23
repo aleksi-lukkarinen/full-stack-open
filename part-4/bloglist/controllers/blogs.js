@@ -23,7 +23,16 @@ blogsRouter.post("/", async (request, response) => {
 
   response
     .status(config.HTTP_STATUS_CREATED)
-    .json(savedBlog.body)
+    .json(savedBlog.toJSON())
+})
+
+blogsRouter.get("/:id", async (request, response) => {
+  const idOfBlogToRetrieve = request.params.id
+  const blog = await Blog.findById(idOfBlogToRetrieve)
+  if (blog)
+    response.json(blog.toJSON())
+  else
+    response.status(config.HTTP_STATUS_NOT_FOUND).end()
 })
 
 blogsRouter.put("/:id", async (request, response) => {

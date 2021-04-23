@@ -33,14 +33,23 @@ describe("When the blog collection is empty", () => {
 
 
 describe("When the blog collection contains one blog", () => {
+  let blogs = undefined
+
   beforeEach(async () => {
     await BF.clearBlogCollection()
     await BF.insertFirstTestBlogToCollection()
+    blogs = await BFHttp.getAllBlogs()
   })
 
-  test("only one blog is returned", async () => {
-    const blogs = await BFHttp.getAllBlogs()
+  test("a set of only that blog is returned", async () => {
     expect(blogs).toHaveLength(1)
+  })
+
+  test("that blog can be retrieved by its ID", async () => {
+    const idOfBlogToRetrieve = blogs[0].id
+    const blog = await BFHttp.getBlog(idOfBlogToRetrieve)
+    expect(blog).toBeDefined()
+    expect(blog.title).toBe(blogs[0].title)
   })
 })
 
