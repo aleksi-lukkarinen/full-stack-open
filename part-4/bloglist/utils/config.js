@@ -1,5 +1,7 @@
 require("dotenv").config()
 
+const USERNAME_MIN_LENGTH = 3
+const PASSWORD_MIN_LENGTH = 3
 const SALT_ROUNDS = 10
 
 const ENVIRONMENT_CLASS = process.env.NODE_ENV
@@ -37,7 +39,33 @@ const HTTP_STATUS_BAD_REQUEST = 400
 const HTTP_STATUS_NOT_FOUND = 404
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
 
+const ERR_FIRST = 0
+const ERR_UNKNOWN_ENDPOINT = ERR_FIRST + 0
+const ERR_MALFORMATTED_ID = ERR_FIRST + 1
+const ERR_USER_WITH_USERNAME_EXISTS = ERR_FIRST + 2
+const ERR_USER_WITH_USERNAME_DOES_NOT_EXIST = ERR_FIRST + 3
+const ERR_USERNAME_TOO_SHORT = ERR_FIRST + 4
+const ERR_USERNAME_IS_NOT_STRING = ERR_FIRST + 5
+const ERR_PASSWORD_TOO_SHORT = ERR_FIRST + 6
+const ERR_PASSWORD_IS_NOT_STRING = ERR_FIRST + 7
+
+const ErrorMessages = {}
+ErrorMessages[ERR_UNKNOWN_ENDPOINT] = "Unknown endpoint"
+ErrorMessages[ERR_MALFORMATTED_ID] = "Malformatted ID value"
+ErrorMessages[ERR_USER_WITH_USERNAME_EXISTS] =
+    "A user with the given username already exists"
+ErrorMessages[ERR_USER_WITH_USERNAME_DOES_NOT_EXIST] =
+    "A user with the given username cannot be found"
+ErrorMessages[ERR_USERNAME_TOO_SHORT] =
+    `A username has to be at least ${USERNAME_MIN_LENGTH} characters long`
+ErrorMessages[ERR_USERNAME_IS_NOT_STRING] = "Username has to be a string"
+ErrorMessages[ERR_PASSWORD_TOO_SHORT] =
+    `A password has to be at least ${PASSWORD_MIN_LENGTH} characters long`
+ErrorMessages[ERR_PASSWORD_IS_NOT_STRING] = "Password has to be a string"
+
 module.exports = {
+  USERNAME_MIN_LENGTH,
+  PASSWORD_MIN_LENGTH,
   SALT_ROUNDS,
 
   ENVIRONMENT_CLASS,
@@ -63,4 +91,14 @@ module.exports = {
   HTTP_STATUS_BAD_REQUEST,
   HTTP_STATUS_NOT_FOUND,
   HTTP_STATUS_INTERNAL_SERVER_ERROR,
+
+  ERR_UNKNOWN_ENDPOINT,
+  ERR_MALFORMATTED_ID,
+  ERR_USER_WITH_USERNAME_EXISTS,
+  ERR_USER_WITH_USERNAME_DOES_NOT_EXIST,
+  ERR_USERNAME_TOO_SHORT,
+  ERR_USERNAME_IS_NOT_STRING,
+  ERR_PASSWORD_TOO_SHORT,
+  ERR_PASSWORD_IS_NOT_STRING,
+  ErrorMessages,
 }

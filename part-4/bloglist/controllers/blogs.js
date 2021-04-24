@@ -16,14 +16,14 @@ blogsRouter.post("/", async (request, response) => {
     return
   }
 
-  const blogToAdd = new Blog({
+  const blogToInsert = new Blog({
     title: body.title,
     author: body.author,
     likes: body.likes || 0,
     url: body.url,
   })
 
-  const savedBlog = await blogToAdd.save()
+  const savedBlog = await blogToInsert.save()
 
   response
     .status(config.HTTP_STATUS_CREATED)

@@ -65,18 +65,18 @@ async function clearBlogCollection() {
     await Blog.deleteMany({})
   }
   catch (error) {
-    const msg = "Error while clearing blog database: "
+    const msg = "Error while clearing blog collection: "
     logger.error(msg, error)
   }
 }
 
 async function insertFirstTestBlogToCollection() {
   try  {
-    const blogInfo = new Blog(testBlogs[0])
-    await blogInfo.save()
+    const blog = new Blog(testBlogs[0])
+    await blog.save()
   }
   catch (error) {
-    const msg = "Error while inserting a test blog to database: "
+    const msg = "Error while inserting a test blog to collection: "
     logger.error(msg, error)
   }
 }
@@ -86,17 +86,17 @@ async function insertAllTestBlogsToCollection() {
     await Blog.insertMany(testBlogs)
   }
   catch (error) {
-    const msg = "Error while inserting test blogs to database: "
+    const msg = "Error while inserting test blogs to collection: "
     logger.error(msg, error)
   }
 }
 
 async function nonExistingBlogId() {
-  const note = new Blog(dummyBlogData)
-  await note.save()
-  await note.remove()
+  const blog = new Blog(dummyBlogData)
+  await blog.save()
+  await blog.remove()
 
-  return note._id.toString()
+  return blog._id.toString()
 }
 
 function blogPathFrom(blogId) {
@@ -119,10 +119,10 @@ function httpUtils(supertestApi) {
     return response.body
   }
 
-  function postBlogAddingRequest(blogToAdd) {
+  function postNewBlog(blogToInsert) {
     return supertestApi
       .post(config.URL_API_BLOGS)
-      .send(blogToAdd)
+      .send(blogToInsert)
   }
 
   function putBlogUpdateById(idOfBlogToUpdate, updatedBlogData) {
@@ -139,7 +139,7 @@ function httpUtils(supertestApi) {
   return {
     getAllBlogs,
     getBlog,
-    postBlogAddingRequest,
+    postNewBlog,
     putBlogUpdateById,
     deleteBlogById,
   }

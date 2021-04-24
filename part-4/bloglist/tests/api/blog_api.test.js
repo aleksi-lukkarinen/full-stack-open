@@ -163,42 +163,43 @@ describe("When the blog collection contains several blogs", () => {
 })
 
 
-describe("When a blog is added to the collection", () => {
+describe("When a blog is inserted to the collection", () => {
   describe("in general", () => {
-    const blogInfoToAdd = BF.testBlogs[1]
-    let addedBlogs = undefined
-    let addedBlog = undefined
+    const blogInfoToInsert = BF.testBlogs[1]
+    let blogsAfterInsert = undefined
+    let insertedBlog = undefined
 
     beforeAll(async () => {
       await BF.clearBlogCollection()
       await BF.insertFirstTestBlogToCollection()
-      await BFHttp.postBlogAddingRequest(blogInfoToAdd)
+      await BFHttp.postNewBlog(blogInfoToInsert)
         .expect(config.HTTP_STATUS_CREATED)
-      addedBlogs = await BFHttp.getAllBlogs()
-      addedBlog = addedBlogs.find(b => b.author === blogInfoToAdd.author)
+      blogsAfterInsert = await BFHttp.getAllBlogs()
+      insertedBlog = blogsAfterInsert.find(b =>
+        b.author === blogInfoToInsert.author)
     })
 
     test("the number of blogs in the collection increases by 1", async () => {
-      expect(addedBlogs).toHaveLength(1 + 1)
+      expect(blogsAfterInsert).toHaveLength(1 + 1)
     })
 
-    test("the added blog has an id", async () => {
-      expect(addedBlog.id).toBeDefined()
+    test("the inserted blog has an ID", async () => {
+      expect(insertedBlog.id).toBeDefined()
     })
 
-    test("the added blog has correct information", async () => {
-      expect(addedBlog).toBeDefined()
-      expect(addedBlog.title).toBe(blogInfoToAdd.title)
-      expect(addedBlog.likes).toBe(blogInfoToAdd.likes)
-      expect(addedBlog.url).toBe(blogInfoToAdd.url)
+    test("the inserted blog has correct information", async () => {
+      expect(insertedBlog).toBeDefined()
+      expect(insertedBlog.title).toBe(blogInfoToInsert.title)
+      expect(insertedBlog.likes).toBe(blogInfoToInsert.likes)
+      expect(insertedBlog.url).toBe(blogInfoToInsert.url)
     })
   })
 
   describe("without setting the \"likes\" field of the blog", () => {
     test("the value of the field will be set to zero", async () => {
-      const blogToAdd = { title: "test blog", url: "http://dummy-land/" }
+      const blogToInsert = { title: "test blog", url: "http://dummy-land/" }
       await BF.clearBlogCollection()
-      await BFHttp.postBlogAddingRequest(blogToAdd)
+      await BFHttp.postNewBlog(blogToInsert)
         .expect(config.HTTP_STATUS_CREATED)
       const blogs = await BFHttp.getAllBlogs()
       expect(blogs[0].likes).toBe(0)
@@ -207,18 +208,18 @@ describe("When a blog is added to the collection", () => {
 })
 
 
-describe("Trying to add a blog to the collection results in HTTP 400 when", () => {
+describe("Trying to insert a blog to collection results in HTTP 400 when", () => {
   test("the title field is not set", async () => {
-    const blogToAdd = { likes: 300, url: "http://dummy/", author: "Someone" }
+    const blogToInsert = { likes: 300, url: "http://dummy/", author: "Someone" }
     await BF.clearBlogCollection()
-    await BFHttp.postBlogAddingRequest(blogToAdd)
+    await BFHttp.postNewBlog(blogToInsert)
       .expect(config.HTTP_STATUS_BAD_REQUEST)
   })
 
   test("the url field is not set", async () => {
-    const blogToAdd = { likes: 300, title: "Dummy title", author: "Someone" }
+    const blogToInsert = { likes: 300, title: "Dummy title", author: "Someone" }
     await BF.clearBlogCollection()
-    await BFHttp.postBlogAddingRequest(blogToAdd)
+    await BFHttp.postNewBlog(blogToInsert)
       .expect(config.HTTP_STATUS_BAD_REQUEST)
   })
 })
