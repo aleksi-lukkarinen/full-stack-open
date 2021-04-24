@@ -127,6 +127,7 @@ const errorHandler = (error, request, response, next) => {
       .status(config.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       .end()
 
+    logger.error("AN UNEXPECTED ERROR FROM THE GENERAL ERROR HANDLER:")
     logger.error(error)
   }
 
