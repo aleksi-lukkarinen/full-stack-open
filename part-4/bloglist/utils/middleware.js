@@ -1,5 +1,7 @@
+const _ = require("lodash")
 const config = require("./config")
 const logger = require("./logger")
+
 
 const requestLogger = (request, response, next) => {
   const msg =
@@ -62,42 +64,56 @@ const errorHandler = (error, request, response, next) => {
 
     /* eslint-disable-next-line no-unused-vars */
     internalErrors.forEach(([fieldName, fieldError]) => {
-      let errorCode = undefined
-      const errorProps = fieldError.properties
-      if (errorProps) {
-        const errorKind = fieldError.kind
-        if (errorProps.path === "username") {
-          if (errorKind === "required" || errorKind === "minlength") {
-            errorCode = config.ERR_USERNAME_TOO_SHORT
-          }
-          else if (errorKind === "unique") {
-            errorCode = config.ERR_USER_WITH_USERNAME_EXISTS
-          }
-          else if (errorKind === "type") {
-            errorCode = config.ERR_USERNAME_IS_NOT_STRING
-          }
-        }
-        else if (errorProps.path === "password") {
-          if (errorKind === "required" || errorKind === "minlength") {
-            errorCode = config.ERR_PASSWORD_TOO_SHORT
-          }
-          else if (errorKind === "type") {
-            errorCode = config.ERR_PASSWORD_IS_NOT_STRING
-          }
+      if (fieldError.name === "CastError") {
+        const errorCode = config.ERR_MALFORMATTED_ID
+        const errorData = {
+          errorCode,
+          message: config.ErrorMessages[errorCode],
+          value: fieldError.value,
+          originalError: {
+            message: fieldError.message,
+            kind: fieldError.kind,
+            path: fieldError.path,
+          },
         }
 
-        if (errorCode) {
-          resultErrors.push({
-            errorCode: errorCode,
-            message: config.ErrorMessages[errorCode],
-            value: errorProps.value,
-            originalError: {
-              message: errorProps.message,
-              kind: errorKind,
-              path: errorProps.path,
-            },
-          })
+        resultErrors.push(errorData)
+      }
+      else if (fieldError.name === "ValidatorError") {
+        const errorProps = fieldError.properties
+        const errorData = {
+          value: errorProps.value,
+          originalError: {
+            message: errorProps.message,
+            kind: fieldError.kind,
+            path: errorProps.path,
+          },
         }
+
+        const pathKindToErrorCodeMapping = {
+          username: {
+            required: config.ERR_USERNAME_TOO_SHORT,
+            minlength: config.ERR_USERNAME_TOO_SHORT,
+            unique: config.ERR_USER_WITH_USERNAME_EXISTS,
+            type: config.ERR_USERNAME_IS_NOT_STRING,
+          },
+          password: {
+            required: config.ERR_PASSWORD_TOO_SHORT,
+            minlength: config.ERR_PASSWORD_TOO_SHORT,
+            type: config.ERR_PASSWORD_IS_NOT_STRING,
+          },
+          blogs: {
+            type: config.ERR_BLOG_LIST_IS_NOT_ARRAY,
+          }
+        }
+        const mapReader = _.property(errorProps.path + "." + fieldError.kind)
+        const errorCode = mapReader(pathKindToErrorCodeMapping)
+        if (errorCode) {
+          errorData.errorCode = errorCode
+          errorData.message = config.ErrorMessages[errorCode]
+        }
+
+        resultErrors.push(errorData)
       }
     })
 

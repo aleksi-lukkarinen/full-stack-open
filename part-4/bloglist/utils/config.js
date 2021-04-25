@@ -48,20 +48,27 @@ const ERR_USERNAME_TOO_SHORT = ERR_FIRST + 4
 const ERR_USERNAME_IS_NOT_STRING = ERR_FIRST + 5
 const ERR_PASSWORD_TOO_SHORT = ERR_FIRST + 6
 const ERR_PASSWORD_IS_NOT_STRING = ERR_FIRST + 7
+const ERR_BLOG_LIST_IS_NOT_ARRAY = ERR_FIRST + 8
 
 const ErrorMessages = {}
-ErrorMessages[ERR_UNKNOWN_ENDPOINT] = "Unknown endpoint"
-ErrorMessages[ERR_MALFORMATTED_ID] = "Malformatted ID value"
+ErrorMessages[ERR_UNKNOWN_ENDPOINT] =
+    "Unknown endpoint"
+ErrorMessages[ERR_MALFORMATTED_ID] =
+    "Malformatted ID value"
 ErrorMessages[ERR_USER_WITH_USERNAME_EXISTS] =
     "A user with the given username already exists"
 ErrorMessages[ERR_USER_WITH_USERNAME_DOES_NOT_EXIST] =
     "A user with the given username cannot be found"
 ErrorMessages[ERR_USERNAME_TOO_SHORT] =
     `A username has to be at least ${USERNAME_MIN_LENGTH} characters long`
-ErrorMessages[ERR_USERNAME_IS_NOT_STRING] = "Username has to be a string"
+ErrorMessages[ERR_USERNAME_IS_NOT_STRING] =
+    "Username has to be a string"
 ErrorMessages[ERR_PASSWORD_TOO_SHORT] =
     `A password has to be at least ${PASSWORD_MIN_LENGTH} characters long`
-ErrorMessages[ERR_PASSWORD_IS_NOT_STRING] = "Password has to be a string"
+ErrorMessages[ERR_PASSWORD_IS_NOT_STRING] =
+    "Password has to be a string"
+ErrorMessages[ERR_BLOG_LIST_IS_NOT_ARRAY] =
+    "Blog list has to be an array"
 
 module.exports = {
   USERNAME_MIN_LENGTH,
@@ -100,5 +107,6 @@ module.exports = {
   ERR_USERNAME_IS_NOT_STRING,
   ERR_PASSWORD_TOO_SHORT,
   ERR_PASSWORD_IS_NOT_STRING,
+  ERR_BLOG_LIST_IS_NOT_ARRAY,
   ErrorMessages,
 }

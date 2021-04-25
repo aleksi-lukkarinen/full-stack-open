@@ -1,6 +1,7 @@
 const config = require("../utils/config")
 const logger = require("../utils/logger")
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 
 const dummyBlogData = {
@@ -72,7 +73,10 @@ async function clearBlogCollection() {
 
 async function insertFirstTestBlogToCollection() {
   try  {
-    const blog = new Blog(testBlogs[0])
+    const user = await User.findOne({})
+    const blogToInsert = testBlogs[0]
+    blogToInsert.user = user._id
+    const blog = new Blog(blogToInsert)
     await blog.save()
   }
   catch (error) {
@@ -83,7 +87,9 @@ async function insertFirstTestBlogToCollection() {
 
 async function insertAllTestBlogsToCollection() {
   try  {
-    await Blog.insertMany(testBlogs)
+    const user = await User.findOne({})
+    const blogsToInsert = testBlogs.map(b => b.user = user._id)
+    await Blog.insertMany(blogsToInsert)
   }
   catch (error) {
     const msg = "Error while inserting test blogs to collection: "

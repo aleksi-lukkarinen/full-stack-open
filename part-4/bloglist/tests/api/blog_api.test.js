@@ -5,8 +5,14 @@ const app = require("../../app")
 const sApi = supertest(app)
 const _ = require("lodash")
 const BF = require("../blog_fixture")
+const UF = require("../user_fixture")
 const BFHttp = BF.httpUtils(sApi)
 
+
+beforeAll(async () => {
+  await UF.clearUserCollection()
+  await UF.insertFirstTestUserToCollection()
+})
 
 afterAll(async () => {
   await mongoose.connection.close()
@@ -99,41 +105,59 @@ describe("A blog can be modified by", () => {
 
 
 describe("A blog returned from the collection", () => {
-  let entryKeys = undefined
+  let blog = undefined
 
   beforeEach(async () => {
     await BF.clearBlogCollection()
     await BF.insertFirstTestBlogToCollection()
     const blogs = await BFHttp.getAllBlogs()
-    entryKeys = _.keys(blogs[0])
+    blog = blogs[0]
   })
 
   test("has a property called \"id\"", async () => {
-    expect(entryKeys).toContain("id")
+    expect(blog).toHaveProperty("id")
   })
 
   test("does not have a property called \"_id\"", async () => {
-    expect(entryKeys).not.toContain("_id")
+    expect(blog).not.toHaveProperty("_id")
   })
 
   test("has a property called \"title\"", async () => {
-    expect(entryKeys).toContain("title")
+    expect(blog).toHaveProperty("title")
   })
 
   test("has a property called \"author\"", async () => {
-    expect(entryKeys).toContain("author")
+    expect(blog).toHaveProperty("author")
   })
 
   test("has a property called \"likes\"", async () => {
-    expect(entryKeys).toContain("likes")
+    expect(blog).toHaveProperty("likes")
   })
 
   test("has a property called \"url\"", async () => {
-    expect(entryKeys).toContain("url")
+    expect(blog).toHaveProperty("url")
+  })
+
+  test("has a property called \"user\"", async () => {
+    expect(blog).toHaveProperty("user")
+  })
+
+  test("has a property called \"user.id\"", async () => {
+    expect(blog.user).toHaveProperty("id")
+  })
+
+  test("has a property called \"user.username\" with a string value", async () => {
+    expect(blog.user).toHaveProperty("username")
+    expect(_.isString(blog.user.username)).toBeTruthy()
+  })
+
+  test("has a property called \"user.name\" with a string value", async () => {
+    expect(blog.user).toHaveProperty("name")
+    expect(_.isString(blog.user.username)).toBeTruthy()
   })
 
   test("does not have a property called \"__v\"", async () => {
-    expect(entryKeys).not.toContain("__v")
+    expect(blog).not.toHaveProperty("__v")
   })
 })
 

@@ -1,12 +1,15 @@
 const bcrypt = require("bcrypt")
+const _ = require("lodash")
 const config = require("../utils/config")
 const usersRouter = require("express").Router()
 const User = require("../models/user")
 
 
 usersRouter.get("/", async (request, response) => {
-  const blogs = await User.find({})
-  response.json(blogs)
+  const users = await User.find({})
+    .populate("blogs", { title: 1, author: 1, url: 1 })
+
+  response.json(users)
 })
 
 usersRouter.post("/", async (request, response, next) => {
@@ -19,6 +22,7 @@ usersRouter.post("/", async (request, response, next) => {
     err.name = "ValidationError"
     err.errors = {}
     err.errors[fieldName] = {
+      name: "ValidatorError",
       kind: kind,
       properties: {
         message: undefined,
@@ -57,6 +61,12 @@ usersRouter.post("/", async (request, response, next) => {
     return
   }
 
+  if (body.blogs && !_.isArray(body.blogs)) {
+    orderCreationOfValidationError(
+      "blogs", "type", body.blogs)
+    return
+  }
+
   const passwordHash =
     await bcrypt.hash(body.password, config.SALT_ROUNDS)
 
@@ -64,6 +74,7 @@ usersRouter.post("/", async (request, response, next) => {
     username: body.username,
     name: body.name,
     passwordHash,
+    blogs: body.blogs,
   })
 
   const savedUser = await userToInsert.save()

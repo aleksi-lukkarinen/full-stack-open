@@ -62,22 +62,22 @@ describe("Inserting a user to the collection", () => {
         .expect(config.HTTP_STATUS_BAD_REQUEST)
     }
 
-    test("the username is missing", async () => {
+    test("username is missing", async () => {
       const userData = { name: "Test User", password: "password" }
       await postAndExpectBadRequest(userData)
     })
 
-    test("the username is not a string", async () => {
+    test("username is not a string", async () => {
       const userData = { username: 3, name: "Test User", password: "pass" }
       await postAndExpectBadRequest(userData)
     })
 
-    test("the username is too short", async () => {
+    test("username is too short", async () => {
       const userData = { username: "nn", name: "Test User", password: "pass" }
       await postAndExpectBadRequest(userData)
     })
 
-    test("the username is already in use", async () => {
+    test("username is already in use", async () => {
       const userData = {
         username: UF.testUsers[0].username,
         name: "Test User",
@@ -86,58 +86,74 @@ describe("Inserting a user to the collection", () => {
       await postAndExpectBadRequest(userData)
     })
 
-    test("the password is missing", async () => {
+    test("password is missing", async () => {
       const userData = { username: "nn", name: "Test User", }
       await postAndExpectBadRequest(userData)
     })
 
-    test("the password is not a string", async () => {
+    test("password is not a string", async () => {
       const userData = { username: "testuser", name: "Test User", password: 3 }
       await postAndExpectBadRequest(userData)
     })
 
-    test("the password is too short", async () => {
+    test("password is too short", async () => {
       const userData = { username: "testuser", name: "Test User", password: "ss" }
+      await postAndExpectBadRequest(userData)
+    })
+
+    test("blog ID is malformed", async () => {
+      const userData = {
+        username: "testuser",
+        name: "Test User",
+        password: "ssss",
+        blogs: ["sdf"] ,
+      }
       await postAndExpectBadRequest(userData)
     })
   })
 })
 
 describe("A user returned from the collection", () => {
-  let entryKeys = undefined
+  let user = undefined
 
   beforeEach(async () => {
     await UF.clearUserCollection()
     await UF.insertFirstTestUserToCollection()
     const users = await UFHttp.getAllUsers()
-    entryKeys = _.keys(users[0])
+    user = users[0]
   })
 
   test("has a property called \"id\"", async () => {
-    expect(entryKeys).toContain("id")
+    expect(user).toHaveProperty("id")
   })
 
   test("does not have a property called \"_id\"", async () => {
-    expect(entryKeys).not.toContain("_id")
+    expect(user).not.toHaveProperty("_id")
   })
 
-  test("has a property called \"username\"", async () => {
-    expect(entryKeys).toContain("username")
+  test("has a property called \"username\" with a string value", async () => {
+    expect(user).toHaveProperty("username")
+    expect(_.isString(user.username)).toBeTruthy()
   })
 
   test("has a property called \"name\"", async () => {
-    expect(entryKeys).toContain("name")
+    expect(user).toHaveProperty("name")
+  })
+
+  test("has a property called \"blogs\" with an array as a value", async () => {
+    expect(user).toHaveProperty("blogs")
+    expect(_.isArray(user.blogs)).toBeTruthy()
   })
 
   test("does not have a property called \"password\"", async () => {
-    expect(entryKeys).not.toContain("password")
+    expect(user).not.toHaveProperty("password")
   })
 
   test("does not have a property called \"passwordHash\"", async () => {
-    expect(entryKeys).not.toContain("passwordHash")
+    expect(user).not.toHaveProperty("passwordHash")
   })
 
   test("does not have a property called \"__v\"", async () => {
-    expect(entryKeys).not.toContain("__v")
+    expect(user).not.toHaveProperty("__v")
   })
 })
