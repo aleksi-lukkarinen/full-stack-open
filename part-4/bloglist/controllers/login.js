@@ -14,9 +14,9 @@ loginRouter.post("/", async (request, response) => {
     : await bcrypt.compare(body.password, user.passwordHash)
 
   if (!(user && correctPasswordGiven)) {
-    return response.status(config.HTTP_STATUS_UNAUTHORIZED)
-      .set("WWW-Authenticate", "Bearer")
-      .json({ error: "invalid username or password" })
+    const e = new Error()
+    e.name = "InvalidUsernameOrPasswordError"
+    throw e
   }
 
   const userToReceiveToken = {
@@ -27,7 +27,7 @@ loginRouter.post("/", async (request, response) => {
   const token = jwt.sign(
     userToReceiveToken,
     config.SECRET_KEY,
-    { expiresIn: 60 })
+    { expiresIn: config.AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS })
 
   response
     .status(config.HTTP_STATUS_OK)

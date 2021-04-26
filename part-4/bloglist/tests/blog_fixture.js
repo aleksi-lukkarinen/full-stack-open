@@ -2,6 +2,7 @@ const config = require("../utils/config")
 const logger = require("../utils/logger")
 const Blog = require("../models/blog")
 const User = require("../models/user")
+const LF = require("./login_fixture")
 
 
 const dummyBlogData = {
@@ -131,6 +132,17 @@ function httpUtils(supertestApi) {
       .send(blogToInsert)
   }
 
+  function postNewBlogAsUser(blogToInsert, user) {
+    const authToken = LF.generateTestAuthTokenFor(user)
+
+    let request = supertestApi.post(config.URL_API_BLOGS)
+    request.set(config.HTTP_HEADER_AUTHORIZATION,
+      `${config.HTTP_AUTH_SCHEME_BEARER} ${authToken}`)
+    const result = request.send(blogToInsert)
+
+    return result
+  }
+
   function putBlogUpdateById(idOfBlogToUpdate, updatedBlogData) {
     return supertestApi
       .put(blogPathFrom(idOfBlogToUpdate))
@@ -146,6 +158,7 @@ function httpUtils(supertestApi) {
     getAllBlogs,
     getBlog,
     postNewBlog,
+    postNewBlogAsUser,
     putBlogUpdateById,
     deleteBlogById,
   }

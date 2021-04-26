@@ -39,10 +39,29 @@ const errorHandler = (error, request, response, next) => {
       ]
     }
   }
+  else if (error.name === "InvalidUsernameOrPasswordError") {
+    responseStatus = config.HTTP_STATUS_UNAUTHORIZED
+    errorCode = config.ERR_INVALID_USERNAME_OR_PASSWORD
+    responseHeadersToSet[config.HTTP_HEADER_AUTHENTICATE] =
+      config.HTTP_AUTH_SCHEME_BEARER
+    responseData = {
+      status: responseStatus,
+      errors: [
+        {
+          errorCode,
+          message: config.ErrorMessages[errorCode],
+          originalError: {
+            message: error.message,
+          },
+        }
+      ]
+    }
+  }
   else if (error.name === "JsonWebTokenError") {
     responseStatus = config.HTTP_STATUS_UNAUTHORIZED
     errorCode = config.ERR_MISSING_OR_INVALID_AUTH_TOKEN
-    responseHeadersToSet[config.HTTP_HEADER_AUTHENTICATE] = "Bearer"
+    responseHeadersToSet[config.HTTP_HEADER_AUTHENTICATE] =
+      config.HTTP_AUTH_SCHEME_BEARER
     responseData = {
       status: responseStatus,
       errors: [
@@ -59,7 +78,8 @@ const errorHandler = (error, request, response, next) => {
   else if (error.name === "TokenExpiredError") {
     responseStatus = config.HTTP_STATUS_UNAUTHORIZED
     errorCode = config.ERR_EXPIRED_AUTH_TOKEN
-    responseHeadersToSet[config.HTTP_HEADER_AUTHENTICATE] = "Bearer"
+    responseHeadersToSet[config.HTTP_HEADER_AUTHENTICATE] =
+      config.HTTP_AUTH_SCHEME_BEARER
     responseData = {
       status: responseStatus,
       errors: [

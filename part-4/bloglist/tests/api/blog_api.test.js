@@ -4,14 +4,17 @@ const supertest = require("supertest")
 const app = require("../../app")
 const sApi = supertest(app)
 const _ = require("lodash")
+const LF = require("../login_fixture")
 const BF = require("../blog_fixture")
 const UF = require("../user_fixture")
 const BFHttp = BF.httpUtils(sApi)
 
 
+let currentUser = undefined
+
 beforeAll(async () => {
   await UF.clearUserCollection()
-  await UF.insertFirstTestUserToCollection()
+  currentUser = await UF.insertFirstTestUserToCollection()
 })
 
 afterAll(async () => {
@@ -196,7 +199,7 @@ describe("When a blog is inserted to the collection", () => {
     beforeAll(async () => {
       await BF.clearBlogCollection()
       await BF.insertFirstTestBlogToCollection()
-      await BFHttp.postNewBlog(blogInfoToInsert)
+      await BFHttp.postNewBlogAsUser(blogInfoToInsert, currentUser)
         .expect(config.HTTP_STATUS_CREATED)
       blogsAfterInsert = await BFHttp.getAllBlogs()
       insertedBlog = blogsAfterInsert.find(b =>
@@ -223,7 +226,7 @@ describe("When a blog is inserted to the collection", () => {
     test("the value of the field will be set to zero", async () => {
       const blogToInsert = { title: "test blog", url: "http://dummy-land/" }
       await BF.clearBlogCollection()
-      await BFHttp.postNewBlog(blogToInsert)
+      await BFHttp.postNewBlogAsUser(blogToInsert, currentUser)
         .expect(config.HTTP_STATUS_CREATED)
       const blogs = await BFHttp.getAllBlogs()
       expect(blogs[0].likes).toBe(0)
@@ -232,18 +235,28 @@ describe("When a blog is inserted to the collection", () => {
 })
 
 
+describe("Trying to insert a blog to collection results in HTTP 401 when", () => {
+  test("the user authentication token is not given", async () => {
+    const blogToInsert = { likes: 300, url: "http://dummy/", author: "Someone" }
+    await BF.clearBlogCollection()
+    await BFHttp.postNewBlog(blogToInsert)
+      .expect(config.HTTP_STATUS_UNAUTHORIZED)
+  })
+})
+
+
 describe("Trying to insert a blog to collection results in HTTP 400 when", () => {
   test("the title field is not set", async () => {
     const blogToInsert = { likes: 300, url: "http://dummy/", author: "Someone" }
     await BF.clearBlogCollection()
-    await BFHttp.postNewBlog(blogToInsert)
+    await BFHttp.postNewBlogAsUser(blogToInsert, currentUser)
       .expect(config.HTTP_STATUS_BAD_REQUEST)
   })
 
   test("the url field is not set", async () => {
     const blogToInsert = { likes: 300, title: "Dummy title", author: "Someone" }
     await BF.clearBlogCollection()
-    await BFHttp.postNewBlog(blogToInsert)
+    await BFHttp.postNewBlogAsUser(blogToInsert, currentUser)
       .expect(config.HTTP_STATUS_BAD_REQUEST)
   })
 })

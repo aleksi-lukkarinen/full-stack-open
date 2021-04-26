@@ -56,7 +56,7 @@ async function hashPassword(password) {
   }
 }
 
-async function prepareTestUserData(userData) {
+async function prepareTestUser(userData) {
   const username = userData.username.trim()
   const name = userData.name.trim()
   const passwordHash = await hashPassword(userData.password)
@@ -75,9 +75,10 @@ async function clearUserCollection() {
 }
 
 async function insertFirstTestUserToCollection() {
-  try  {
-    const user = await prepareTestUserData(testUsers[0])
-    await user.save()
+  try {
+    const user = await prepareTestUser(testUsers[0])
+    const insertedUser = await user.save()
+    return insertedUser
   }
   catch (error) {
     const msg = "Error while inserting a test user to collection: "
@@ -87,9 +88,9 @@ async function insertFirstTestUserToCollection() {
 
 async function insertAllTestUsersToCollection() {
   try  {
-    const promises = testUsers.map(u => prepareTestUserData(u))
+    const promises = testUsers.map(u => prepareTestUser(u))
     const users = await Promise.all(promises)
-    await User.insertMany(users)
+    return await User.insertMany(users)
   }
   catch (error) {
     const msg = "Error while inserting test users to collection: "
@@ -98,7 +99,7 @@ async function insertAllTestUsersToCollection() {
 }
 
 async function nonExistingUserId() {
-  const user = await prepareTestUserData(dummyUserData)
+  const user = await prepareTestUser(dummyUserData)
   await user.save()
   await user.remove()
 
@@ -157,7 +158,7 @@ module.exports = {
   testUsers,
 
   hashPassword,
-  prepareCollectionUser: prepareTestUserData,
+  prepareCollectionUser: prepareTestUser,
   clearUserCollection,
   insertFirstTestUserToCollection,
   insertAllTestUsersToCollection,

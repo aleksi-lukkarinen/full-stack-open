@@ -3,6 +3,7 @@ require("dotenv").config()
 const USERNAME_MIN_LENGTH = 3
 const PASSWORD_MIN_LENGTH = 3
 const SALT_ROUNDS = 10
+const AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS = 10
 
 const ENVIRONMENT_CLASS = process.env.NODE_ENV
 const IS_TEST_ENVIRONMENT = ENVIRONMENT_CLASS === "test"
@@ -47,16 +48,20 @@ const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
 
 const HTTP_HEADER_AUTHENTICATE = "WWW-Authenticate"
 const HTTP_HEADER_AUTHORIZATION = "Authorization"
+const HTTP_AUTH_SCHEME_BEARER = "Bearer"
 
 function errCodeCreatorBasedOn(base) {
   return (offset) => { return base + offset }
 }
 const cmnErr = errCodeCreatorBasedOn(0)
-const valErr = errCodeCreatorBasedOn(100)
+const authErr = errCodeCreatorBasedOn(100)
+const valErr = errCodeCreatorBasedOn(200)
 
 const ERR_UNKNOWN_ENDPOINT = cmnErr(0)
-const ERR_MISSING_OR_INVALID_AUTH_TOKEN = cmnErr(1)
-const ERR_EXPIRED_AUTH_TOKEN = cmnErr(2)
+
+const ERR_INVALID_USERNAME_OR_PASSWORD = authErr(0)
+const ERR_MISSING_OR_INVALID_AUTH_TOKEN = authErr(1)
+const ERR_EXPIRED_AUTH_TOKEN = authErr(2)
 
 const ERR_MALFORMATTED_ID = valErr(0)
 const ERR_USER_WITH_USERNAME_EXISTS = valErr(1)
@@ -71,6 +76,9 @@ const ERR_BLOG_LIST_IS_NOT_ARRAY = valErr(7)
 const ErrorMessages = {}
 ErrorMessages[ERR_UNKNOWN_ENDPOINT] =
     "Unknown endpoint"
+
+ErrorMessages[ERR_INVALID_USERNAME_OR_PASSWORD] =
+    "Invalid username or password"
 ErrorMessages[ERR_MISSING_OR_INVALID_AUTH_TOKEN] =
     "User authentication token is missing or invalid"
 ErrorMessages[ERR_EXPIRED_AUTH_TOKEN] =
@@ -97,6 +105,7 @@ module.exports = {
   USERNAME_MIN_LENGTH,
   PASSWORD_MIN_LENGTH,
   SALT_ROUNDS,
+  AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS,
 
   ENVIRONMENT_CLASS,
   IS_TEST_ENVIRONMENT,
@@ -127,8 +136,11 @@ module.exports = {
 
   HTTP_HEADER_AUTHENTICATE,
   HTTP_HEADER_AUTHORIZATION,
+  HTTP_AUTH_SCHEME_BEARER,
 
   ERR_UNKNOWN_ENDPOINT,
+
+  ERR_INVALID_USERNAME_OR_PASSWORD,
   ERR_MISSING_OR_INVALID_AUTH_TOKEN,
   ERR_EXPIRED_AUTH_TOKEN,
 
