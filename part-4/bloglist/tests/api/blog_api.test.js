@@ -4,7 +4,7 @@ const supertest = require("supertest")
 const app = require("../../app")
 const sApi = supertest(app)
 const _ = require("lodash")
-const LF = require("../login_fixture")
+const FU = require("../fixture_utils")
 const BF = require("../blog_fixture")
 const UF = require("../user_fixture")
 const BFHttp = BF.httpUtils(sApi)
@@ -110,10 +110,8 @@ describe("A blog can be modified by", () => {
 describe("A blog returned from the collection", () => {
   let blog = undefined
 
-  let flagSetupFinished
-  const setupFinished = new Promise((resolve) => {
-    flagSetupFinished = resolve
-  })
+  const [untilSetupIsFinished, signalSetupFinished] =
+    FU.createSignalingPromise()
 
   beforeAll(async () => {
     await BF.clearBlogCollection()
@@ -122,34 +120,36 @@ describe("A blog returned from the collection", () => {
     const blogs = await BFHttp.getAllBlogs()
     blog = blogs[0]
 
-    flagSetupFinished()
+    signalSetupFinished()
   })
 
   const propertiesToHave = [
-    ["id"],
-    ["title"],
-    ["author"],
-    ["likes"],
-    ["url"],
-    ["user"],
-    ["user.id"],
-    ["user.username"],
-    ["user.name"]
+    ["id",            "string"],
+    ["title",         "string"],
+    ["author",        "string"],
+    ["likes",         "number"],
+    ["url",           "string"],
+    ["user",          "object"],
+    ["user.id",       "string"],
+    ["user.username", "string"],
+    ["user.name",     "string"],
   ]
 
   const propertiesNotToHave =
     ["_id", "__v", "user.password", "user.passwordHash"]
 
   test.concurrent.each(propertiesToHave)(
-    "has a property called \"%s\"", async propName => {
-      await setupFinished
+    "has a property called \"%s\" of type \"%s\"",
+    async (propName, propType) => {
+      await untilSetupIsFinished
       expect(blog).toHaveProperty(propName)
+      expect(typeof(_.property(propName)(blog))).toBe(propType)
     }
   )
 
   test.concurrent.each(propertiesNotToHave)(
     "does not have a property called \"%s\"", async propName => {
-      await setupFinished
+      await untilSetupIsFinished
       expect(blog).not.toHaveProperty(propName)
     }
   )

@@ -4,6 +4,7 @@ const supertest = require("supertest")
 const app = require("../../app")
 const sApi = supertest(app)
 const _ = require("lodash")
+const FU = require("../fixture_utils")
 const UF = require("../user_fixture")
 const UFHttp = UF.httpUtils(sApi)
 
@@ -116,44 +117,41 @@ describe("Inserting a user to the collection", () => {
 describe("A user returned from the collection", () => {
   let user = undefined
 
+  const [untilSetupIsFinished, signalSetupFinished] =
+    FU.createSignalingPromise()
+
   beforeEach(async () => {
     await UF.clearUserCollection()
     await UF.insertFirstTestUserToCollection()
     const users = await UFHttp.getAllUsers()
     user = users[0]
+    signalSetupFinished()
   })
 
-  test("has a property called \"id\"", async () => {
-    expect(user).toHaveProperty("id")
-  })
+  const propertiesToHave = [
+    ["id",            "string"],
+    ["username",      "string"],
+    ["name",          "string"],
+    ["blogs",         "array"],
+  ]
 
-  test("does not have a property called \"_id\"", async () => {
-    expect(user).not.toHaveProperty("_id")
-  })
+  const propertiesNotToHave =
+    ["_id", "__v", "password", "passwordHash"]
 
-  test("has a property called \"username\" with a string value", async () => {
-    expect(user).toHaveProperty("username")
-    expect(_.isString(user.username)).toBeTruthy()
-  })
+  test.concurrent.each(propertiesToHave)(
+    "has a property called \"%s\" of type \"%s\"",
+    async (propName, expectedType) => {
+      await untilSetupIsFinished
+      expect(user).toHaveProperty(propName)
+      const actualType = FU.objectType(_.property(propName)(user))
+      expect(actualType).toBe(expectedType)
+    }
+  )
 
-  test("has a property called \"name\"", async () => {
-    expect(user).toHaveProperty("name")
-  })
-
-  test("has a property called \"blogs\" with an array as a value", async () => {
-    expect(user).toHaveProperty("blogs")
-    expect(_.isArray(user.blogs)).toBeTruthy()
-  })
-
-  test("does not have a property called \"password\"", async () => {
-    expect(user).not.toHaveProperty("password")
-  })
-
-  test("does not have a property called \"passwordHash\"", async () => {
-    expect(user).not.toHaveProperty("passwordHash")
-  })
-
-  test("does not have a property called \"__v\"", async () => {
-    expect(user).not.toHaveProperty("__v")
-  })
+  test.concurrent.each(propertiesNotToHave)(
+    "does not have a property called \"%s\"", async propName => {
+      await untilSetupIsFinished
+      expect(user).not.toHaveProperty(propName)
+    }
+  )
 })
