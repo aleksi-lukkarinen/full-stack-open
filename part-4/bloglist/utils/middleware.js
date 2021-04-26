@@ -1,8 +1,11 @@
 const _ = require("lodash")
+const jwt = require("jsonwebtoken")
 const config = require("./config")
 const logger = require("./logger")
+const User = require("../models/user")
 
 
+/* eslint-disable-next-line no-unused-vars */
 const requestLogger = (request, response, next) => {
   const msg =
   "\nRequest:\n" +
@@ -12,6 +15,7 @@ const requestLogger = (request, response, next) => {
   logger.info(msg)
   next()
 }
+
 
 /* eslint-disable-next-line no-unused-vars */
 const authTokenExtractor = (request, response, next) => {
@@ -34,6 +38,25 @@ const authTokenExtractor = (request, response, next) => {
   next()
 }
 
+
+/* eslint-disable-next-line no-unused-vars */
+const userExtractor = async (request, response, next) => {
+  request.user = undefined
+
+  const decodedToken = jwt.verify(request.authToken, config.SECRET_KEY)
+  if (!request.authToken || !decodedToken.id) {
+    const e = new Error()
+    e.name = "JsonWebTokenError"
+    throw e
+  }
+
+  request.user = await User.findById(decodedToken.id)
+
+  next()
+}
+
+
+/* eslint-disable-next-line no-unused-vars */
 const unknownEndpoint = (request, response, next) => {
   const error = new Error()
   error.name = "UnknownEndpointError"
@@ -233,6 +256,7 @@ const errorHandler = (error, request, response, next) => {
 module.exports = {
   requestLogger,
   authTokenExtractor,
+  userExtractor,
   unknownEndpoint,
   errorHandler
 }

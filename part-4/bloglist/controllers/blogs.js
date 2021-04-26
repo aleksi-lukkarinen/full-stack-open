@@ -1,6 +1,7 @@
 const _ = require("lodash")
 const jwt = require("jsonwebtoken")
 const config = require("../utils/config")
+const middleware = require("../utils/middleware")
 const blogsRouter = require("express").Router()
 const Blog = require("../models/blog")
 const User = require("../models/user")
@@ -13,17 +14,8 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post("/", async (request, response) => {
-  const { body } = request
-
-  const decodedToken = jwt.verify(request.authToken, config.SECRET_KEY)
-  if (!request.authToken || !decodedToken.id) {
-    const e = new Error()
-    e.name = "JsonWebTokenError"
-    throw e
-  }
-
-  const user = await User.findById(decodedToken.id)
+blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
+  const { body, user } = request
 
   if (!body.title || !body.url) {
     response.status(config.HTTP_STATUS_BAD_REQUEST).end()
