@@ -110,58 +110,49 @@ describe("A blog can be modified by", () => {
 describe("A blog returned from the collection", () => {
   let blog = undefined
 
-  beforeEach(async () => {
+  let flagSetupFinished
+  const setupFinished = new Promise((resolve) => {
+    flagSetupFinished = resolve
+  })
+
+  beforeAll(async () => {
     await BF.clearBlogCollection()
     await BF.insertFirstTestBlogToCollection()
+
     const blogs = await BFHttp.getAllBlogs()
     blog = blogs[0]
+
+    flagSetupFinished()
   })
 
-  test("has a property called \"id\"", async () => {
-    expect(blog).toHaveProperty("id")
-  })
+  const propertiesToHave = [
+    ["id"],
+    ["title"],
+    ["author"],
+    ["likes"],
+    ["url"],
+    ["user"],
+    ["user.id"],
+    ["user.username"],
+    ["user.name"]
+  ]
 
-  test("does not have a property called \"_id\"", async () => {
-    expect(blog).not.toHaveProperty("_id")
-  })
+  const propertiesNotToHave =
+    ["_id", "__v", "user.password", "user.passwordHash"]
 
-  test("has a property called \"title\"", async () => {
-    expect(blog).toHaveProperty("title")
-  })
+  test.concurrent.each(propertiesToHave)(
+    "has a property called \"%s\"", async propName => {
+      await setupFinished
+      expect(blog).toHaveProperty(propName)
+    }
+  )
 
-  test("has a property called \"author\"", async () => {
-    expect(blog).toHaveProperty("author")
-  })
-
-  test("has a property called \"likes\"", async () => {
-    expect(blog).toHaveProperty("likes")
-  })
-
-  test("has a property called \"url\"", async () => {
-    expect(blog).toHaveProperty("url")
-  })
-
-  test("has a property called \"user\"", async () => {
-    expect(blog).toHaveProperty("user")
-  })
-
-  test("has a property called \"user.id\"", async () => {
-    expect(blog.user).toHaveProperty("id")
-  })
-
-  test("has a property called \"user.username\" with a string value", async () => {
-    expect(blog.user).toHaveProperty("username")
-    expect(_.isString(blog.user.username)).toBeTruthy()
-  })
-
-  test("has a property called \"user.name\" with a string value", async () => {
-    expect(blog.user).toHaveProperty("name")
-    expect(_.isString(blog.user.username)).toBeTruthy()
-  })
-
-  test("does not have a property called \"__v\"", async () => {
-    expect(blog).not.toHaveProperty("__v")
-  })
+  test.concurrent.each(propertiesNotToHave)(
+    "does not have a property called \"%s\"", async propName => {
+      await setupFinished
+      expect(blog).not.toHaveProperty(propName)
+    }
+  )
 })
 
 
