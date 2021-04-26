@@ -45,20 +45,37 @@ const HTTP_STATUS_UNAUTHORIZED = 401
 const HTTP_STATUS_NOT_FOUND = 404
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
 
-const ERR_FIRST = 0
-const ERR_UNKNOWN_ENDPOINT = ERR_FIRST + 0
-const ERR_MALFORMATTED_ID = ERR_FIRST + 1
-const ERR_USER_WITH_USERNAME_EXISTS = ERR_FIRST + 2
-const ERR_USER_WITH_USERNAME_DOES_NOT_EXIST = ERR_FIRST + 3
-const ERR_USERNAME_TOO_SHORT = ERR_FIRST + 4
-const ERR_USERNAME_IS_NOT_STRING = ERR_FIRST + 5
-const ERR_PASSWORD_TOO_SHORT = ERR_FIRST + 6
-const ERR_PASSWORD_IS_NOT_STRING = ERR_FIRST + 7
-const ERR_BLOG_LIST_IS_NOT_ARRAY = ERR_FIRST + 8
+const HTTP_HEADER_AUTHENTICATE = "WWW-Authenticate"
+const HTTP_HEADER_AUTHORIZATION = "Authorization"
+
+function errCodeCreatorBasedOn(base) {
+  return (offset) => { return base + offset }
+}
+const cmnErr = errCodeCreatorBasedOn(0)
+const valErr = errCodeCreatorBasedOn(100)
+
+const ERR_UNKNOWN_ENDPOINT = cmnErr(0)
+const ERR_MISSING_OR_INVALID_AUTH_TOKEN = cmnErr(1)
+const ERR_EXPIRED_AUTH_TOKEN = cmnErr(2)
+
+const ERR_MALFORMATTED_ID = valErr(0)
+const ERR_USER_WITH_USERNAME_EXISTS = valErr(1)
+const ERR_USER_WITH_USERNAME_DOES_NOT_EXIST = valErr(2)
+const ERR_USERNAME_TOO_SHORT = valErr(3)
+const ERR_USERNAME_IS_NOT_STRING = valErr(4)
+const ERR_PASSWORD_TOO_SHORT = valErr(5)
+const ERR_PASSWORD_IS_NOT_STRING = valErr(6)
+const ERR_BLOG_LIST_IS_NOT_ARRAY = valErr(7)
+
 
 const ErrorMessages = {}
 ErrorMessages[ERR_UNKNOWN_ENDPOINT] =
     "Unknown endpoint"
+ErrorMessages[ERR_MISSING_OR_INVALID_AUTH_TOKEN] =
+    "User authentication token is missing or invalid"
+ErrorMessages[ERR_EXPIRED_AUTH_TOKEN] =
+    "User authentication token has been expired"
+
 ErrorMessages[ERR_MALFORMATTED_ID] =
     "Malformatted ID value"
 ErrorMessages[ERR_USER_WITH_USERNAME_EXISTS] =
@@ -108,7 +125,13 @@ module.exports = {
   HTTP_STATUS_NOT_FOUND,
   HTTP_STATUS_INTERNAL_SERVER_ERROR,
 
+  HTTP_HEADER_AUTHENTICATE,
+  HTTP_HEADER_AUTHORIZATION,
+
   ERR_UNKNOWN_ENDPOINT,
+  ERR_MISSING_OR_INVALID_AUTH_TOKEN,
+  ERR_EXPIRED_AUTH_TOKEN,
+
   ERR_MALFORMATTED_ID,
   ERR_USER_WITH_USERNAME_EXISTS,
   ERR_USER_WITH_USERNAME_DOES_NOT_EXIST,
@@ -117,5 +140,6 @@ module.exports = {
   ERR_PASSWORD_TOO_SHORT,
   ERR_PASSWORD_IS_NOT_STRING,
   ERR_BLOG_LIST_IS_NOT_ARRAY,
+
   ErrorMessages,
 }

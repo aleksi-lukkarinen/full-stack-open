@@ -25,6 +25,7 @@ const errorHandler = (error, request, response, next) => {
   let errorCode = undefined
   let responseStatus = undefined
   let responseData = {}
+  let responseHeadersToSet = {}
   if (error.name === "UnknownEndpointError") {
     responseStatus = config.HTTP_STATUS_NOT_FOUND
     errorCode = config.ERR_UNKNOWN_ENDPOINT
@@ -34,6 +35,40 @@ const errorHandler = (error, request, response, next) => {
         {
           errorCode,
           message: config.ErrorMessages[errorCode],
+        }
+      ]
+    }
+  }
+  else if (error.name === "JsonWebTokenError") {
+    responseStatus = config.HTTP_STATUS_UNAUTHORIZED
+    errorCode = config.ERR_MISSING_OR_INVALID_AUTH_TOKEN
+    responseHeadersToSet[config.HTTP_HEADER_AUTHENTICATE] = "Bearer"
+    responseData = {
+      status: responseStatus,
+      errors: [
+        {
+          errorCode,
+          message: config.ErrorMessages[errorCode],
+          originalError: {
+            message: error.message,
+          },
+        }
+      ]
+    }
+  }
+  else if (error.name === "TokenExpiredError") {
+    responseStatus = config.HTTP_STATUS_UNAUTHORIZED
+    errorCode = config.ERR_EXPIRED_AUTH_TOKEN
+    responseHeadersToSet[config.HTTP_HEADER_AUTHENTICATE] = "Bearer"
+    responseData = {
+      status: responseStatus,
+      errors: [
+        {
+          errorCode,
+          message: config.ErrorMessages[errorCode],
+          originalError: {
+            message: error.message,
+          },
         }
       ]
     }
@@ -134,6 +169,10 @@ const errorHandler = (error, request, response, next) => {
 
     logger.error(responseData)
 
+    const headers = _.toPairs(responseHeadersToSet)
+    headers.forEach(([ name, value ]) => {
+      response.set(name, value)
+    })
     result = response
       .status(responseStatus)
       .send(responseData)

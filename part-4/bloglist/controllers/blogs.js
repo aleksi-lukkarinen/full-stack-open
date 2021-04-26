@@ -1,7 +1,29 @@
+const _ = require("lodash")
+const jwt = require("jsonwebtoken")
 const config = require("../utils/config")
 const blogsRouter = require("express").Router()
 const Blog = require("../models/blog")
 const User = require("../models/user")
+
+
+function extractTokenFrom(request) {
+  const expectedAuthScheme = "bearer"
+  const authHeader =
+    request.get(config.HTTP_HEADER_AUTHORIZATION)
+
+  if (authHeader && _.isString(authHeader)) {
+    const cleanedAuthHeader = authHeader.trim()
+    const givenAuthScheme =
+      cleanedAuthHeader.substr(0, expectedAuthScheme.length).toLowerCase()
+
+    if (givenAuthScheme === expectedAuthScheme) {
+      const token = cleanedAuthHeader.substring(expectedAuthScheme.length + 1)
+      return token
+    }
+  }
+
+  return null
+}
 
 
 blogsRouter.get("/", async (request, response) => {
@@ -19,7 +41,18 @@ blogsRouter.post("/", async (request, response) => {
     return
   }
 
-  const user = await User.findOne({})
+  console.log("SECRET", config.SECRET_KEY)
+  const token = extractTokenFrom(request)
+  console.log("TOKEN", token)
+  const decodedToken = jwt.verify(token, config.SECRET_KEY)
+  console.log("DEC T", decodedToken)
+  if (!token || !decodedToken.id) {
+    const e = new Error()
+    e.name = "JsonWebTokenError"
+    throw e
+  }
+
+  const user = await User.findById(decodedToken.id)
 
   const blogToInsert = new Blog({
     title: body.title,

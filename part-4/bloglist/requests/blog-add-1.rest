@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwODRjYjJjN2EzYTZhMGJiNDU5YjJlNiIsInVzZXJuYW1lIjoibW1pa2tvbCIsImlhdCI6MTYxOTM5NTU4NCwiZXhwIjoxNjE5Mzk1NjQ0fQ.a0efdHeW9-7cMGlf5-pKNs2QBC9_IxWcTqqEsRtAm1Q
 
 {
   "title": "Type wars",
