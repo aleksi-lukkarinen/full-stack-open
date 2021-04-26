@@ -137,6 +137,21 @@ const errorHandler = (error, request, response, next) => {
       ]
     }
   }
+  else if (error.name === "BlogNotOwnedByCurrentUserError") {
+    responseStatus = config.HTTP_STATUS_UNAUTHORIZED
+    errorCode = config.ERR_BLOG_NOT_OWNED_BY_CURRENT_USER
+    responseHeadersToSet[config.HTTP_HEADER_AUTHENTICATE] =
+      config.HTTP_AUTH_SCHEME_BEARER
+    responseData = {
+      status: responseStatus,
+      errors: [
+        {
+          errorCode,
+          message: config.ErrorMessages[errorCode],
+        }
+      ]
+    }
+  }
   else if (error.name === "CastError") {
     if (error.kind === "ObjectId" && error.path === "_id") {
       responseStatus = config.HTTP_STATUS_BAD_REQUEST

@@ -62,10 +62,21 @@ blogsRouter.put("/:id", async (request, response) => {
   response.json(updatedNote)
 })
 
-blogsRouter.delete("/:id", async (request, response) => {
-  const idOfBlogToDelete = request.params.id
-  await Blog.findByIdAndDelete(idOfBlogToDelete)
-  response.status(config.HTTP_STATUS_NO_CONTENT).end()
-})
+blogsRouter.delete("/:id", middleware.userExtractor,
+  async (request, response) => {
+    const idOfBlogToDelete = request.params.id
+
+    const blogToDelete = await Blog.findById(idOfBlogToDelete)
+    if (blogToDelete.user.toString() !== request.user.id.toString()) {
+      const e = new Error()
+      e.name = "BlogNotOwnedByCurrentUserError"
+      throw e
+    }
+
+    await blogToDelete.delete()
+
+    response.status(config.HTTP_STATUS_NO_CONTENT).end()
+  }
+)
 
 module.exports = blogsRouter

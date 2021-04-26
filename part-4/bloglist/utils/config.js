@@ -3,7 +3,7 @@ require("dotenv").config()
 const USERNAME_MIN_LENGTH = 3
 const PASSWORD_MIN_LENGTH = 3
 const SALT_ROUNDS = 10
-const AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS = 10
+const AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS = 60
 
 const ENVIRONMENT_CLASS = process.env.NODE_ENV
 const IS_TEST_ENVIRONMENT = ENVIRONMENT_CLASS === "test"
@@ -62,6 +62,7 @@ const ERR_UNKNOWN_ENDPOINT = cmnErr(0)
 const ERR_INVALID_USERNAME_OR_PASSWORD = authErr(0)
 const ERR_MISSING_OR_INVALID_AUTH_TOKEN = authErr(1)
 const ERR_EXPIRED_AUTH_TOKEN = authErr(2)
+const ERR_BLOG_NOT_OWNED_BY_CURRENT_USER = authErr(3)
 
 const ERR_MALFORMATTED_ID = valErr(0)
 const ERR_USER_WITH_USERNAME_EXISTS = valErr(1)
@@ -72,7 +73,6 @@ const ERR_PASSWORD_TOO_SHORT = valErr(5)
 const ERR_PASSWORD_IS_NOT_STRING = valErr(6)
 const ERR_BLOG_LIST_IS_NOT_ARRAY = valErr(7)
 
-
 const ErrorMessages = {}
 ErrorMessages[ERR_UNKNOWN_ENDPOINT] =
     "Unknown endpoint"
@@ -82,7 +82,9 @@ ErrorMessages[ERR_INVALID_USERNAME_OR_PASSWORD] =
 ErrorMessages[ERR_MISSING_OR_INVALID_AUTH_TOKEN] =
     "User authentication token is missing or invalid"
 ErrorMessages[ERR_EXPIRED_AUTH_TOKEN] =
-    "User authentication token has been expired"
+    "User authentication token has expired"
+ErrorMessages[ERR_BLOG_NOT_OWNED_BY_CURRENT_USER] =
+    "This blog is not owned by the current user, so access to it is denied"
 
 ErrorMessages[ERR_MALFORMATTED_ID] =
     "Malformatted ID value"
@@ -143,6 +145,7 @@ module.exports = {
   ERR_INVALID_USERNAME_OR_PASSWORD,
   ERR_MISSING_OR_INVALID_AUTH_TOKEN,
   ERR_EXPIRED_AUTH_TOKEN,
+  ERR_BLOG_NOT_OWNED_BY_CURRENT_USER,
 
   ERR_MALFORMATTED_ID,
   ERR_USER_WITH_USERNAME_EXISTS,
