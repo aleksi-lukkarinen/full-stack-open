@@ -171,7 +171,7 @@ describe("When the blog collection contains several blogs", () => {
     const blogsAtStart = await BFHttp.getAllBlogs()
     const blogToRemove = blogsAtStart[0]
 
-    await BFHttp.deleteBlogById(blogToRemove.id)
+    await BFHttp.deleteBlogByIdAsUser(blogToRemove.id, currentUser)
       .expect(config.HTTP_STATUS_NO_CONTENT)
 
     const blogsAtEnd = await BFHttp.getAllBlogs()
@@ -254,17 +254,24 @@ describe("Trying to insert a blog to collection results in HTTP 400 when", () =>
 
 
 describe("Trying to delete a single blog by its ID results in", () => {
-  test("HTTP 204 when the ID is unknown", async () => {
+  test("HTTP 401 when the user authentication token is not given", async () => {
     const idOfBlogToDelete = await BF.nonExistingBlogId()
 
     await BFHttp.deleteBlogById(idOfBlogToDelete)
+      .expect(config.HTTP_STATUS_UNAUTHORIZED)
+  })
+
+  test("HTTP 204 when the ID is unknown [authorized]", async () => {
+    const idOfBlogToDelete = await BF.nonExistingBlogId()
+
+    await BFHttp.deleteBlogByIdAsUser(idOfBlogToDelete, currentUser)
       .expect(config.HTTP_STATUS_NO_CONTENT)
   })
 
-  test("HTTP 400 when the ID is malformatted", async () => {
+  test("HTTP 400 when the ID is malformatted [authorized]", async () => {
     const invalidBlogId = "$$$....@@@"
 
-    await BFHttp.deleteBlogById(invalidBlogId)
+    await BFHttp.deleteBlogByIdAsUser(invalidBlogId, currentUser)
       .expect(config.HTTP_STATUS_BAD_REQUEST)
   })
 })

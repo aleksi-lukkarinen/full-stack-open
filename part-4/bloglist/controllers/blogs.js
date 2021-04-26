@@ -67,13 +67,14 @@ blogsRouter.delete("/:id", middleware.userExtractor,
     const idOfBlogToDelete = request.params.id
 
     const blogToDelete = await Blog.findById(idOfBlogToDelete)
-    if (blogToDelete.user.toString() !== request.user.id.toString()) {
-      const e = new Error()
-      e.name = "BlogNotOwnedByCurrentUserError"
-      throw e
+    if (blogToDelete) {
+      if (blogToDelete.user.toString() !== request.user.id.toString()) {
+        const e = new Error()
+        e.name = "BlogNotOwnedByCurrentUserError"
+        throw e
+      }
+      await blogToDelete.delete()
     }
-
-    await blogToDelete.delete()
 
     response.status(config.HTTP_STATUS_NO_CONTENT).end()
   }

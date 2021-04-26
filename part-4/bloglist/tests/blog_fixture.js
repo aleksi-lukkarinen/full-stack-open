@@ -89,7 +89,8 @@ async function insertFirstTestBlogToCollection() {
 async function insertAllTestBlogsToCollection() {
   try  {
     const user = await User.findOne({})
-    const blogsToInsert = testBlogs.map(b => b.user = user._id)
+    const blogsToInsert = testBlogs
+    blogsToInsert.forEach(b => b.user = user._id)
     await Blog.insertMany(blogsToInsert)
   }
   catch (error) {
@@ -102,8 +103,8 @@ async function nonExistingBlogId() {
   const blog = new Blog(dummyBlogData)
   await blog.save()
   await blog.remove()
-
-  return blog._id.toString()
+  const result = blog._id.toString()
+  return result
 }
 
 function blogPathFrom(blogId) {
@@ -154,6 +155,17 @@ function httpUtils(supertestApi) {
       .delete(blogPathFrom(idOfBlogToDelete))
   }
 
+  function deleteBlogByIdAsUser(idOfBlogToDelete, user) {
+    const authToken = LF.generateTestAuthTokenFor(user)
+
+    const result = supertestApi
+      .delete(blogPathFrom(idOfBlogToDelete))
+      .set(config.HTTP_HEADER_AUTHORIZATION,
+        `${config.HTTP_AUTH_SCHEME_BEARER} ${authToken}`)
+
+    return result
+  }
+
   return {
     getAllBlogs,
     getBlog,
@@ -161,6 +173,7 @@ function httpUtils(supertestApi) {
     postNewBlogAsUser,
     putBlogUpdateById,
     deleteBlogById,
+    deleteBlogByIdAsUser,
   }
 }
 
