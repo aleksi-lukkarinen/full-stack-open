@@ -6,25 +6,6 @@ const Blog = require("../models/blog")
 const User = require("../models/user")
 
 
-function extractTokenFrom(request) {
-  const expectedAuthScheme = config.HTTP_AUTH_SCHEME_BEARER.toLocaleLowerCase()
-  const authHeader = request.get(config.HTTP_HEADER_AUTHORIZATION)
-
-  if (authHeader && _.isString(authHeader)) {
-    const cleanedAuthHeader = authHeader.trim()
-    const givenAuthScheme =
-      cleanedAuthHeader.substr(0, expectedAuthScheme.length).toLowerCase()
-
-    if (givenAuthScheme === expectedAuthScheme) {
-      const token = cleanedAuthHeader.substring(expectedAuthScheme.length + 1)
-      return token
-    }
-  }
-
-  return null
-}
-
-
 blogsRouter.get("/", async (request, response) => {
   let blogs = await Blog.find({})
     .populate("user", { username: 1, name: 1 })
@@ -35,9 +16,8 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const { body } = request
 
-  const token = extractTokenFrom(request)
-  const decodedToken = jwt.verify(token, config.SECRET_KEY)
-  if (!token || !decodedToken.id) {
+  const decodedToken = jwt.verify(request.authToken, config.SECRET_KEY)
+  if (!request.authToken || !decodedToken.id) {
     const e = new Error()
     e.name = "JsonWebTokenError"
     throw e

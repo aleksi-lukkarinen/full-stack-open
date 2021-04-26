@@ -13,6 +13,27 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
+/* eslint-disable-next-line no-unused-vars */
+const authTokenExtractor = (request, response, next) => {
+  request.authToken = undefined
+
+  const expectedAuthScheme = config.HTTP_AUTH_SCHEME_BEARER.toLowerCase()
+  const authHeader = request.get(config.HTTP_HEADER_AUTHORIZATION)
+
+  if (authHeader && _.isString(authHeader)) {
+    const cleanedAuthHeader = authHeader.trim()
+    const givenAuthScheme =
+      cleanedAuthHeader.substr(0, expectedAuthScheme.length).toLowerCase()
+
+    if (givenAuthScheme === expectedAuthScheme) {
+      const token = cleanedAuthHeader.substring(expectedAuthScheme.length + 1)
+      request.authToken = token
+    }
+  }
+
+  next()
+}
+
 const unknownEndpoint = (request, response, next) => {
   const error = new Error()
   error.name = "UnknownEndpointError"
@@ -211,6 +232,7 @@ const errorHandler = (error, request, response, next) => {
 
 module.exports = {
   requestLogger,
+  authTokenExtractor,
   unknownEndpoint,
   errorHandler
 }

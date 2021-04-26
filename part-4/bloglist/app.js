@@ -59,6 +59,7 @@ app.use(cors())
 app.use(express.static("build"))
 app.use(express.json())
 app.use(middleware.requestLogger)
+app.use(middleware.authTokenExtractor)
 
 app.use(config.URL_API_LOGIN, loginRouter)
 app.use(config.URL_API_USERS, usersRouter)

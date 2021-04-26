@@ -46,7 +46,7 @@ describe("Inserting a user to the collection", () => {
       expect(insertedUser.id).toBeDefined()
     })
 
-    test("the inserted user having correct information", async () => {
+    test("the inserted user matching the given information", async () => {
       expect(insertedUser).toBeDefined()
       expect(insertedUser.name).toBe(userInfoToInsert.name)
     })
