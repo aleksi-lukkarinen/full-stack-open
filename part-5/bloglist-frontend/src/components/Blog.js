@@ -1,11 +1,11 @@
 import React from "react"
 
 
-const Blog = ({blog}) => (
+const BlogListItem = ({blog}) => (
   <div>
     {blog.title} {blog.author}
   </div>
 )
 
 
-export default Blog
+export default BlogListItem

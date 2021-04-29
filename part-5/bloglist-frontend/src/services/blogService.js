@@ -1,8 +1,8 @@
 import axios from "axios"
+
 const baseUrl = "/api/blogs"
-
-
 let authToken = null
+
 
 function setAuthToken(tokenToSet) {
   authToken = `Bearer ${tokenToSet}`
@@ -14,9 +14,9 @@ const getAll = () => {
 }
 
 
-const exports = {
+const BlogService = {
   getAll,
   setAuthToken,
 }
 
-export default exports
+export default BlogService
