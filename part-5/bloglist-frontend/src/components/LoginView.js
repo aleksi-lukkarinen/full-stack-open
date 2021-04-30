@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useRef, useState} from "react"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
@@ -6,6 +6,7 @@ import Notification from "./Notification"
 
 
 const LoginView = ({setCurrentUser, viewTitle}) => {
+  const inputUsername = useRef(null)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState(null)
@@ -30,6 +31,7 @@ const LoginView = ({setCurrentUser, viewTitle}) => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
+      inputUsername.current.focus()
     }
   }
 
@@ -51,7 +53,9 @@ const LoginView = ({setCurrentUser, viewTitle}) => {
             type="text"
             value={username}
             name="Username"
+            autoFocus
             autoComplete="username"
+            ref={inputUsername}
             onChange={({ target }) => setUsername(target.value)} />
         </div>
         <div className="row">
