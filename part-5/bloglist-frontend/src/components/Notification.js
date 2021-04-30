@@ -5,7 +5,7 @@ const Notification = ({ content, baseClass, messageVisibleClass }) => {
 
   let classes = baseClass
   if (content !== null && content.length > 0)
-    classes += " " + messageVisibleClass
+    classes += ` ${messageVisibleClass}`
 
   return <div className={classes}>{content}</div>
 }

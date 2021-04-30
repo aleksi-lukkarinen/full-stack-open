@@ -2,8 +2,34 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-H2 {
+body {
+  margin: 0em;
+}
 
+.siteHeader {
+  height:           3em;
+  line-height:      3em;
+  padding:          0em 1em;
+  color:            white;
+  background-color: #113355;
+  font-size:        90%;
+  font-weight:      bold;
+}
+
+.userInfo .currentUserName {
+  margin-right:     1em;
+}
+
+.contentContainer {
+  padding:          1em;
+}
+
+.sectionHeader {
+  margin-left: -0.1em;
+}
+
+.sectionHeader.first {
+  margin-top: 0em;
 }
 
 .notificationBox {
@@ -15,8 +41,8 @@ H2 {
 }
 
 .infoVisible {
-  margin-top: 2em;
   padding: 0.5em;
+  margin-bottom: 1em;
   background: #eeffee;
   border: 1px solid #aabbaa;
   color: darkgreen;
@@ -24,8 +50,8 @@ H2 {
 }
 
 .errorVisible {
-  margin-top: 2em;
   padding: 0.5em;
+  margin-bottom: 1em;
   background: #ffeeee;
   border: 1px solid #bbaaaa;
   color: maroon;
