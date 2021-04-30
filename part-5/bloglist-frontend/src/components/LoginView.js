@@ -2,14 +2,16 @@ import React, {useRef, useState} from "react"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
-import Notification from "./Notification"
 
 
-const LoginView = ({setCurrentUser, viewTitle}) => {
+const LoginView = ({
+  viewTitle,
+  setCurrentUser,
+  setErrorMessage}) => {
+
   const inputUsername = useRef(null)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [errorMessage, setErrorMessage] = useState(null)
 
   async function processLogin(event) {
     event.preventDefault()
@@ -40,11 +42,6 @@ const LoginView = ({setCurrentUser, viewTitle}) => {
       <SectionHeader
         content={viewTitle}
         isFirst={true} />
-
-        <Notification
-          content={errorMessage}
-          baseClass={"notificationBox"}
-          messageVisibleClass={"errorVisible"} />
 
       <form className="loginForm" onSubmit={processLogin}>
         <div className="row">

@@ -1,18 +1,17 @@
 import React, {useState} from 'react'
 import BlogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
-import Notification from "./Notification"
 
 
 const BlogInsertionForm = ({
         formTitle,
-        blogs, setBlogs}) => {
+        blogs, setBlogs,
+        setInfoMessage,
+        setErrorMessage}) => {
 
   const [newBlogTitle, setNewBlogTitle] = useState("")
   const [newBlogAuthor, setNewBlogAuthor] = useState("")
   const [newBlogUrl, setNewBlogUrl] = useState("")
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [infoMessage, setInfoMessage] = useState(null)
 
   function showInfoMessage(content) {
     setInfoMessage(content)
@@ -111,16 +110,6 @@ const BlogInsertionForm = ({
     <>
       <SectionHeader content={formTitle} />
 
-      <Notification
-        content={errorMessage}
-        baseClass={"notificationBox"}
-        messageVisibleClass={"errorVisible"} />
-
-      <Notification
-        content={infoMessage}
-        baseClass={"notificationBox"}
-        messageVisibleClass={"infoVisible"} />
-
       <form onSubmit={insertBlog}>
         <div>
           <label htmlFor="newBlogTitle">Title</label>
@@ -146,7 +135,7 @@ const BlogInsertionForm = ({
             onChange={(event) => setNewBlogUrl(event.target.value)} />
         </div>
         <div>
-          <button type="submit">Add</button>
+          <button type="submit">Insert</button>
         </div>
       </form>
     </>

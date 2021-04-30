@@ -5,7 +5,11 @@ import BlogList from "./BlogList"
 import BlogInsertionForm from "./BlogInsertionForm"
 
 
-const BlogListView = ({viewTitle}) => {
+const BlogListView = ({
+  viewTitle,
+  setInfoMessage,
+  setErrorMessage}) => {
+
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
@@ -24,7 +28,9 @@ const BlogListView = ({viewTitle}) => {
 
       <BlogInsertionForm
         formTitle="Insert a New Blog"
-        blogs={blogs} setBlogs={setBlogs} />
+        blogs={blogs} setBlogs={setBlogs}
+        setInfoMessage={setInfoMessage}
+        setErrorMessage={setErrorMessage} />
     </div>
   )
 }
