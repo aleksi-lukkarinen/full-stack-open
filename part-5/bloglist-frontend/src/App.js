@@ -29,10 +29,10 @@ const App = () => {
         setCurrentUser={setCurrentUser} />
 
       { currentUser === null
-        ? <LoginView setCurrentUser={setCurrentUser}>
-            Log in to BlogList
-          </LoginView>
-        : <BlogListView>Blogs</BlogListView>
+        ? <LoginView
+            viewTitle="Log in to BlogList"
+            setCurrentUser={setCurrentUser} />
+        : <BlogListView viewTitle="Blogs" />
       }
     </>
   )

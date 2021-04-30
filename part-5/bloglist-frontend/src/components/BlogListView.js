@@ -5,7 +5,7 @@ import BlogList from "./BlogList"
 import BlogInsertionForm from "./BlogInsertionForm"
 
 
-const BlogListView = ({children}) => {
+const BlogListView = ({viewTitle}) => {
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
@@ -16,9 +16,9 @@ const BlogListView = ({children}) => {
 
   return (
     <div className="contentContainer">
-      <SectionHeader isFirst={true}>
-        {children}
-      </SectionHeader>
+      <SectionHeader
+        content={viewTitle}
+        isFirst={true} />
 
       <BlogList blogs={blogs} />
 

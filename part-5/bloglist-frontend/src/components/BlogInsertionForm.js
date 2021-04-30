@@ -109,7 +109,7 @@ const BlogInsertionForm = ({
 
   return (
     <>
-      <SectionHeader>{formTitle}</SectionHeader>
+      <SectionHeader content={formTitle} />
 
       <Notification
         content={errorMessage}

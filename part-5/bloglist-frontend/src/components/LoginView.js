@@ -5,7 +5,7 @@ import SectionHeader from "./SectionHeader"
 import Notification from "./Notification"
 
 
-const LoginView = ({setCurrentUser, children}) => {
+const LoginView = ({setCurrentUser, viewTitle}) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState(null)
@@ -35,7 +35,9 @@ const LoginView = ({setCurrentUser, children}) => {
 
   return (
     <div className="contentContainer">
-      <SectionHeader>{children}</SectionHeader>
+      <SectionHeader
+        content={viewTitle}
+        isFirst={true} />
 
       <form onSubmit={processLogin}>
 
