@@ -32,6 +32,33 @@ body {
   margin-top: 0em;
 }
 
+.loginForm {
+  display: table;
+}
+
+.loginForm .row {
+  display: table-row;
+}
+
+.loginForm .row label {
+  display:  table-cell;
+  padding-bottom: 0.5em;
+}
+
+.loginForm .row input {
+  display:  table-cell;
+  margin-left: 1em;
+}
+
+.loginForm .row .cell {
+  display:  table-cell;
+  text-align: right;
+}
+
+.loginForm button {
+  margin-top: 0.5em;
+}
+
 .notificationBox {
   width: 30em;
   font-size: 90%;

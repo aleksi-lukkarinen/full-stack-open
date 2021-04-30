@@ -39,28 +39,36 @@ const LoginView = ({setCurrentUser, viewTitle}) => {
         content={viewTitle}
         isFirst={true} />
 
-      <form onSubmit={processLogin}>
-
         <Notification
           content={errorMessage}
           baseClass={"notificationBox"}
           messageVisibleClass={"errorVisible"} />
 
-        <div>
-          <span>Username</span>
-            <input type="text" value={username} name="Username"
-              autoComplete="username"
-              onChange={({ target }) => setUsername(target.value)}
-          />
+      <form className="loginForm" onSubmit={processLogin}>
+        <div className="row">
+          <label htmlFor="Username">Username</label>
+          <input
+            type="text"
+            value={username}
+            name="Username"
+            autoComplete="username"
+            onChange={({ target }) => setUsername(target.value)} />
         </div>
-        <div>
-          <span>Password</span>
-            <input type="password" value={password} name="Password"
-              autoComplete="current-password"
-              onChange={({ target }) => setPassword(target.value)}
-          />
+        <div className="row">
+          <label htmlFor="Password">Password</label>
+          <input
+            type="password"
+            value={password}
+            name="Password"
+            autoComplete="current-password"
+            onChange={({ target }) => setPassword(target.value)} />
         </div>
-        <button type="submit">Login</button>
+        <div className="row">
+          <div className="cell" />
+          <div className="cell">
+            <button type="submit">Login</button>
+          </div>
+        </div>
       </form>
     </div>
   )
