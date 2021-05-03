@@ -62,6 +62,18 @@ button {
   margin: 0.5em 0em 0em 1em;
 }
 
+#txtNewBlogTitle {
+  width: 30em;
+}
+
+#txtNewBlogAuthor {
+  width: 20em;
+}
+
+#txtNewBlogUrl {
+  width: 30em;
+}
+
 .notificationBox {
   width: 30em;
   font-size: 90%;

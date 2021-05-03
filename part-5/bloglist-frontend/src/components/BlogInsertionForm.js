@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {useField} from "../hooks"
 import BlogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
 import SimpleForm from './SimpleForm'
 import SimpleFormRow from './SimpleFormRow'
+import Showable from './Showable'
 
 
 const BlogInsertionForm = ({
@@ -11,6 +12,8 @@ const BlogInsertionForm = ({
         blogs, setBlogs,
         setInfoMessage,
         setErrorMessage}) => {
+
+  const [isFormVisible, setFormVisibility] = useState(false)
 
   const {reset:resetNewBlogTitle, ...newBlogTitle} =
     useField("txtNewBlogTitle", "text")
@@ -33,9 +36,9 @@ const BlogInsertionForm = ({
     event.preventDefault()
 
     const blogToInsert = {
-      title: newBlogTitle,
-      author: newBlogAuthor,
-      url: newBlogUrl,
+      title: newBlogTitle.value,
+      author: newBlogAuthor.value,
+      url: newBlogUrl.value,
     }
 
     BlogService
@@ -45,6 +48,9 @@ const BlogInsertionForm = ({
 
         showInfoMessage(
           `Entry "${blogToInsert.title}" was successfully inserted.`)
+
+        setFormVisibility(false)
+        clearFields()
       })
       .catch(error => {
         let msg = `Inserting blog "${blogToInsert.title}" failed`
@@ -102,42 +108,61 @@ const BlogInsertionForm = ({
 
         showErrorMessage(msg)
       })
+  }
 
+  function showInsertionForm() {
+    setFormVisibility(true)
+  }
+
+  function visibilityChanged() {
+    if (isFormVisible) {
+      const field = newBlogTitle.ref.current
+      field.focus()
+    }
+  }
+
+  function cancelInsertion(event) {
+    event.preventDefault()
+
+    setFormVisibility(false)
     clearFields()
   }
 
   function clearFields() {
-    newBlogTitle.reset()
-    newBlogAuthor.reset()
-    newBlogUrl.reset()
+    resetNewBlogTitle()
+    resetNewBlogAuthor()
+    resetNewBlogUrl()
   }
 
   return (
     <>
-      <SectionHeader content={formTitle} />
+      <Showable
+        afterUpdate={visibilityChanged}
+        isVisible={isFormVisible}
+        showContent={showInsertionForm}
+        buttonLabel="Insert a New Blog..."
+        buttonId="cmdShowBlogInsertionForm">
 
-      <SimpleForm submitTitle="Insert" onSubmit={insertBlog}>
-        <SimpleFormRow>
-          <label htmlFor={newBlogTitle.id}>Title</label>
-          <input
-            {...newBlogTitle}
-            style={{width: "30em"}} />
-        </SimpleFormRow>
-        <SimpleFormRow>
-          <label htmlFor={newBlogAuthor.id}>Author</label>
-          <input
-            {...newBlogAuthor}
-            autoComplete="name"
-            style={{width: "20em"}} />
-        </SimpleFormRow>
-        <SimpleFormRow>
-          <label htmlFor={newBlogUrl.id}>URL</label>
-          <input
-            {...newBlogUrl}
-            autoComplete="url"
-            style={{width: "30em"}} />
-        </SimpleFormRow>
-      </SimpleForm>
+        <SectionHeader content={formTitle} isFirst={true} />
+
+        <SimpleForm
+          submitTitle="Insert" onSubmit={insertBlog}
+          cancelTitle="Cancel" onCancel={cancelInsertion} >
+
+          <SimpleFormRow>
+            <label htmlFor={newBlogTitle.id}>Title</label>
+            <input {...newBlogTitle} />
+          </SimpleFormRow>
+          <SimpleFormRow>
+            <label htmlFor={newBlogAuthor.id}>Author</label>
+            <input {...newBlogAuthor} autoComplete="name" />
+          </SimpleFormRow>
+          <SimpleFormRow>
+            <label htmlFor={newBlogUrl.id}>URL</label>
+            <input {...newBlogUrl} autoComplete="url" />
+          </SimpleFormRow>
+        </SimpleForm>
+      </Showable>
     </>
   )
 }

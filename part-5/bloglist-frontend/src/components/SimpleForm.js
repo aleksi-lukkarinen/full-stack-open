@@ -3,7 +3,13 @@ import SimpleFormRow from "./SimpleFormRow"
 import SubmitButton from "./SubmitButton"
 
 
-const SimpleForm = ({onSubmit, submitTitle, children}) => {
+const SimpleForm = ({
+  submitTitle, onSubmit,
+  cancelTitle, onCancel,
+  children}) => {
+
+  const showCancel = cancelTitle !== undefined
+
   return (
     <form className="simpleForm" onSubmit={onSubmit}>
       {children}
@@ -11,6 +17,10 @@ const SimpleForm = ({onSubmit, submitTitle, children}) => {
         <SimpleFormCell />
         <SimpleFormCell>
           <SubmitButton title={submitTitle} />
+
+          {showCancel &&
+            <button onClick={onCancel}>{cancelTitle}</button>
+          }
         </SimpleFormCell>
       </SimpleFormRow>
     </form>

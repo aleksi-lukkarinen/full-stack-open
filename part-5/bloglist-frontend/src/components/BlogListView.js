@@ -20,17 +20,15 @@ const BlogListView = ({
 
   return (
     <>
-      <SectionHeader
-        content={viewTitle}
-        isFirst={true} />
-
-      <BlogList blogs={blogs} />
-
       <BlogInsertionForm
         formTitle="Insert a New Blog"
         blogs={blogs} setBlogs={setBlogs}
         setInfoMessage={setInfoMessage}
         setErrorMessage={setErrorMessage} />
+
+      <SectionHeader content={viewTitle} />
+
+      <BlogList blogs={blogs} />
     </>
   )
 }

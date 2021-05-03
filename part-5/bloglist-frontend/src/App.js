@@ -51,7 +51,7 @@ const App = () => {
           : <BlogListView
               setInfoMessage={setInfoMessage}
               setErrorMessage={setErrorMessage}
-              viewTitle="Blogs" />
+              viewTitle="Existing Blogs" />
         }
       </ContentContainer>
     </>
