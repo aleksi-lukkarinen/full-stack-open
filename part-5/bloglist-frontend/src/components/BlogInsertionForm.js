@@ -119,15 +119,23 @@ const BlogInsertionForm = ({
       <SimpleForm submitTitle="Insert" onSubmit={insertBlog}>
         <SimpleFormRow>
           <label htmlFor={newBlogTitle.id}>Title</label>
-          <input {...newBlogTitle} />
+          <input
+            {...newBlogTitle}
+            style={{width: "30em"}} />
         </SimpleFormRow>
         <SimpleFormRow>
           <label htmlFor={newBlogAuthor.id}>Author</label>
-          <input {...newBlogAuthor} autoComplete="name" />
+          <input
+            {...newBlogAuthor}
+            autoComplete="name"
+            style={{width: "20em"}} />
         </SimpleFormRow>
         <SimpleFormRow>
           <label htmlFor={newBlogUrl.id}>URL</label>
-          <input {...newBlogUrl} autoComplete="url" />
+          <input
+            {...newBlogUrl}
+            autoComplete="url"
+            style={{width: "30em"}} />
         </SimpleFormRow>
       </SimpleForm>
     </>
