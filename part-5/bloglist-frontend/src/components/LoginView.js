@@ -1,4 +1,5 @@
-import React, {useRef, useState} from "react"
+import React from "react"
+import {useField} from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
@@ -9,16 +10,18 @@ const LoginView = ({
   setCurrentUser,
   setErrorMessage}) => {
 
-  const inputUsername = useRef(null)
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const {reset:resetUsername, ...username} =
+    useField("txtUsername", "text")
+  const {reset:resetPassword, ...password} =
+    useField("txtPassword", "text")
 
   async function processLogin(event) {
     event.preventDefault()
 
     try {
       const loggedInUser = await loginService.login({
-        username, password
+        username: username.value,
+        password: password.value,
       })
 
       const jsonUserData = JSON.stringify(loggedInUser)
@@ -33,7 +36,7 @@ const LoginView = ({
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-      inputUsername.current.focus()
+      username.ref.current.focus()
     }
   }
 
@@ -45,24 +48,17 @@ const LoginView = ({
 
       <form className="loginForm" onSubmit={processLogin}>
         <div className="row">
-          <label htmlFor="Username">Username</label>
+          <label htmlFor={username.id}>Username</label>
           <input
-            type="text"
-            value={username}
-            name="Username"
+            {...username}
             autoFocus
-            autoComplete="username"
-            ref={inputUsername}
-            onChange={({ target }) => setUsername(target.value)} />
+            autoComplete="username" />
         </div>
         <div className="row">
-          <label htmlFor="Password">Password</label>
+          <label htmlFor={password.id}>Password</label>
           <input
-            type="password"
-            value={password}
-            name="Password"
-            autoComplete="current-password"
-            onChange={({ target }) => setPassword(target.value)} />
+            {...password}
+            autoComplete="current-password" />
         </div>
         <div className="row">
           <div className="cell" />
