@@ -4,6 +4,8 @@ import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
 import SubmitButton from "./SubmitButton"
+import SimpleForm from "./SimpleForm"
+import SimpleFormRow from "./SimpleFormRow"
 
 
 const LoginView = ({
@@ -47,27 +49,27 @@ const LoginView = ({
         content={viewTitle}
         isFirst={true} />
 
-      <form className="simpleForm" onSubmit={processLogin}>
-        <div className="row">
+      <SimpleForm onSubmit={processLogin}>
+        <SimpleFormRow>
           <label htmlFor={username.id}>Username</label>
           <input
             {...username}
             autoFocus
             autoComplete="username" />
-        </div>
-        <div className="row">
+        </SimpleFormRow>
+        <SimpleFormRow>
           <label htmlFor={password.id}>Password</label>
           <input
             {...password}
             autoComplete="current-password" />
-        </div>
-        <div className="row">
+        </SimpleFormRow>
+        <SimpleFormRow>
           <div className="cell" />
           <div className="cell">
             <SubmitButton title="Login" />
           </div>
-        </div>
-      </form>
+        </SimpleFormRow>
+      </SimpleForm>
     </>
   )
 }

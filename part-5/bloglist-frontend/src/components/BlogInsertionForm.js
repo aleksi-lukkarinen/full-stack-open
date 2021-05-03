@@ -2,6 +2,8 @@ import React from 'react'
 import {useField} from "../hooks"
 import BlogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
+import SimpleForm from './SimpleForm'
+import SimpleFormRow from './SimpleFormRow'
 import SubmitButton from './SubmitButton'
 
 
@@ -115,26 +117,26 @@ const BlogInsertionForm = ({
     <>
       <SectionHeader content={formTitle} />
 
-      <form className="simpleForm" onSubmit={insertBlog}>
-        <div className="row">
+      <SimpleForm onSubmit={insertBlog}>
+        <SimpleFormRow>
           <label htmlFor={newBlogTitle.id}>Title</label>
           <input {...newBlogTitle} />
-        </div>
-        <div className="row">
+        </SimpleFormRow>
+        <SimpleFormRow>
           <label htmlFor={newBlogAuthor.id}>Author</label>
           <input {...newBlogAuthor} autoComplete="name" />
-        </div>
-        <div className="row">
+        </SimpleFormRow>
+        <SimpleFormRow>
           <label htmlFor={newBlogUrl.id}>URL</label>
           <input {...newBlogUrl} autoComplete="url" />
-        </div>
-        <div className="row">
+        </SimpleFormRow>
+        <SimpleFormRow>
           <div className="cell" />
           <div className="cell">
             <SubmitButton title="Insert" />
           </div>
-        </div>
-      </form>
+        </SimpleFormRow>
+      </SimpleForm>
     </>
   )
 }
