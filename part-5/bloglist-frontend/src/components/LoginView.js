@@ -6,6 +6,7 @@ import SectionHeader from "./SectionHeader"
 import SubmitButton from "./SubmitButton"
 import SimpleForm from "./SimpleForm"
 import SimpleFormRow from "./SimpleFormRow"
+import SimpleFormCell from "./SimpleFormCell"
 
 
 const LoginView = ({
@@ -64,10 +65,10 @@ const LoginView = ({
             autoComplete="current-password" />
         </SimpleFormRow>
         <SimpleFormRow>
-          <div className="cell" />
-          <div className="cell">
+          <SimpleFormCell />
+          <SimpleFormCell>
             <SubmitButton title="Login" />
-          </div>
+          </SimpleFormCell>
         </SimpleFormRow>
       </SimpleForm>
     </>
