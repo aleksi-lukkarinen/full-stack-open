@@ -3,6 +3,7 @@ import {useField} from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
+import SubmitButton from "./SubmitButton"
 
 
 const LoginView = ({
@@ -13,7 +14,7 @@ const LoginView = ({
   const {reset:resetUsername, ...username} =
     useField("txtUsername", "text")
   const {reset:resetPassword, ...password} =
-    useField("txtPassword", "text")
+    useField("txtPassword", "password")
 
   async function processLogin(event) {
     event.preventDefault()
@@ -46,7 +47,7 @@ const LoginView = ({
         content={viewTitle}
         isFirst={true} />
 
-      <form className="loginForm" onSubmit={processLogin}>
+      <form className="simpleForm" onSubmit={processLogin}>
         <div className="row">
           <label htmlFor={username.id}>Username</label>
           <input
@@ -63,7 +64,7 @@ const LoginView = ({
         <div className="row">
           <div className="cell" />
           <div className="cell">
-            <button type="submit">Login</button>
+            <SubmitButton title="Login" />
           </div>
         </div>
       </form>

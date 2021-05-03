@@ -1,6 +1,8 @@
-import React, {useState} from 'react'
+import React from 'react'
+import {useField} from "../hooks"
 import BlogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
+import SubmitButton from './SubmitButton'
 
 
 const BlogInsertionForm = ({
@@ -9,9 +11,12 @@ const BlogInsertionForm = ({
         setInfoMessage,
         setErrorMessage}) => {
 
-  const [newBlogTitle, setNewBlogTitle] = useState("")
-  const [newBlogAuthor, setNewBlogAuthor] = useState("")
-  const [newBlogUrl, setNewBlogUrl] = useState("")
+  const {reset:resetNewBlogTitle, ...newBlogTitle} =
+    useField("txtNewBlogTitle", "text")
+  const {reset:resetNewBlogAuthor, ...newBlogAuthor} =
+    useField("txtNewBlogAuthor", "text")
+  const {reset:resetNewBlogUrl, ...newBlogUrl} =
+    useField("txtNewBlogUrl", "text")
 
   function showInfoMessage(content) {
     setInfoMessage(content)
@@ -101,41 +106,33 @@ const BlogInsertionForm = ({
   }
 
   function clearFields() {
-    setNewBlogTitle("")
-    setNewBlogAuthor("")
-    setNewBlogUrl("")
+    newBlogTitle.reset()
+    newBlogAuthor.reset()
+    newBlogUrl.reset()
   }
 
   return (
     <>
       <SectionHeader content={formTitle} />
 
-      <form onSubmit={insertBlog}>
-        <div>
-          <label htmlFor="newBlogTitle">Title</label>
-          <input
-            name="newBlogTitle"
-            value={newBlogTitle}
-            onChange={(event) => setNewBlogTitle(event.target.value)} />
+      <form className="simpleForm" onSubmit={insertBlog}>
+        <div className="row">
+          <label htmlFor={newBlogTitle.id}>Title</label>
+          <input {...newBlogTitle} />
         </div>
-        <div>
-          <label htmlFor="newBlogAuthor">Author</label>
-          <input
-            name="newBlogAuthor"
-            value={newBlogAuthor}
-            autoComplete="name"
-            onChange={(event) => setNewBlogAuthor(event.target.value)} />
+        <div className="row">
+          <label htmlFor={newBlogAuthor.id}>Author</label>
+          <input {...newBlogAuthor} autoComplete="name" />
         </div>
-        <div>
-          <label htmlFor="newBlogUrl">URL</label>
-          <input
-            name="newBlogUrl"
-            value={newBlogUrl}
-            autoComplete="url"
-            onChange={(event) => setNewBlogUrl(event.target.value)} />
+        <div className="row">
+          <label htmlFor={newBlogUrl.id}>URL</label>
+          <input {...newBlogUrl} autoComplete="url" />
         </div>
-        <div>
-          <button type="submit">Insert</button>
+        <div className="row">
+          <div className="cell" />
+          <div className="cell">
+            <SubmitButton title="Insert" />
+          </div>
         </div>
       </form>
     </>
