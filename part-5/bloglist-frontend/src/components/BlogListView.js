@@ -19,7 +19,7 @@ const BlogListView = ({
   }, [])
 
   return (
-    <div className="contentContainer">
+    <>
       <SectionHeader
         content={viewTitle}
         isFirst={true} />
@@ -31,7 +31,7 @@ const BlogListView = ({
         blogs={blogs} setBlogs={setBlogs}
         setInfoMessage={setInfoMessage}
         setErrorMessage={setErrorMessage} />
-    </div>
+    </>
   )
 }
 

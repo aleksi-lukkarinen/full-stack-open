@@ -4,6 +4,7 @@ import LoginView from "./components/LoginView"
 import BlogListView from "./components/BlogListView"
 import SiteHeader from "./components/SiteHeader"
 import Notification from "./components/Notification"
+import ContentContainer from "./components/ContentContainer"
 
 
 const App = () => {
@@ -31,26 +32,28 @@ const App = () => {
         currentUser={currentUser}
         setCurrentUser={setCurrentUser} />
 
-      <Notification
-        content={errorMessage}
-        baseClass={"notificationBox"}
-        messageVisibleClass={"errorVisible"} />
+      <ContentContainer>
+        <Notification
+          content={errorMessage}
+          baseClass={"notificationBox"}
+          messageVisibleClass={"errorVisible"} />
 
-      <Notification
-        content={infoMessage}
-        baseClass={"notificationBox"}
-        messageVisibleClass={"infoVisible"} />
+        <Notification
+          content={infoMessage}
+          baseClass={"notificationBox"}
+          messageVisibleClass={"infoVisible"} />
 
-      { currentUser === null
-        ? <LoginView
-            viewTitle="Log in to BlogList"
-            setCurrentUser={setCurrentUser}
-            setErrorMessage={setErrorMessage} />
-        : <BlogListView
-            setInfoMessage={setInfoMessage}
-            setErrorMessage={setErrorMessage}
-            viewTitle="Blogs" />
-      }
+        { currentUser === null
+          ? <LoginView
+              viewTitle="Log in to BlogList"
+              setCurrentUser={setCurrentUser}
+              setErrorMessage={setErrorMessage} />
+          : <BlogListView
+              setInfoMessage={setInfoMessage}
+              setErrorMessage={setErrorMessage}
+              viewTitle="Blogs" />
+        }
+      </ContentContainer>
     </>
   )
 }

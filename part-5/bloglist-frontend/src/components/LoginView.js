@@ -38,7 +38,7 @@ const LoginView = ({
   }
 
   return (
-    <div className="contentContainer">
+    <>
       <SectionHeader
         content={viewTitle}
         isFirst={true} />
@@ -71,7 +71,7 @@ const LoginView = ({
           </div>
         </div>
       </form>
-    </div>
+    </>
   )
 }
 
