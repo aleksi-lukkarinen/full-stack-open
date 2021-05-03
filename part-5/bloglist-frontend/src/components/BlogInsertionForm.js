@@ -3,9 +3,7 @@ import {useField} from "../hooks"
 import BlogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
 import SimpleForm from './SimpleForm'
-import SimpleFormCell from './SimpleFormCell'
 import SimpleFormRow from './SimpleFormRow'
-import SubmitButton from './SubmitButton'
 
 
 const BlogInsertionForm = ({
@@ -118,7 +116,7 @@ const BlogInsertionForm = ({
     <>
       <SectionHeader content={formTitle} />
 
-      <SimpleForm onSubmit={insertBlog}>
+      <SimpleForm submitTitle="Insert" onSubmit={insertBlog}>
         <SimpleFormRow>
           <label htmlFor={newBlogTitle.id}>Title</label>
           <input {...newBlogTitle} />
@@ -130,12 +128,6 @@ const BlogInsertionForm = ({
         <SimpleFormRow>
           <label htmlFor={newBlogUrl.id}>URL</label>
           <input {...newBlogUrl} autoComplete="url" />
-        </SimpleFormRow>
-        <SimpleFormRow>
-          <SimpleFormCell />
-          <SimpleFormCell>
-            <SubmitButton title="Insert" />
-          </SimpleFormCell>
         </SimpleFormRow>
       </SimpleForm>
     </>

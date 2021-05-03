@@ -3,10 +3,8 @@ import {useField} from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
-import SubmitButton from "./SubmitButton"
 import SimpleForm from "./SimpleForm"
 import SimpleFormRow from "./SimpleFormRow"
-import SimpleFormCell from "./SimpleFormCell"
 
 
 const LoginView = ({
@@ -50,7 +48,7 @@ const LoginView = ({
         content={viewTitle}
         isFirst={true} />
 
-      <SimpleForm onSubmit={processLogin}>
+      <SimpleForm submitTitle="Login" onSubmit={processLogin}>
         <SimpleFormRow>
           <label htmlFor={username.id}>Username</label>
           <input
@@ -63,12 +61,6 @@ const LoginView = ({
           <input
             {...password}
             autoComplete="current-password" />
-        </SimpleFormRow>
-        <SimpleFormRow>
-          <SimpleFormCell />
-          <SimpleFormCell>
-            <SubmitButton title="Login" />
-          </SimpleFormCell>
         </SimpleFormRow>
       </SimpleForm>
     </>
