@@ -1,5 +1,6 @@
 import React from "react"
-import {useField} from "../hooks"
+import { useTranslation } from "react-i18next"
+import { useField } from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
@@ -8,10 +9,10 @@ import SimpleFormRow from "./SimpleFormRow"
 
 
 const LoginView = ({
-  viewTitle,
-  setCurrentUser,
-  setErrorMessage}) => {
+        setCurrentUser,
+        setErrorMessage}) => {
 
+  const {t} = useTranslation()
   const {reset:resetUsername, ...username} =
     useField("txtUsername", "text")
   const {reset:resetPassword, ...password} =
@@ -34,7 +35,7 @@ const LoginView = ({
       blogService.setAuthToken(loggedInUser.token)
     }
     catch (error) {
-      setErrorMessage("Invalid credentials.")
+      setErrorMessage(t("LoginForm.errInvalidCreds"))
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -45,19 +46,19 @@ const LoginView = ({
   return (
     <>
       <SectionHeader
-        content={viewTitle}
+        content={t("LoginForm.title")}
         isFirst={true} />
 
-      <SimpleForm submitTitle="Login" onSubmit={processLogin}>
+      <SimpleForm submitTitle={t("LoginForm.cmdLogin")} onSubmit={processLogin}>
         <SimpleFormRow>
-          <label htmlFor={username.id}>Username</label>
+          <label htmlFor={username.id}>{t("LoginForm.lblUsername")}</label>
           <input
             {...username}
             autoFocus
             autoComplete="username" />
         </SimpleFormRow>
         <SimpleFormRow>
-          <label htmlFor={password.id}>Password</label>
+          <label htmlFor={password.id}>{t("LoginForm.lblPassword")}</label>
           <input
             {...password}
             autoComplete="current-password" />

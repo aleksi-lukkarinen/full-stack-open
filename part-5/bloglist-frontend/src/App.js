@@ -45,13 +45,11 @@ const App = () => {
 
         { currentUser === null
           ? <LoginView
-              viewTitle="Log in to BlogList"
               setCurrentUser={setCurrentUser}
               setErrorMessage={setErrorMessage} />
           : <BlogListView
               setInfoMessage={setInfoMessage}
-              setErrorMessage={setErrorMessage}
-              viewTitle="Existing Blogs" />
+              setErrorMessage={setErrorMessage} />
         }
       </ContentContainer>
     </>

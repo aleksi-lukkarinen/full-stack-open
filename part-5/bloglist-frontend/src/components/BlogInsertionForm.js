@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
-import {useField} from "../hooks"
+import { useTranslation } from "react-i18next"
+import { useField } from "../hooks"
 import BlogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
 import SimpleForm from './SimpleForm'
@@ -8,10 +9,11 @@ import Showable from './Showable'
 
 
 const BlogInsertionForm = ({
-        formTitle,
         blogs, setBlogs,
         setInfoMessage,
         setErrorMessage}) => {
+
+  const {t} = useTranslation()
 
   const [isFormVisible, setFormVisibility] = useState(false)
 
@@ -46,8 +48,8 @@ const BlogInsertionForm = ({
       .then(data => {
         setBlogs(blogs.concat(data))
 
-        showInfoMessage(
-          `Entry "${blogToInsert.title}" was successfully inserted.`)
+        const msg = t("BlogInsertionForm.msgSuccessfulInsertion", { blogToInsert })
+        showInfoMessage(msg)
 
         setFormVisibility(false)
         clearFields()
@@ -140,25 +142,29 @@ const BlogInsertionForm = ({
         afterUpdate={visibilityChanged}
         isVisible={isFormVisible}
         showContent={showInsertionForm}
-        buttonLabel="Insert a New Blog..."
+        buttonLabel={t("BlogInsertionForm.cmdOpenForm")}
         buttonId="cmdShowBlogInsertionForm">
 
-        <SectionHeader content={formTitle} isFirst={true} />
+        <SectionHeader
+          content={t("BlogInsertionForm.title")}
+          isFirst={true} />
 
         <SimpleForm
-          submitTitle="Insert" onSubmit={insertBlog}
-          cancelTitle="Cancel" onCancel={cancelInsertion} >
+          submitTitle={t("BlogInsertionForm.cmdInsert")}
+          onSubmit={insertBlog}
+          cancelTitle={t("BlogInsertionForm.cmdCancel")}
+          onCancel={cancelInsertion} >
 
           <SimpleFormRow>
-            <label htmlFor={newBlogTitle.id}>Title</label>
+            <label htmlFor={newBlogTitle.id}>{t("BlogInsertionForm.lblTitle")}</label>
             <input {...newBlogTitle} />
           </SimpleFormRow>
           <SimpleFormRow>
-            <label htmlFor={newBlogAuthor.id}>Author</label>
+            <label htmlFor={newBlogAuthor.id}>{t("BlogInsertionForm.lblAuthor")}</label>
             <input {...newBlogAuthor} autoComplete="name" />
           </SimpleFormRow>
           <SimpleFormRow>
-            <label htmlFor={newBlogUrl.id}>URL</label>
+            <label htmlFor={newBlogUrl.id}>{t("BlogInsertionForm.lblURL")}</label>
             <input {...newBlogUrl} autoComplete="url" />
           </SimpleFormRow>
         </SimpleForm>
