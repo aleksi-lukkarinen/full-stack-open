@@ -1,7 +1,9 @@
+import React from "react"
+
 import PropTypes from "prop-types"
 
 
-const ContentContainer = ({children}) => {
+const ContentContainer = ({ children }) => {
   return (
     <div className="contentContainer">
       {children}

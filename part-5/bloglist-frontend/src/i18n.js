@@ -71,17 +71,17 @@ const resources = {
 }
 
 i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: "en",
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+      resources,
+      lng: "en",
 
-    keySeparator: ".",
+      keySeparator: ".",
 
-    interpolation: {
-      escapeValue: false,
-    }
-  })
+      interpolation: {
+        escapeValue: false,
+      }
+    })
 
 export default i18n

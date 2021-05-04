@@ -1,7 +1,9 @@
+import React from "react"
+
 import PropTypes from "prop-types"
 
 
-const SimpleFormRow = ({children}) => {
+const SimpleFormRow = ({ children }) => {
   return (
     <div className="row">
       {children}

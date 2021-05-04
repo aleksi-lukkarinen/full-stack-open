@@ -1,7 +1,9 @@
+import React from "react"
+
 import PropTypes from "prop-types"
 
 
-const SimpleFormCell = ({children}) => {
+const SimpleFormCell = ({ children }) => {
   return (
     <div className="cell">
       {children}

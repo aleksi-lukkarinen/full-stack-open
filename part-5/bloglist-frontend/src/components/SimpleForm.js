@@ -1,3 +1,5 @@
+import React from "react"
+
 import PropTypes from "prop-types"
 
 import SimpleFormCell from "./SimpleFormCell"
@@ -8,7 +10,7 @@ import SubmitButton from "./SubmitButton"
 const SimpleForm = ({
   submitTitle, onSubmit,
   cancelTitle, onCancel,
-  children}) => {
+  children }) => {
 
   const showCancel = cancelTitle !== undefined
 

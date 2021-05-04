@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 
 import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
@@ -11,14 +11,14 @@ import BlogInsertionForm from "./BlogInsertionForm"
 
 const BlogListView = ({
   setInfoMessage,
-  setErrorMessage}) => {
+  setErrorMessage }) => {
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+    blogService.getAll().then(foundBlogs =>
+      setBlogs(foundBlogs)
     )
   }, [])
 

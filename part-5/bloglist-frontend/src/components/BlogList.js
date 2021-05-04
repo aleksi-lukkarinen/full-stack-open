@@ -1,9 +1,11 @@
+import React from "react"
+
 import PropTypes from "prop-types"
 
 import BlogListItem from "./BlogListItem"
 
 
-const BlogList = ({blogs}) => {
+const BlogList = ({ blogs }) => {
   return (
     <>
       {blogs.map(blog => <BlogListItem key={blog.id} blog={blog} />)}

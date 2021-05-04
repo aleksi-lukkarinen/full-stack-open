@@ -1,7 +1,9 @@
+import React from "react"
+
 import PropTypes from "prop-types"
 
 
-const BlogListItem = ({blog}) => (
+const BlogListItem = ({ blog }) => (
   <div>
     {blog.title} {blog.author}
   </div>

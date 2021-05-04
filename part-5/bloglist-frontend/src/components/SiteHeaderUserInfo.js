@@ -1,8 +1,13 @@
+import React from "react"
+
 import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
 
 
-const SiteHeaderUserInfo = ({ currentUser, setCurrentUser }) => {
+const SiteHeaderUserInfo = ({
+  currentUser,
+  setCurrentUser }) => {
+
   const { t } = useTranslation()
 
   function processLogout(event) {
@@ -13,7 +18,7 @@ const SiteHeaderUserInfo = ({ currentUser, setCurrentUser }) => {
   }
 
   return (
-      <span className="userInfo">
+    <span className="userInfo">
       {currentUser
         ? <>
             <span className="currentUserName">{t("SiteHeader.knownUser", { currentUser })}</span>

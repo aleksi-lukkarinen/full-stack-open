@@ -1,3 +1,5 @@
+import React from "react"
+
 import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
 
@@ -10,13 +12,13 @@ import SimpleFormRow from "./SimpleFormRow"
 
 
 const LoginView = ({
-        setCurrentUser,
-        setErrorMessage}) => {
+  setCurrentUser,
+  setErrorMessage }) => {
 
-  const {t} = useTranslation()
-  const {reset:resetUsername, ...username} =
+  const { t } = useTranslation()
+  const { reset:resetUsername, ...username } =
     useField("txtUsername", "text")
-  const {reset:resetPassword, ...password} =
+  const { reset:resetPassword, ...password } =
     useField("txtPassword", "password")
 
   async function processLogin(event) {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 
 import PropTypes from "prop-types"
 
@@ -6,8 +6,10 @@ import PropTypes from "prop-types"
 function cssDisplayForHiddenVisibleContent(isVisible) {
   const cssDisplayValues = ["none", ""]
 
-  function cssDisplayFor(isVisible) {
-    return {display: cssDisplayValues[Number(isVisible)]}
+  function cssDisplayFor(bVisibility) {
+    return {
+      display: cssDisplayValues[Number(bVisibility)]
+    }
   }
 
   return [
@@ -20,7 +22,7 @@ const Showable = ({
   visibilityChanged,
   isVisible, showContent,
   buttonLabel, buttonId,
-  children}) => {
+  children }) => {
 
   const [oldVisibility, setOldVisibility] = useState(false)
 
