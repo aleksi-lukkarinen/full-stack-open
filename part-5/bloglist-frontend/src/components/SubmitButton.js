@@ -1,8 +1,8 @@
 import PropTypes from "prop-types"
 
 
-const SubmitButton = ({title}) => {
-  return <button type="submit">{title}</button>
+const SubmitButton = ({ title }) => {
+  return <button type="submit">{ title }</button>
 }
 
 SubmitButton.propTypes = {
