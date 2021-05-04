@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 
 const SimpleFormCell = ({children}) => {
   return (
@@ -5,6 +7,10 @@ const SimpleFormCell = ({children}) => {
       {children}
     </div>
   )
+}
+
+SimpleFormCell.propTypes = {
+  children: PropTypes.any,
 }
 
 export default SimpleFormCell

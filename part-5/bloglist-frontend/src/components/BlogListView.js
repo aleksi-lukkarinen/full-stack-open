@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
+
 import { useTranslation } from "react-i18next"
+import PropTypes from "prop-types"
+
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
 import BlogList from "./BlogList"
@@ -33,5 +36,9 @@ const BlogListView = ({
   )
 }
 
+BlogListView.propTypes = {
+  setInfoMessage: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
+}
 
 export default BlogListView

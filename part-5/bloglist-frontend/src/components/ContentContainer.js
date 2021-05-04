@@ -1,4 +1,4 @@
-import React from "react"
+import PropTypes from "prop-types"
 
 
 const ContentContainer = ({children}) => {
@@ -7,6 +7,10 @@ const ContentContainer = ({children}) => {
       {children}
     </div>
   )
+}
+
+ContentContainer.propTypes = {
+  children: PropTypes.any,
 }
 
 export default ContentContainer

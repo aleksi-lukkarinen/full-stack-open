@@ -1,7 +1,10 @@
-import React, {useState} from 'react'
+import { useState } from 'react'
+
 import { useTranslation } from "react-i18next"
+import PropTypes from "prop-types"
+
 import { useField } from "../hooks"
-import BlogService from "../services/blogService"
+import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
 import SimpleForm from './SimpleForm'
 import SimpleFormRow from './SimpleFormRow'
@@ -43,7 +46,7 @@ const BlogInsertionForm = ({
       url: newBlogUrl.value,
     }
 
-    BlogService
+    blogService
       .insert(blogToInsert)
       .then(data => {
         setBlogs(blogs.concat(data))
@@ -139,7 +142,7 @@ const BlogInsertionForm = ({
   return (
     <>
       <Showable
-        afterUpdate={visibilityChanged}
+        visibilityChanged={visibilityChanged}
         isVisible={isFormVisible}
         showContent={showInsertionForm}
         buttonLabel={t("BlogInsertionForm.cmdOpenForm")}
@@ -172,5 +175,13 @@ const BlogInsertionForm = ({
     </>
   )
 }
+
+BlogInsertionForm.propTypes = {
+  blogs: PropTypes.array,
+  setBlogs: PropTypes.func.isRequired,
+  setInfoMessage: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
+}
+
 
 export default BlogInsertionForm

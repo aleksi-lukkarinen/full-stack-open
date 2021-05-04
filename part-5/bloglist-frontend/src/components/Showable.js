@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from "react"
+import { useState, useEffect } from "react"
+
+import PropTypes from "prop-types"
 
 
 function cssDisplayForHiddenVisibleContent(isVisible) {
@@ -53,6 +55,15 @@ const Showable = ({
       </div>
     </div>
   )
+}
+
+Showable.propTypes = {
+  visibilityChanged: PropTypes.func.isRequired,
+  isVisible: PropTypes.bool.isRequired,
+  showContent: PropTypes.func.isRequired,
+  buttonLabel: PropTypes.string.isRequired,
+  buttonId: PropTypes.string.isRequired,
+  children: PropTypes.any,
 }
 
 export default Showable

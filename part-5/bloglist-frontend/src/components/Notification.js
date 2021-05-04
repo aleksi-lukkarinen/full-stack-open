@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 
 const Notification = ({ content, baseClass, messageVisibleClass }) => {
   if (content === null)
@@ -10,5 +12,10 @@ const Notification = ({ content, baseClass, messageVisibleClass }) => {
   return <div className={classes}>{content}</div>
 }
 
+Notification.propTypes = {
+  content: PropTypes.string,
+  baseClass: PropTypes.string.isRequired,
+  messageVisibleClass: PropTypes.string.isRequired,
+}
 
 export default Notification

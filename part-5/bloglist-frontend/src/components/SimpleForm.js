@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 import SimpleFormCell from "./SimpleFormCell"
 import SimpleFormRow from "./SimpleFormRow"
 import SubmitButton from "./SubmitButton"
@@ -25,6 +27,14 @@ const SimpleForm = ({
       </SimpleFormRow>
     </form>
   )
+}
+
+SimpleForm.propTypes = {
+  submitTitle: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  cancelTitle: PropTypes.string,
+  onCancel: PropTypes.func,
+  children: PropTypes.any,
 }
 
 export default SimpleForm

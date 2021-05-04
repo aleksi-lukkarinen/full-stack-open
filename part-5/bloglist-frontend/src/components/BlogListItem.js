@@ -1,4 +1,4 @@
-import React from "react"
+import PropTypes from "prop-types"
 
 
 const BlogListItem = ({blog}) => (
@@ -7,5 +7,8 @@ const BlogListItem = ({blog}) => (
   </div>
 )
 
+BlogListItem.propTypes = {
+  blog: PropTypes.object.isRequired,
+}
 
 export default BlogListItem

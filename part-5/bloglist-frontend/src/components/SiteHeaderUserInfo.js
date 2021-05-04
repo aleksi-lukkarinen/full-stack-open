@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import PropTypes from "prop-types"
 
 
 const SiteHeaderUserInfo = ({ currentUser, setCurrentUser }) => {
@@ -22,6 +23,11 @@ const SiteHeaderUserInfo = ({ currentUser, setCurrentUser }) => {
       }
     </span>
   )
+}
+
+SiteHeaderUserInfo.propTypes = {
+  currentUser: PropTypes.object,
+  setCurrentUser: PropTypes.func.isRequired,
 }
 
 export default SiteHeaderUserInfo

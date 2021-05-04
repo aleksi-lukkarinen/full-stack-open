@@ -1,6 +1,6 @@
-import React from "react"
-import BlogListItem from "./BlogListItem"
+import PropTypes from "prop-types"
 
+import BlogListItem from "./BlogListItem"
 
 
 const BlogList = ({blogs}) => {
@@ -11,5 +11,8 @@ const BlogList = ({blogs}) => {
   )
 }
 
+BlogList.propTypes = {
+  blogs: PropTypes.array,
+}
 
 export default BlogList
