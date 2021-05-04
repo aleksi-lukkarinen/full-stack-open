@@ -20,12 +20,49 @@ button {
   font-weight:      bold;
 }
 
-.userInfo .currentUserName {
-  margin-right:     1em;
+.siteHeader .userInfo,
+.siteHeader .separator,
+.siteHeader .languageSwitcher {
+  display: inline;
+}
+
+.siteHeader .separator {
+  padding: 0em 1em;
+}
+
+.siteHeader .separator .content::after {
+  content: "|";
+}
+
+.siteHeader .userInfo .currentUserName {
+  margin-right: 1em;
+}
+
+.siteHeader .languageSwitcher * {
+  background:     none !important;
+  border:         none !important;
+  padding:        0 !important;
+  color:           white;
+  margin-right:   0.5em;
+}
+
+.siteHeader .languageSwitcher *:focus {
+  outline-style:    dotted;
+  outline-width:    1px;
+  outline-color:     white;
+}
+
+.siteHeader .languageSwitcher .active {
+  font-weight:      bold;
+}
+
+.siteHeader .languageSwitcher .selectable {
+  text-decoration:  underline;
+  cursor:           pointer;
 }
 
 .contentContainer {
-  padding:          1em;
+  padding: 1em;
 }
 
 .sectionHeader {
