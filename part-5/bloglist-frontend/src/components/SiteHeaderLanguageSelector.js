@@ -29,7 +29,7 @@ const SiteHeaderLanguageSelector = () => {
           disabled={ isActiveLanguage }
           className={ isActiveLanguage ? "active" : "selectable" }>
 
-          {languageInfo[lang].abbr}
+          {languageInfo[`${lang}`].abbr}
         </button>
       )
     })

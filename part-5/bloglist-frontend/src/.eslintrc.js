@@ -4,11 +4,15 @@ module.exports = {
     "es6": true,
     "jest/globals": true
   },
+  "plugins": [
+    "react", "jest", "security"
+  ],
   "extends": [
     "react-app",
     "react-app/jest",
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:security/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -17,9 +21,6 @@ module.exports = {
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": [
-    "react", "jest"
-  ],
   "rules": {
     "arrow-spacing": [
       "error", { "before": true, "after": true }

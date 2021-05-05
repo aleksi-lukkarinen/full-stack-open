@@ -80,7 +80,7 @@ const BlogInsertionForm = ({
                   else {
                     msg += "s:"
                     for (let i=0; i<responseData.errors.length; i++) {
-                      msg += ` (${i + 1}) ` + responseData.errors[i].message
+                      msg += ` (${i + 1}) ` + responseData.errors[Number(i)].message
                       if (!msg.endsWith("."))
                         msg += "."
                     }
