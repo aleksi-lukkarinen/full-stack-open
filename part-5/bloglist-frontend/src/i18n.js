@@ -34,6 +34,16 @@ const resources = {
       "BlogList": {
         "title": "Saved Blogs",
       },
+
+      "BlogListItem": {
+        "btnDetailVisibility": {
+          "hide": "Hide",
+          "show": "Show"
+        },
+        "likes": "{{count}} like",
+        "likes_plural": "{{count}} likes",
+        "btnLike": "Like"
+      }
     }
   },
   fi: {
@@ -66,6 +76,16 @@ const resources = {
       "BlogList": {
         "title": "Tallennetut blogit",
       },
+
+      "BlogListItem": {
+        "btnDetailVisibility": {
+          "hide": "Piilota",
+          "show": "Näytä"
+        },
+        "likes": "{{count}} tykkäys",
+        "likes_plural": "{{count}} tykkäystä",
+        "btnLike": "Tykkää"
+      }
     }
   }
 }

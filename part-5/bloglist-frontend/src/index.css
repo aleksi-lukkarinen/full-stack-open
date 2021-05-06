@@ -111,6 +111,66 @@ button {
   width: 30em;
 }
 
+.blogListItem {
+  width: 30em;
+  background: lightYellow;
+  border: 1px solid darkgoldenrod;
+  margin-top: 0.3em;
+  padding: 0.5em;
+  font-size: 95%;
+}
+
+.blogListItem .pnlButtons {
+  margin-top: -0.15em;
+  float: right;
+  margin-left: 1em;
+}
+
+.blogListItem .pnlButtons * {
+  font-size: 60%;
+}
+
+.blogListItem .header .blogTitle {
+  font-weight: bold;
+}
+
+.blogListItem .header .blogTitle::after {
+  content: " ";
+}
+
+.blogListItem .header .blogAuthor {
+  font-size: 70%;
+}
+
+.blogListItem .header .blogAuthor::before {
+  content: "(";
+}
+
+.blogListItem .header .blogAuthor::after {
+  content: ")";
+}
+
+.blogListItem .blogUrl {
+  margin-top: 0.5em;
+  font-size: 70%;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+.blogListItem .footer {
+  margin-top: 0.5em;
+  font-size: 80%;
+}
+
+.blogListItem .footer .adder {
+  margin-right: 1em;
+}
+
+.blogListItem .footer .btnLike {
+  margin-left: 0.5em;
+  font-size: 80%;
+}
+
 .notificationBox {
   width: 30em;
   font-size: 90%;
