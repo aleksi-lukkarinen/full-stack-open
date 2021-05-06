@@ -1,8 +1,17 @@
 import React from "react"
 
+import BrToHide from "./BrToHide"
+
 
 const SiteHeaderSeparator = () => {
-  return <span className="separator"><span className="content" /></span>
+  return (
+    <>
+      <BrToHide />
+      <span className="separator">
+        <span className="content" />
+      </span>
+    </>
+  )
 }
 
 export default SiteHeaderSeparator

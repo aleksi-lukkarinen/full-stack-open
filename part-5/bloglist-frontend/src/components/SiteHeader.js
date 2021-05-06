@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 import SiteHeaderLanguageSelector from "./SiteHeaderLanguageSelector"
 import SiteHeaderSeparator from "./SiteHeaderSeparator"
 import SiteHeaderUserInfo from "./SiteHeaderUserInfo"
+import BrToHide from "./BrToHide"
 
 
 const SiteHeader = ({
@@ -12,7 +13,7 @@ const SiteHeader = ({
   setCurrentUser }) => {
 
   return (
-    <div className="siteHeader">
+    <ul className="siteHeader">
       <SiteHeaderUserInfo
         currentUser={ currentUser }
         setCurrentUser={ setCurrentUser } />
@@ -20,7 +21,8 @@ const SiteHeader = ({
       <SiteHeaderSeparator />
 
       <SiteHeaderLanguageSelector />
-    </div>
+      <BrToHide />
+    </ul>
   )
 }
 

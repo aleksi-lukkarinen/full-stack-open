@@ -10,7 +10,14 @@ button {
   padding: 0.1em 0.7em;
 }
 
+.toHide {
+  display: none;
+}
+
 .siteHeader {
+  display:          block;
+  list-style-type:  none;
+  margin:           0em;
   height:           3em;
   line-height:      3em;
   padding:          0em 1em;
@@ -20,13 +27,12 @@ button {
   font-weight:      bold;
 }
 
-.siteHeader .userInfo,
-.siteHeader .separator,
-.siteHeader .languageSwitcher {
+.siteHeader li {
   display: inline;
 }
 
 .siteHeader .separator {
+  display: inline;
   padding: 0em 1em;
 }
 
@@ -34,7 +40,8 @@ button {
   content: "|";
 }
 
-.siteHeader .userInfo .currentUserName {
+.siteHeader .currentUserName {
+  display: inline;
   margin-right: 1em;
 }
 
@@ -131,6 +138,7 @@ button {
 }
 
 .blogListItem .header .blogTitle {
+  display: inline;
   font-weight: bold;
 }
 
@@ -139,6 +147,7 @@ button {
 }
 
 .blogListItem .header .blogAuthor {
+  display: inline;
   font-size: 70%;
 }
 
@@ -163,7 +172,12 @@ button {
 }
 
 .blogListItem .footer .adder {
+  display: inline;
   margin-right: 1em;
+}
+
+.blogListItem .footer .blogLikes {
+  display: inline;
 }
 
 .blogListItem .footer .btnLike {

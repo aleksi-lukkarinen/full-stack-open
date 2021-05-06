@@ -35,7 +35,7 @@ const SiteHeaderLanguageSelector = () => {
     })
 
   return (
-    <span className="languageSwitcher">{ languageButtons }</span>
+    <li className="languageSwitcher">{ languageButtons }</li>
   )
 }
 

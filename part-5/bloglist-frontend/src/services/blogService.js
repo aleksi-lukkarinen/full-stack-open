@@ -18,18 +18,29 @@ function getAllBlogs() {
 }
 
 function insertBlog(blogToInsert) {
-  const config = {
+  const settings = {
     headers: {
       Authorization: authToken
     }
   }
-  const result = axios.post(baseUrl, blogToInsert, config)
+  const result = axios.post(baseUrl, blogToInsert, settings)
+  return simplified(result)
+}
+
+function likeBlog(blogToLike) {
+  const url = `${baseUrl}/${blogToLike.id}`
+  const dataToPut = {
+    ...blogToLike,
+    likes: blogToLike.likes + 1
+  }
+  const result = axios.put(url, dataToPut)
   return simplified(result)
 }
 
 const BlogService = {
   getAll: getAllBlogs,
   insert: insertBlog,
+  like: likeBlog,
   setAuthToken,
 }
 

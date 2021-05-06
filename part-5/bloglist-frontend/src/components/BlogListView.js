@@ -31,7 +31,9 @@ const BlogListView = ({
 
       <SectionHeader content={ t("BlogList.title") } />
 
-      <BlogList blogs={ blogs } />
+      <BlogList
+        blogs={ blogs }
+        setBlogs={ setBlogs } />
     </>
   )
 }

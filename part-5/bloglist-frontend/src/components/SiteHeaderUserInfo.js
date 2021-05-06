@@ -18,17 +18,16 @@ const SiteHeaderUserInfo = ({
   }
 
   return (
-    <span className="userInfo">
-      {currentUser
-        ? <>
-            <span className="currentUserName">{t("SiteHeader.knownUser", { currentUser })}</span>
+    currentUser
+      ? <>
+          <li className="currentUserName">{t("SiteHeader.knownUser", { currentUser })}</li>
+          <li>
             <button type="button" onClick={ processLogout }>
               {t("SiteHeader.cmdLogout")}
             </button>
-          </>
-        : <span className="currentUserName">{t("SiteHeader.unknownUser")}</span>
-      }
-    </span>
+          </li>
+        </>
+      : <li className="currentUserName">{t("SiteHeader.unknownUser")}</li>
   )
 }
 
