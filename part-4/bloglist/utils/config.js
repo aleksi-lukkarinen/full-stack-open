@@ -3,7 +3,7 @@ require("dotenv").config()
 const USERNAME_MIN_LENGTH = 3
 const PASSWORD_MIN_LENGTH = 3
 const SALT_ROUNDS = 10
-const AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS = 60
+const AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS = 60 * 60
 
 const ENVIRONMENT_CLASS = process.env.NODE_ENV
 const IS_TEST_ENVIRONMENT = ENVIRONMENT_CLASS === "test"
@@ -72,6 +72,8 @@ const ERR_USERNAME_IS_NOT_STRING = valErr(4)
 const ERR_PASSWORD_TOO_SHORT = valErr(5)
 const ERR_PASSWORD_IS_NOT_STRING = valErr(6)
 const ERR_BLOG_LIST_IS_NOT_ARRAY = valErr(7)
+const ERR_BLOG_TITLE_IS_MISSING = valErr(8)
+const ERR_BLOG_URL_IS_MISSING = valErr(9)
 
 const ErrorMessages = {}
 ErrorMessages[ERR_UNKNOWN_ENDPOINT] =
@@ -102,6 +104,10 @@ ErrorMessages[ERR_PASSWORD_IS_NOT_STRING] =
     "Password has to be a string"
 ErrorMessages[ERR_BLOG_LIST_IS_NOT_ARRAY] =
     "Blog list has to be an array"
+ErrorMessages[ERR_BLOG_TITLE_IS_MISSING] =
+    "Blog title is missing"
+ErrorMessages[ERR_BLOG_URL_IS_MISSING] =
+    "Blog url is missing"
 
 module.exports = {
   USERNAME_MIN_LENGTH,
@@ -155,6 +161,8 @@ module.exports = {
   ERR_PASSWORD_TOO_SHORT,
   ERR_PASSWORD_IS_NOT_STRING,
   ERR_BLOG_LIST_IS_NOT_ARRAY,
+  ERR_BLOG_TITLE_IS_MISSING,
+  ERR_BLOG_URL_IS_MISSING,
 
   ErrorMessages,
 }

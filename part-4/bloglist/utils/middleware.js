@@ -137,6 +137,32 @@ const errorHandler = (error, request, response, next) => {
       ]
     }
   }
+  else if (error.name === "BlogTitleIsMissingError") {
+    responseStatus = config.HTTP_STATUS_BAD_REQUEST
+    errorCode = config.ERR_BLOG_TITLE_IS_MISSING
+    responseData = {
+      status: responseStatus,
+      errors: [
+        {
+          errorCode,
+          message: config.ErrorMessages[errorCode],
+        }
+      ]
+    }
+  }
+  else if (error.name === "BlogUrlIsMissingError") {
+    responseStatus = config.HTTP_STATUS_BAD_REQUEST
+    errorCode = config.ERR_BLOG_URL_IS_MISSING
+    responseData = {
+      status: responseStatus,
+      errors: [
+        {
+          errorCode,
+          message: config.ErrorMessages[errorCode],
+        }
+      ]
+    }
+  }
   else if (error.name === "BlogNotOwnedByCurrentUserError") {
     responseStatus = config.HTTP_STATUS_UNAUTHORIZED
     errorCode = config.ERR_BLOG_NOT_OWNED_BY_CURRENT_USER

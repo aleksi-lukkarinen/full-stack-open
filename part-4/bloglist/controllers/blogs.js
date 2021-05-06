@@ -14,9 +14,16 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
   const { body, user } = request
 
-  if (!body.title || !body.url) {
-    response.status(config.HTTP_STATUS_BAD_REQUEST).end()
-    return
+  if (!body.title) {
+    const e = new Error()
+    e.name = "BlogTitleIsMissingError"
+    throw e
+  }
+
+  if (!body.url) {
+    const e = new Error()
+    e.name = "BlogUrlIsMissingError"
+    throw e
   }
 
   const blogToInsert = new Blog({
