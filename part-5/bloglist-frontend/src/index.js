@@ -5,10 +5,11 @@ import App from "./App"
 import "./index.css"
 
 
-const appBase =
+const appBase = (
   <React.StrictMode>
     <App />
   </React.StrictMode>
+)
 
 const root = document.getElementById("root")
 

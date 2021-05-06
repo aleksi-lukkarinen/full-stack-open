@@ -30,27 +30,27 @@ const App = () => {
   return (
     <>
       <SiteHeader
-        currentUser={currentUser}
-        setCurrentUser={setCurrentUser} />
+        currentUser={ currentUser }
+        setCurrentUser={ setCurrentUser } />
 
       <ContentContainer>
         <Notification
-          content={errorMessage}
-          baseClass={"notificationBox"}
-          messageVisibleClass={"errorVisible"} />
+          content={ errorMessage }
+          baseClass={ "notificationBox" }
+          messageVisibleClass={ "errorVisible" } />
 
         <Notification
-          content={infoMessage}
-          baseClass={"notificationBox"}
-          messageVisibleClass={"infoVisible"} />
+          content={ infoMessage }
+          baseClass={ "notificationBox" }
+          messageVisibleClass={ "infoVisible" } />
 
         { currentUser === null
           ? <LoginView
-              setCurrentUser={setCurrentUser}
-              setErrorMessage={setErrorMessage} />
+              setCurrentUser={ setCurrentUser }
+              setErrorMessage={ setErrorMessage } />
           : <BlogListView
-              setInfoMessage={setInfoMessage}
-              setErrorMessage={setErrorMessage} />
+              setInfoMessage={ setInfoMessage }
+              setErrorMessage={ setErrorMessage } />
         }
       </ContentContainer>
     </>

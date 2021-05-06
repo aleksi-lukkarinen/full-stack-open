@@ -22,7 +22,9 @@ const SiteHeaderUserInfo = ({
       {currentUser
         ? <>
             <span className="currentUserName">{t("SiteHeader.knownUser", { currentUser })}</span>
-            <button onClick={ processLogout }>{t("SiteHeader.cmdLogout")}</button>
+            <button type="button" onClick={ processLogout }>
+              {t("SiteHeader.cmdLogout")}
+            </button>
           </>
         : <span className="currentUserName">{t("SiteHeader.unknownUser")}</span>
       }

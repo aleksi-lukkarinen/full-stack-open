@@ -14,8 +14,8 @@ const SiteHeader = ({
   return (
     <div className="siteHeader">
       <SiteHeaderUserInfo
-        currentUser={currentUser}
-        setCurrentUser={setCurrentUser} />
+        currentUser={ currentUser }
+        setCurrentUser={ setCurrentUser } />
 
       <SiteHeaderSeparator />
 

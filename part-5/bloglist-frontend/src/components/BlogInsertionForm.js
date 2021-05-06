@@ -19,7 +19,7 @@ const BlogInsertionForm = ({
 
   const { t } = useTranslation()
 
-  const [isFormVisible, setFormVisibility] = useState(false)
+  const [formIsVisible, setFormVisibility] = useState(false)
 
   const { reset:resetNewBlogTitle, ...newBlogTitle } =
     useField("txtNewBlogTitle", "text")
@@ -121,7 +121,7 @@ const BlogInsertionForm = ({
   }
 
   function visibilityChanged() {
-    if (isFormVisible) {
+    if (formIsVisible) {
       const field = newBlogTitle.ref.current
       field.focus()
     }
@@ -143,33 +143,33 @@ const BlogInsertionForm = ({
   return (
     <>
       <Showable
-        visibilityChanged={visibilityChanged}
-        isVisible={isFormVisible}
-        showContent={showInsertionForm}
-        buttonLabel={t("BlogInsertionForm.cmdOpenForm")}
+        visibilityChanged={ visibilityChanged }
+        contentIsVisible={ formIsVisible }
+        showContent={ showInsertionForm }
+        buttonLabel={ t("BlogInsertionForm.cmdOpenForm") }
         buttonId="cmdShowBlogInsertionForm">
 
         <SectionHeader
-          content={t("BlogInsertionForm.title")}
-          isFirst={true} />
+          content={ t("BlogInsertionForm.title") }
+          thisIsFirstHeader={ true } />
 
         <SimpleForm
-          submitTitle={t("BlogInsertionForm.cmdInsert")}
-          onSubmit={insertBlog}
-          cancelTitle={t("BlogInsertionForm.cmdCancel")}
-          onCancel={cancelInsertion} >
+          submitTitle={ t("BlogInsertionForm.cmdInsert") }
+          onSubmit={ insertBlog }
+          cancelTitle={ t("BlogInsertionForm.cmdCancel") }
+          onCancel={ cancelInsertion } >
 
           <SimpleFormRow>
-            <label htmlFor={newBlogTitle.id}>{t("BlogInsertionForm.lblTitle")}</label>
-            <input {...newBlogTitle} />
+            <label htmlFor={ newBlogTitle.id }>{t("BlogInsertionForm.lblTitle")}</label>
+            <input { ...newBlogTitle } />
           </SimpleFormRow>
           <SimpleFormRow>
-            <label htmlFor={newBlogAuthor.id}>{t("BlogInsertionForm.lblAuthor")}</label>
-            <input {...newBlogAuthor} autoComplete="name" />
+            <label htmlFor={ newBlogAuthor.id }>{t("BlogInsertionForm.lblAuthor")}</label>
+            <input { ...newBlogAuthor } autoComplete="name" />
           </SimpleFormRow>
           <SimpleFormRow>
-            <label htmlFor={newBlogUrl.id}>{t("BlogInsertionForm.lblURL")}</label>
-            <input {...newBlogUrl} autoComplete="url" />
+            <label htmlFor={ newBlogUrl.id }>{t("BlogInsertionForm.lblURL")}</label>
+            <input { ...newBlogUrl } autoComplete="url" />
           </SimpleFormRow>
         </SimpleForm>
       </Showable>

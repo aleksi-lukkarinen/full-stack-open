@@ -49,21 +49,21 @@ const LoginView = ({
   return (
     <>
       <SectionHeader
-        content={t("LoginForm.title")}
-        isFirst={true} />
+        content={ t("LoginForm.title") }
+        thisIsFirstHeader={ true } />
 
-      <SimpleForm submitTitle={t("LoginForm.cmdLogin")} onSubmit={processLogin}>
+      <SimpleForm submitTitle={ t("LoginForm.cmdLogin") } onSubmit={ processLogin }>
         <SimpleFormRow>
-          <label htmlFor={username.id}>{t("LoginForm.lblUsername")}</label>
+          <label htmlFor={ username.id }>{t("LoginForm.lblUsername")}</label>
           <input
-            {...username}
+            { ...username }
             autoFocus
             autoComplete="username" />
         </SimpleFormRow>
         <SimpleFormRow>
-          <label htmlFor={password.id}>{t("LoginForm.lblPassword")}</label>
+          <label htmlFor={ password.id }>{t("LoginForm.lblPassword")}</label>
           <input
-            {...password}
+            { ...password }
             autoComplete="current-password" />
         </SimpleFormRow>
       </SimpleForm>

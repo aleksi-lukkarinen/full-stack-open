@@ -20,14 +20,14 @@ function cssDisplayForHiddenVisibleContent(isVisible) {
 
 const Showable = ({
   visibilityChanged,
-  isVisible, showContent,
+  contentIsVisible, showContent,
   buttonLabel, buttonId,
   children }) => {
 
   const [oldVisibility, setOldVisibility] = useState(false)
 
   const [cssForHiddenContent, cssForVisibleContent] =
-    cssDisplayForHiddenVisibleContent(isVisible)
+    cssDisplayForHiddenVisibleContent(contentIsVisible)
 
   function showChildren(event) {
     event.preventDefault()
@@ -38,21 +38,23 @@ const Showable = ({
   useEffect(() => {
     if (visibilityChanged &&
       typeof(visibilityChanged) === "function" &&
-      isVisible !== oldVisibility) {
+      contentIsVisible !== oldVisibility) {
 
-      setOldVisibility(isVisible)
+      setOldVisibility(contentIsVisible)
       visibilityChanged()
     }
-  }, [visibilityChanged, isVisible, oldVisibility])
+  }, [visibilityChanged, contentIsVisible, oldVisibility])
 
   return (
     <div>
-      <div style={cssForHiddenContent}>
+      <div style={ cssForHiddenContent }>
         <button
-          id={buttonId}
-          onClick={showChildren}>{buttonLabel}</button>
+          id={ buttonId }
+          type="button"
+          onClick={ showChildren }>{buttonLabel}
+        </button>
       </div>
-      <div style={cssForVisibleContent}>
+      <div style={ cssForVisibleContent }>
         {children}
       </div>
     </div>
@@ -61,7 +63,7 @@ const Showable = ({
 
 Showable.propTypes = {
   visibilityChanged: PropTypes.func.isRequired,
-  isVisible: PropTypes.bool.isRequired,
+  contentIsVisible: PropTypes.bool.isRequired,
   showContent: PropTypes.func.isRequired,
   buttonLabel: PropTypes.string.isRequired,
   buttonId: PropTypes.string.isRequired,

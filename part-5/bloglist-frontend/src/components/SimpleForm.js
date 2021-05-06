@@ -15,15 +15,17 @@ const SimpleForm = ({
   const showCancel = cancelTitle !== undefined
 
   return (
-    <form className="simpleForm" onSubmit={onSubmit}>
+    <form className="simpleForm" onSubmit={ onSubmit }>
       {children}
       <SimpleFormRow>
         <SimpleFormCell />
         <SimpleFormCell>
-          <SubmitButton title={submitTitle} />
+          <SubmitButton title={ submitTitle } />
 
           {showCancel &&
-            <button onClick={onCancel}>{cancelTitle}</button>
+            <button type="button" onClick={ onCancel }>
+              {cancelTitle}
+            </button>
           }
         </SimpleFormCell>
       </SimpleFormRow>

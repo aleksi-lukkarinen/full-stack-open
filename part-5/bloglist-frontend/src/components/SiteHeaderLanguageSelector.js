@@ -24,7 +24,7 @@ const SiteHeaderLanguageSelector = () => {
 
       return (
         <button
-          type="submit" key={lang} data-language={lang}
+          type="submit" key={ lang } data-language={ lang }
           onClick={ switchLanguage }
           disabled={ isActiveLanguage }
           className={ isActiveLanguage ? "active" : "selectable" }>
