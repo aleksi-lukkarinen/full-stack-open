@@ -4,13 +4,12 @@ import PropTypes from "prop-types"
 import { Button } from "@material-ui/core"
 
 
-const SubmitButton = ({ title }) => {
+const SubmitButton = ({ title, style }) => {
   return (
     <Button
       type="submit"
-      variant="contained"
-      size="small"
-      color="primary">
+      color="primary"
+      style={ style }>
 
       { title }
     </Button>

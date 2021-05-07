@@ -1,9 +1,18 @@
 * {
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+
 }
 
 .toHide {
   display: none;
+}
+
+.focusedButton {
+  background-color: rebeccapurple !important;
+  color: white !important;
+}
+
+.siteHeader {
+  background: linear-gradient(0deg, #cc0044 0%, #ff0077 10%, #ff0077 90%, #ff3377 100%);
 }
 
 .siteHeader .currentUserName {
@@ -16,11 +25,8 @@
 }
 
 .sectionHeader {
-  margin-left: -0.1em;
-}
-
-.sectionHeader.first {
-  margin-top: 0em;
+  padding-top: 0.5em;
+  padding-bottom: 1em;
 }
 
 .simpleForm button {

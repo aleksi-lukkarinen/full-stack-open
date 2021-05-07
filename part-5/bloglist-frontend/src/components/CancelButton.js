@@ -4,12 +4,11 @@ import PropTypes from "prop-types"
 import { Button } from "@material-ui/core"
 
 
-const CancelButton = ({ title, onClick }) => {
+const CancelButton = ({ title, style, onClick }) => {
   return (
     <Button
       type="button"
-      variant="contained"
-      size="small"
+      style={ style }
       onClick={ onClick }>
 
       { title }

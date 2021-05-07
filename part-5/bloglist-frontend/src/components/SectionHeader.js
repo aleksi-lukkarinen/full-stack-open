@@ -1,14 +1,29 @@
 import React from "react"
 
 import PropTypes from "prop-types"
+import { Typography } from "@material-ui/core"
 
 
-const SectionHeader = ({ thisIsFirstHeader, content }) => {
-  let classes = "sectionHeader"
-  if (thisIsFirstHeader)
-    classes += " first"
+const SectionHeader = ({ content, variant, component, className, style }) => {
+  const effectiveVariant =
+    variant ? variant : "h6"
 
-  return <h2 className={ classes }>{ content }</h2>
+  const effectiveComponent =
+    component ? component : variant
+
+  const effectiveClassName =
+    "sectionHeader" + (className ? " " + className : "")
+
+  return (
+    <Typography
+      variant={ effectiveVariant }
+      component={ effectiveComponent }
+      className={ effectiveClassName }
+      style={ style }>
+
+      { content }
+    </Typography>
+  )
 }
 
 SectionHeader.propTypes = {

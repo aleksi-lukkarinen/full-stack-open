@@ -3,7 +3,6 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
 import {
-  Button,
   TextField,
 } from "@material-ui/core"
 
@@ -12,6 +11,7 @@ import { useField } from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
+import SubmitButton from "./SubmitButton"
 
 
 const LoginView = ({
@@ -45,7 +45,7 @@ const LoginView = ({
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-      username.ref.current.focus()
+      username.inputRef.current.focus()
     }
   }
 
@@ -60,7 +60,6 @@ const LoginView = ({
           <TextField
             { ...username }
             variant="filled"
-            size="small"
             label={ t("Forms.Required") }
             placeholder={ t("LoginForm.lblUsername") }
             autoFocus
@@ -71,7 +70,6 @@ const LoginView = ({
           <TextField
             { ...password }
             variant="filled"
-            size="small"
             style={ { marginTop: "0.5em" } }
             label={ t("Forms.Required") }
             placeholder={ t("LoginForm.lblPassword") }
@@ -79,15 +77,9 @@ const LoginView = ({
             InputLabelProps={ { shrink: true } } />
         </div>
         <div>
-          <Button
-            variant="contained"
-            size="small"
-            style={ { marginTop: "1em" } }
-            color="primary"
-            type="submit">
-
-            {t("LoginForm.cmdLogin")}
-          </Button>
+          <SubmitButton
+            title={ t("LoginForm.cmdLogin") }
+            style={ { marginTop: "1em" } } />
         </div>
       </form>
     </>

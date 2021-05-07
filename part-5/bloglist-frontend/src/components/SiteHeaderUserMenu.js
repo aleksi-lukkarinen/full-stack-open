@@ -53,7 +53,12 @@ const SiteHeaderUserMenu = ({
 
   return (
     <>
-      <Button id="btnUserMenu" color="inherit" onClick={ handleUserMenuOpening }>
+      <Button
+        id="btnUserMenu"
+        variant="text"
+        color="inherit"
+        onClick={ handleUserMenuOpening }>
+
         <AccountCircle className="userIcon" />
         {currentUser
           ? <span className="currentUserName">{t("SiteHeader.knownUser", { currentUser })}</span>
