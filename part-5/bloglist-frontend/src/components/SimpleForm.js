@@ -2,9 +2,9 @@ import React from "react"
 
 import PropTypes from "prop-types"
 
-import SimpleFormCell from "./SimpleFormCell"
 import SimpleFormRow from "./SimpleFormRow"
 import SubmitButton from "./SubmitButton"
+import CancelButton from "./CancelButton"
 
 
 const SimpleForm = ({
@@ -17,17 +17,14 @@ const SimpleForm = ({
   return (
     <form className="simpleForm" onSubmit={ onSubmit }>
       {children}
-      <SimpleFormRow>
-        <SimpleFormCell />
-        <SimpleFormCell>
-          <SubmitButton title={ submitTitle } />
+      <SimpleFormRow style={ { marginTop: "1em" } }>
+        <SubmitButton title={ submitTitle } />
 
-          {showCancel &&
-            <button type="button" onClick={ onCancel }>
-              {cancelTitle}
-            </button>
-          }
-        </SimpleFormCell>
+        {showCancel &&
+          <CancelButton
+            title={ cancelTitle }
+            onClick={ onCancel } />
+        }
       </SimpleFormRow>
     </form>
   )

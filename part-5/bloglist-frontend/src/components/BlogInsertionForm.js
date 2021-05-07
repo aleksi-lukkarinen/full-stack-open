@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 
-import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
+import { useTranslation } from "react-i18next"
+import { TextField } from "@material-ui/core"
 
 import { useField } from "../hooks"
 import blogService from "../services/blogService"
@@ -122,7 +123,7 @@ const BlogInsertionForm = ({
 
   function visibilityChanged() {
     if (formIsVisible) {
-      const field = newBlogTitle.ref.current
+      const field = newBlogTitle.inputRef.current
       field.focus()
     }
   }
@@ -160,16 +161,39 @@ const BlogInsertionForm = ({
           onCancel={ cancelInsertion } >
 
           <SimpleFormRow>
-            <label htmlFor={ newBlogTitle.id }>{t("BlogInsertionForm.lblTitle")}</label>
-            <input { ...newBlogTitle } />
+            <TextField
+              error={ newBlogTitle.value === "" }
+              { ...newBlogTitle }
+              variant="filled"
+              size="small"
+              label={ t("Forms.Required") }
+              placeholder={ t("BlogInsertionForm.titleField.placeHolder") }
+              helperText={ t("BlogInsertionForm.titleField.helperText") }
+              InputLabelProps={ { shrink: true } } />
           </SimpleFormRow>
           <SimpleFormRow>
-            <label htmlFor={ newBlogAuthor.id }>{t("BlogInsertionForm.lblAuthor")}</label>
-            <input { ...newBlogAuthor } autoComplete="name" />
+            <TextField
+              { ...newBlogAuthor }
+              variant="filled"
+              size="small"
+              hiddenLabel
+              placeholder={ t("BlogInsertionForm.authorField.placeHolder") }
+              helperText={ t("BlogInsertionForm.authorField.helperText") }
+              style={ { marginTop: "1em" } }
+              InputLabelProps={ { shrink: true } } />
           </SimpleFormRow>
           <SimpleFormRow>
-            <label htmlFor={ newBlogUrl.id }>{t("BlogInsertionForm.lblURL")}</label>
-            <input { ...newBlogUrl } autoComplete="url" />
+            <TextField
+              { ...newBlogUrl }
+              error={ newBlogUrl.value === "" }
+              variant="filled"
+              size="small"
+              autoComplete="url"
+              label={ t("Forms.Required") }
+              placeholder={ t("BlogInsertionForm.urlField.placeHolder") }
+              helperText={ t("BlogInsertionForm.urlField.helperText") }
+              style={ { marginTop: "1em" } }
+              InputLabelProps={ { shrink: true } } />
           </SimpleFormRow>
         </SimpleForm>
       </Showable>

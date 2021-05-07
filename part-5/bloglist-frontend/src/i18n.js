@@ -6,10 +6,20 @@ import LanguageDetector from "i18next-browser-languagedetector"
 const resources = {
   en: {
     translation: {
+      "Forms": {
+        "Required": "Required",
+      },
+
       "SiteHeader": {
-        "unknownUser": "Unknown User",
-        "knownUser": "{{currentUser.name}} logged in",
-        "cmdLogout": "Log out",
+        "unknownUser": "Unknown",
+        "knownUser": "{{currentUser.name}}",
+      },
+
+      "UserMenu": {
+        "finnish": "Suomeksi",
+        "english": "In English",
+        "login": "Log In",
+        "logout": "Log Out",
       },
 
       "LoginForm": {
@@ -21,11 +31,20 @@ const resources = {
       },
 
       "BlogInsertionForm": {
-        "title": "Insert a New Blog",
+        "title": "Add a New Blog",
         "cmdOpenForm": "Add a New Blog...",
-        "lblTitle": "Title",
-        "lblAuthor": "Author",
-        "lblURL": "URL",
+        "titleField": {
+          "placeHolder": "Title",
+          "helperText": "For instance: The Greenhouse Effect in the 21st Century",
+        },
+        "authorField": {
+          "placeHolder": "Author's Name",
+          "helperText": "For instance: Jack Smith",
+        },
+        "urlField": {
+          "placeHolder": "Internet Address",
+          "helperText": "For instance: http://www.blogplatform.com/this-cool-blog-post/",
+        },
         "cmdInsert": "Save",
         "cmdCancel": "Cancel",
         "msgSuccessfulInsertion": "Blog \"{{blogToInsert.title}}\" was successfully inserted.",
@@ -48,10 +67,18 @@ const resources = {
   },
   fi: {
     translation: {
+      "Forms": {
+        "Required": "Pakollinen",
+      },
+
       "SiteHeader": {
-        "unknownUser": "Tuntematon käyttäjä",
-        "knownUser": "{{currentUser.name}} kirjautuneena",
-        "cmdLogout": "Kirjaudu ulos",
+        "unknownUser": "Tuntematon",
+        "knownUser": "{{currentUser.name}}",
+      },
+
+      "UserMenu": {
+        "login": "Kirjaudu sisään",
+        "logout": "Kirjaudu ulos",
       },
 
       "LoginForm": {
@@ -65,9 +92,18 @@ const resources = {
       "BlogInsertionForm": {
         "title": "Lisää uusi blogi",
         "cmdOpenForm": "Lisää uusi blogi...",
-        "lblTitle": "Otsikko",
-        "lblAuthor": "Kirjoittaja",
-        "lblURL": "Osoite",
+        "titleField": {
+          "placeHolder": "Otsikko",
+          "helperText": "Esimerkki: Kasvihuoneilmiö 2000-luvulla",
+        },
+        "authorField": {
+          "placeHolder": "Kirjoittajan nimi",
+          "helperText": "Esimerkki: Ville Virtanen",
+        },
+        "urlField": {
+          "placeHolder": "Internet-osoite",
+          "helperText": "Esimerkki: http://www.blogipalvelu.fi/blogipostaus/",
+        },
         "cmdInsert": "Tallenna",
         "cmdCancel": "Peruuta",
         "msgSuccessfulInsertion": "Blogin \"{{blogToInsert.title}}\" lisääminen onnistui.",

@@ -2,13 +2,16 @@ import React from "react"
 
 import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
+import {
+  Button,
+  TextField,
+} from "@material-ui/core"
+
 
 import { useField } from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
-import SimpleForm from "./SimpleForm"
-import SimpleFormRow from "./SimpleFormRow"
 
 
 const LoginView = ({
@@ -52,21 +55,41 @@ const LoginView = ({
         content={ t("LoginForm.title") }
         thisIsFirstHeader={ true } />
 
-      <SimpleForm submitTitle={ t("LoginForm.cmdLogin") } onSubmit={ processLogin }>
-        <SimpleFormRow>
-          <label htmlFor={ username.id }>{t("LoginForm.lblUsername")}</label>
-          <input
+      <form onSubmit={ processLogin }>
+        <div>
+          <TextField
             { ...username }
+            variant="filled"
+            size="small"
+            label={ t("Forms.Required") }
+            placeholder={ t("LoginForm.lblUsername") }
             autoFocus
-            autoComplete="username" />
-        </SimpleFormRow>
-        <SimpleFormRow>
-          <label htmlFor={ password.id }>{t("LoginForm.lblPassword")}</label>
-          <input
+            autoComplete="username"
+            InputLabelProps={ { shrink: true } } />
+        </div>
+        <div>
+          <TextField
             { ...password }
-            autoComplete="current-password" />
-        </SimpleFormRow>
-      </SimpleForm>
+            variant="filled"
+            size="small"
+            style={ { marginTop: "0.5em" } }
+            label={ t("Forms.Required") }
+            placeholder={ t("LoginForm.lblPassword") }
+            autoComplete="current-password"
+            InputLabelProps={ { shrink: true } } />
+        </div>
+        <div>
+          <Button
+            variant="contained"
+            size="small"
+            style={ { marginTop: "1em" } }
+            color="primary"
+            type="submit">
+
+            {t("LoginForm.cmdLogin")}
+          </Button>
+        </div>
+      </form>
     </>
   )
 }

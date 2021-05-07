@@ -2,7 +2,7 @@ import { useState, useRef } from "react"
 
 
 export const useField = (htmlID, htmlType) => {
-  const fieldRef = useRef(null)
+  const inputRef = useRef(null)
   const [value, setValue] = useState("")
 
   function onChange(event) {
@@ -16,7 +16,7 @@ export const useField = (htmlID, htmlType) => {
   return {
     id: htmlID,
     type: htmlType,
-    ref: fieldRef,
+    inputRef,
     value,
     onChange,
     reset,

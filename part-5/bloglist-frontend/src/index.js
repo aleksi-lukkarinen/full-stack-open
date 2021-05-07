@@ -6,9 +6,7 @@ import "./index.css"
 
 
 const appBase = (
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <App />
 )
 
 const root = document.getElementById("root")

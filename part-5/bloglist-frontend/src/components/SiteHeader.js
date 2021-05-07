@@ -1,28 +1,42 @@
 import React from "react"
 
 import PropTypes from "prop-types"
+import { makeStyles } from "@material-ui/core/styles"
+import { AppBar, Toolbar, Typography } from "@material-ui/core"
 
-import SiteHeaderLanguageSelector from "./SiteHeaderLanguageSelector"
-import SiteHeaderSeparator from "./SiteHeaderSeparator"
-import SiteHeaderUserInfo from "./SiteHeaderUserInfo"
-import BrToHide from "./BrToHide"
+import SiteHeaderUserMenu from "./SiteHeaderUserMenu"
 
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  title: {
+    flexGrow: 1,
+  },
+}))
 
 const SiteHeader = ({
   currentUser,
   setCurrentUser }) => {
 
+  const classes = useStyles()
+
   return (
-    <ul className="siteHeader">
-      <SiteHeaderUserInfo
-        currentUser={ currentUser }
-        setCurrentUser={ setCurrentUser } />
+    <>
+      <AppBar position="fixed" className="siteHeader">
+        <Toolbar>
+          <Typography variant="h6" className={ classes.title }>
+            BlogList
+          </Typography>
 
-      <SiteHeaderSeparator />
-
-      <SiteHeaderLanguageSelector />
-      <BrToHide />
-    </ul>
+          <SiteHeaderUserMenu
+            currentUser={ currentUser }
+            setCurrentUser={ setCurrentUser } />
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+    </>
   )
 }
 

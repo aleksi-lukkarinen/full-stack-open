@@ -4,21 +4,22 @@ import PropTypes from "prop-types"
 import { Button } from "@material-ui/core"
 
 
-const SubmitButton = ({ title }) => {
+const CancelButton = ({ title, onClick }) => {
   return (
     <Button
-      type="submit"
+      type="button"
       variant="contained"
       size="small"
-      color="primary">
+      onClick={ onClick }>
 
       { title }
     </Button>
   )
 }
 
-SubmitButton.propTypes = {
+CancelButton.propTypes = {
   title: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
 }
 
-export default SubmitButton
+export default CancelButton

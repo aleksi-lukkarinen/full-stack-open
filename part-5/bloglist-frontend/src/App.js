@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react"
 
+import Container from "@material-ui/core/Container"
+
 import blogService from "./services/blogService"
 import LoginView from "./components/LoginView"
 import BlogListView from "./components/BlogListView"
 import SiteHeader from "./components/SiteHeader"
 import Notification from "./components/Notification"
-import ContentContainer from "./components/ContentContainer"
 
 
 const App = () => {
@@ -28,32 +29,28 @@ const App = () => {
   }, [])
 
   return (
-    <>
+    <Container maxWidth="sm">
       <SiteHeader
         currentUser={ currentUser }
         setCurrentUser={ setCurrentUser } />
 
-      <ContentContainer>
-        <Notification
-          content={ errorMessage }
-          baseClass={ "notificationBox" }
-          messageVisibleClass={ "errorVisible" } />
+      <Notification
+        content={ errorMessage }
+        severity="error" />
 
-        <Notification
-          content={ infoMessage }
-          baseClass={ "notificationBox" }
-          messageVisibleClass={ "infoVisible" } />
+      <Notification
+        content={ infoMessage }
+        severity="success" />
 
-        { currentUser === null
-          ? <LoginView
-              setCurrentUser={ setCurrentUser }
-              setErrorMessage={ setErrorMessage } />
-          : <BlogListView
-              setInfoMessage={ setInfoMessage }
-              setErrorMessage={ setErrorMessage } />
-        }
-      </ContentContainer>
-    </>
+      { currentUser === null
+        ? <LoginView
+            setCurrentUser={ setCurrentUser }
+            setErrorMessage={ setErrorMessage } />
+        : <BlogListView
+            setInfoMessage={ setInfoMessage }
+            setErrorMessage={ setErrorMessage } />
+      }
+    </Container>
   )
 }
 

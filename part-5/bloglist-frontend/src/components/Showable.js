@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 
 import PropTypes from "prop-types"
+import { Button } from "@material-ui/core"
 
 
 function cssDisplayForHiddenVisibleContent(isVisible) {
@@ -48,11 +49,17 @@ const Showable = ({
   return (
     <div>
       <div style={ cssForHiddenContent }>
-        <button
+        <Button
           id={ buttonId }
           type="button"
-          onClick={ showChildren }>{buttonLabel}
-        </button>
+          variant="contained"
+          size="small"
+          color="primary"
+          style={ { marginTop: "1em" } }
+          onClick={ showChildren }>
+
+          {buttonLabel}
+        </Button>
       </div>
       <div style={ cssForVisibleContent }>
         {children}

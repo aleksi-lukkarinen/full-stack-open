@@ -1,75 +1,18 @@
 * {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-  margin: 0em;
-}
-
-button {
-  padding: 0.1em 0.7em;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 .toHide {
   display: none;
 }
 
-.siteHeader {
-  display:          block;
-  list-style-type:  none;
-  margin:           0em;
-  height:           3em;
-  line-height:      3em;
-  padding:          0em 1em;
-  color:            white;
-  background-color: #113355;
-  font-size:        90%;
-  font-weight:      bold;
-}
-
-.siteHeader li {
-  display: inline;
-}
-
-.siteHeader .separator {
-  display: inline;
-  padding: 0em 1em;
-}
-
-.siteHeader .separator .content::after {
-  content: "|";
-}
-
 .siteHeader .currentUserName {
   display: inline;
-  margin-right: 1em;
+  text-decoration: underline;
 }
 
-.siteHeader .languageSwitcher * {
-  background:     none !important;
-  border:         none !important;
-  padding:        0 !important;
-  color:           white;
-  margin-right:   0.5em;
-}
-
-.siteHeader .languageSwitcher *:focus {
-  outline-style:    dotted;
-  outline-width:    1px;
-  outline-color:     white;
-}
-
-.siteHeader .languageSwitcher .active {
-  font-weight:      bold;
-}
-
-.siteHeader .languageSwitcher .selectable {
-  text-decoration:  underline;
-  cursor:           pointer;
-}
-
-.contentContainer {
-  padding: 1em;
+.siteHeader .userIcon {
+  margin-right: 0.2em;
 }
 
 .sectionHeader {
@@ -80,30 +23,8 @@ button {
   margin-top: 0em;
 }
 
-.simpleForm {
-  display: table;
-}
-
-.simpleForm .row {
-  display: table-row;
-}
-
-.simpleForm .row label {
-  display:  table-cell;
-  padding-bottom: 0.5em;
-}
-
-.simpleForm .row input {
-  display:  table-cell;
-  margin-left: 1em;
-}
-
-.simpleForm .row .cell {
-  display:  table-cell;
-}
-
 .simpleForm button {
-  margin: 0.5em 0em 0em 1em;
+  margin: 0.5em 0.5em 0em 0em;
 }
 
 #txtNewBlogTitle {
