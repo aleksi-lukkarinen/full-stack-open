@@ -5,7 +5,7 @@ module.exports = {
     "jest/globals": true
   },
   "plugins": [
-    "react", "jest", "security"
+    "react", "jest", "security", "cypress"
   ],
   "extends": [
     "react-app",
