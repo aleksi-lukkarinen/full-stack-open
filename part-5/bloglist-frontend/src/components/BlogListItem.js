@@ -106,7 +106,7 @@ const BlogListItem = ({
             <div className="blogUrl">{blog.url}</div>
             <div className="footer">
               <div className="adder">{blog.user.name}</div>
-              <div className="blogLikes">
+              <div className="blogLikes" data-likes={ blog.likes }>
                 {t("BlogListItem.likes", { "count": blog.likes })}
                 <button
                   type="button"
