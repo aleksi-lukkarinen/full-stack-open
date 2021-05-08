@@ -48,7 +48,8 @@ const App = () => {
             setErrorMessage={ setErrorMessage } />
         : <BlogListView
             setInfoMessage={ setInfoMessage }
-            setErrorMessage={ setErrorMessage } />
+            setErrorMessage={ setErrorMessage }
+            currentUser={ currentUser } />
       }
     </Container>
   )

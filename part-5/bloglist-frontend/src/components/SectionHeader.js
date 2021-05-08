@@ -29,6 +29,10 @@ const SectionHeader = ({ content, variant, component, className, style }) => {
 SectionHeader.propTypes = {
   thisIsFirstHeader: PropTypes.bool,
   content: PropTypes.string.isRequired,
+  variant: PropTypes.string,
+  component: PropTypes.string,
+  className: PropTypes.string,
+  style: PropTypes.object,
 }
 
 export default SectionHeader

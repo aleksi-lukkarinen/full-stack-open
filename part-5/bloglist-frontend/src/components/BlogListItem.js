@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState } from "react"
 
 import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
@@ -6,9 +6,14 @@ import BlogService from "../services/blogService"
 import BrToHide from "./BrToHide"
 
 
-const BlogListItem = ({ blog, blogs, setBlogs }) => {
+const BlogListItem = ({
+  blog,
+  blogs, setBlogs,
+  currentUser,
+  setInfoMessage, setErrorMessage,
+}) => {
+
   const { t } = useTranslation()
-  const likeButton = useRef(null)
   const [blogDetailsAreVisible, setDetailVisibility] = useState(false)
 
   const visibilityButtonTitleKey =
@@ -17,6 +22,9 @@ const BlogListItem = ({ blog, blogs, setBlogs }) => {
     t(`BlogListItem.btnDetailVisibility.${visibilityButtonTitleKey}`)
 
   const showAuthor = blog.author && blog.author.length > 0
+
+  const showDelete = currentUser &&
+      (blog.user.id.toString() === currentUser.id.toString())
 
   function toggleDetailVisibility(event) {
     event.preventDefault()
@@ -40,6 +48,39 @@ const BlogListItem = ({ blog, blogs, setBlogs }) => {
         .finally(() => {
           sourceButton.disabled = false
         })
+  }
+
+  function deleteBlog(event) {
+    event.preventDefault()
+
+    const msgConfirmation = blog.author
+      ? t("BlogListItem.confirmDeletionWithAuthor", {
+        title: blog.title,
+        author: blog.author,
+      })
+      : t("BlogListItem.confirmDeletionWithoutAuthor", {
+        title: blog.title,
+      })
+
+    // eslint-disable-next-line no-alert
+    const blogShouldNotBeDeleted = !window.confirm(msgConfirmation)
+    if (blogShouldNotBeDeleted)
+      return
+
+    BlogService
+        .delete(blog)
+        .then(result => {
+          const msg = `Blog "${blog.title}" was successfully deleted.`
+          setInfoMessage(msg)
+          setTimeout(() => setInfoMessage(null), 5000)
+        })
+        .catch(error => {
+          const msg = `Unable to delete blog ${blog.title} from the server. ` +
+                      "Maybe it was deleted earlier or did never exist."
+          setErrorMessage(msg)
+          setTimeout(() => setErrorMessage(null), 5000)
+        })
+        .finally(setBlogs(blogs.filter(b => b.id !== blog.id)))
   }
 
   return (
@@ -69,14 +110,23 @@ const BlogListItem = ({ blog, blogs, setBlogs }) => {
                 {t("BlogListItem.likes", { "count": blog.likes })}
                 <button
                   type="button"
-                  ref={ likeButton }
                   className="btnLike"
-                  data-blog-id={ blog.id }
                   onClick={ addLike }>
 
                   {t("BlogListItem.btnLike")}
                 </button>
               </div>
+              {showDelete &&
+                <div className="blogDeletion">
+                  <button
+                    type="button"
+                    className="btnDelete"
+                    onClick={ deleteBlog }>
+
+                    {t("BlogListItem.btnDelete")}
+                  </button>
+                </div>
+              }
             </div>
           </>
         }
@@ -90,6 +140,9 @@ BlogListItem.propTypes = {
   blog: PropTypes.object.isRequired,
   blogs: PropTypes.array,
   setBlogs: PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
+  setInfoMessage: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
 }
 
 export default BlogListItem

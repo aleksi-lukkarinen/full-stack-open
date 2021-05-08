@@ -18,6 +18,7 @@ const SubmitButton = ({ title, style }) => {
 
 SubmitButton.propTypes = {
   title: PropTypes.string.isRequired,
+  style: PropTypes.object,
 }
 
 export default SubmitButton

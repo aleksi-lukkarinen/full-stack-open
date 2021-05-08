@@ -25,7 +25,11 @@ function compareBlogs(a, b) {
   return 0
 }
 
-const BlogList = ({ blogs, setBlogs }) => {
+const BlogList = ({
+  blogs, setBlogs,
+  currentUser,
+  setInfoMessage, setErrorMessage }) => {
+
   blogs.sort(compareBlogs)
 
   const listElements = []
@@ -36,7 +40,10 @@ const BlogList = ({ blogs, setBlogs }) => {
         key={ b.id }
         blog={ b }
         blogs={ blogs }
-        setBlogs={ setBlogs } />
+        setBlogs={ setBlogs }
+        currentUser={ currentUser }
+        setInfoMessage={ setInfoMessage }
+        setErrorMessage={ setErrorMessage } />
     )
     listElements.push(el)
   }
@@ -47,6 +54,9 @@ const BlogList = ({ blogs, setBlogs }) => {
 BlogList.propTypes = {
   blogs: PropTypes.array,
   setBlogs: PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
+  setInfoMessage: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
 }
 
 export default BlogList

@@ -6,121 +6,129 @@ import LanguageDetector from "i18next-browser-languagedetector"
 const resources = {
   en: {
     translation: {
-      "Forms": {
-        "Required": "Required",
+      Forms: {
+        Required: "Required",
+        unknownAuthor: "<unknown author>",
       },
 
-      "SiteHeader": {
-        "unknownUser": "Unknown",
-        "knownUser": "{{currentUser.name}}",
+      SiteHeader: {
+        unknownUser: "Unknown",
+        knownUser: "{{currentUser.name}}",
       },
 
-      "UserMenu": {
-        "finnish": "Suomeksi",
-        "english": "In English",
-        "login": "Log In",
-        "logout": "Log Out",
+      UserMenu: {
+        finnish: "Suomeksi",
+        english: "In English",
+        login: "Log In",
+        logout: "Log Out",
       },
 
-      "LoginForm": {
-        "title": "Log in to BlogList",
-        "lblUsername": "Username",
-        "lblPassword": "Password",
-        "cmdLogin": "Log in",
-        "errInvalidCreds": "Incorrect username or password.",
+      LoginForm: {
+        title: "Log in to BlogList",
+        lblUsername: "Username",
+        lblPassword: "Password",
+        cmdLogin: "Log in",
+        errInvalidCreds: "Incorrect username or password.",
       },
 
-      "BlogInsertionForm": {
-        "title": "Add a New Blog",
-        "cmdOpenForm": "Add a New Blog...",
-        "titleField": {
-          "placeHolder": "Title",
-          "helperText": "For instance: The Greenhouse Effect in the 21st Century",
+      BlogInsertionForm: {
+        title: "Add a New Blog",
+        cmdOpenForm: "Add a New Blog...",
+        titleField: {
+          placeHolder: "Title",
+          helperText: "For instance: The Greenhouse Effect in the 21st Century",
         },
-        "authorField": {
-          "placeHolder": "Author's Name",
-          "helperText": "For instance: Jack Smith",
+        authorField: {
+          placeHolder: "Author's Name",
+          helperText: "For instance: Jack Smith",
         },
-        "urlField": {
-          "placeHolder": "Internet Address",
-          "helperText": "For instance: http://www.blogplatform.com/this-cool-blog-post/",
+        urlField: {
+          placeHolder: "Internet Address",
+          helperText: "For instance: http://www.blogplatform.com/this-cool-blog-post/",
         },
-        "cmdInsert": "Save",
-        "cmdCancel": "Cancel",
-        "msgSuccessfulInsertion": "Blog \"{{blogToInsert.title}}\" was successfully inserted.",
+        cmdInsert: "Save",
+        cmdCancel: "Cancel",
+        msgSuccessfulInsertion: "Blog \"{{blogToInsert.title}}\" was successfully inserted.",
       },
 
-      "BlogList": {
-        "title": "Saved Blogs",
+      BlogList: {
+        title: "Saved Blogs",
       },
 
-      "BlogListItem": {
-        "btnDetailVisibility": {
-          "hide": "Hide",
-          "show": "Show"
+      BlogListItem: {
+        btnDetailVisibility: {
+          hide: "Hide",
+          show: "Show"
         },
-        "likes": "{{count}} like",
-        "likes_plural": "{{count}} likes",
-        "btnLike": "Like"
+        likes: "{{count}} like",
+        likes_plural: "{{count}} likes",
+        btnLike: "Like",
+        btnDelete: "Delete",
+        confirmDeletionWithAuthor: "Delete blog \"{{title}}\" written by {{author}}?",
+        confirmDeletionWithoutAuthor: "Delete blog \"{{title}}\"?",
       }
     }
   },
   fi: {
     translation: {
-      "Forms": {
-        "Required": "Pakollinen",
+      Forms: {
+        Required: "Pakollinen",
+        unknownAuthor: "<tuntematon kirjoittaja>",
       },
 
-      "SiteHeader": {
-        "unknownUser": "Tuntematon",
-        "knownUser": "{{currentUser.name}}",
+      SiteHeader: {
+        unknownUser: "Tuntematon",
+        knownUser: "{{currentUser.name}}",
       },
 
-      "UserMenu": {
-        "login": "Kirjaudu sisään",
-        "logout": "Kirjaudu ulos",
+      UserMenu: {
+        login: "Kirjaudu sisään",
+        logout: "Kirjaudu ulos",
       },
 
-      "LoginForm": {
-        "title": "Kirjaudu BlogList-sovellukseen",
-        "lblUsername": "Käyttäjätunnus",
-        "lblPassword": "Salasana",
-        "cmdLogin": "Kirjaudu",
-        "errInvalidCreds": "Väärä käyttäjätunnus tai salasana",
+      LoginForm: {
+        title: "Kirjaudu BlogList-sovellukseen",
+        lblUsername: "Käyttäjätunnus",
+        lblPassword: "Salasana",
+        cmdLogin: "Kirjaudu",
+        errInvalidCreds: "Väärä käyttäjätunnus tai salasana",
       },
 
-      "BlogInsertionForm": {
-        "title": "Lisää uusi blogi",
-        "cmdOpenForm": "Lisää uusi blogi...",
-        "titleField": {
-          "placeHolder": "Otsikko",
-          "helperText": "Esimerkki: Kasvihuoneilmiö 2000-luvulla",
+      BlogInsertionForm: {
+        title: "Lisää uusi blogi",
+        cmdOpenForm: "Lisää uusi blogi...",
+        titleField: {
+          placeHolder: "Otsikko",
+          helperText: "Esimerkki: Kasvihuoneilmiö 2000-luvulla",
         },
-        "authorField": {
-          "placeHolder": "Kirjoittajan nimi",
-          "helperText": "Esimerkki: Ville Virtanen",
+        authorField: {
+          placeHolder: "Kirjoittajan nimi",
+          helperText: "Esimerkki: Ville Virtanen",
         },
-        "urlField": {
-          "placeHolder": "Internet-osoite",
-          "helperText": "Esimerkki: http://www.blogipalvelu.fi/blogipostaus/",
+        urlField: {
+          placeHolder: "Internet-osoite",
+          helperText: "Esimerkki: http://www.blogipalvelu.fi/blogipostaus/",
         },
-        "cmdInsert": "Tallenna",
-        "cmdCancel": "Peruuta",
-        "msgSuccessfulInsertion": "Blogin \"{{blogToInsert.title}}\" lisääminen onnistui.",
+        cmdInsert: "Tallenna",
+        cmdCancel: "Peruuta",
+        msgSuccessfulInsertion: "Blogin \"{{blogToInsert.title}}\" lisääminen onnistui.",
       },
 
-      "BlogList": {
-        "title": "Tallennetut blogit",
+      BlogList: {
+        title: "Tallennetut blogit",
       },
 
-      "BlogListItem": {
-        "btnDetailVisibility": {
-          "hide": "Piilota",
-          "show": "Näytä"
+      BlogListItem: {
+        btnDetailVisibility: {
+          hide: "Piilota",
+          show: "Näytä"
         },
-        "likes": "{{count}} tykkäys",
-        "likes_plural": "{{count}} tykkäystä",
-        "btnLike": "Tykkää"
+        likes: "{{count}} tykkäys",
+        likes_plural: "{{count}} tykkäystä",
+        btnLike: "Tykkää",
+        btnDelete: "Poista",
+        confirmDeletionWithAuthor: "Poistetaanko kirjoittajan {{author}} blogi \"{{title}}\"?",
+        confirmDeletionWithoutAuthor: "Poistetaanko blogi \"{{title}}\"?",
       }
     }
   }

@@ -37,10 +37,22 @@ function likeBlog(blogToLike) {
   return simplified(result)
 }
 
+function deleteBlog(blogToDelete) {
+  const settings = {
+    headers: {
+      Authorization: authToken
+    }
+  }
+  const url = `${baseUrl}/${blogToDelete.id}`
+  const result = axios.delete(url, settings)
+  return simplified(result)
+}
+
 const BlogService = {
   getAll: getAllBlogs,
   insert: insertBlog,
   like: likeBlog,
+  delete: deleteBlog,
   setAuthToken,
 }
 

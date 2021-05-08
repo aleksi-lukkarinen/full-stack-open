@@ -18,6 +18,7 @@ const CancelButton = ({ title, style, onClick }) => {
 
 CancelButton.propTypes = {
   title: PropTypes.string.isRequired,
+  style: PropTypes.object,
   onClick: PropTypes.func,
 }
 

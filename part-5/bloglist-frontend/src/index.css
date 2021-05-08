@@ -103,12 +103,18 @@
   margin-right: 1em;
 }
 
-.blogListItem .footer .blogLikes {
+.blogListItem .footer .blogLikes,
+.blogListItem .footer .blogDeletion {
   display: inline;
 }
 
 .blogListItem .footer .btnLike {
   margin-left: 0.5em;
+  font-size: 80%;
+}
+
+.blogListItem .footer .btnDelete {
+  margin-left: 2em;
   font-size: 80%;
 }
 

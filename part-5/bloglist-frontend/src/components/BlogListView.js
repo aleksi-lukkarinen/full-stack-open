@@ -11,7 +11,8 @@ import BlogInsertionForm from "./BlogInsertionForm"
 
 const BlogListView = ({
   setInfoMessage,
-  setErrorMessage }) => {
+  setErrorMessage,
+  currentUser }) => {
 
   const { t } = useTranslation()
   const [blogs, setBlogs] = useState([])
@@ -33,7 +34,10 @@ const BlogListView = ({
 
       <BlogList
         blogs={ blogs }
-        setBlogs={ setBlogs } />
+        setBlogs={ setBlogs }
+        currentUser={ currentUser }
+        setInfoMessage={ setInfoMessage }
+        setErrorMessage={ setErrorMessage } />
     </>
   )
 }
@@ -41,6 +45,7 @@ const BlogListView = ({
 BlogListView.propTypes = {
   setInfoMessage: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
 }
 
 export default BlogListView
