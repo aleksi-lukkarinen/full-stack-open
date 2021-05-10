@@ -39,9 +39,15 @@ beforeAll(() => {
 })
 
 describe("BlogListItem,", () => {
+  let testUser = undefined
+  let testBlog = undefined
+
+  beforeEach(() => {
+    testUser = createTestUser()
+    testBlog = createTestBlog(testUser)
+  })
+
   test("by default, shows only blog title and author", () => {
-    const testUser = createTestUser()
-    const testBlog = createTestBlog(testUser)
     const testComponent = render(
       <BlogListItem
         blog={ testBlog }
@@ -60,8 +66,6 @@ describe("BlogListItem,", () => {
   })
 
   test("after the \"Show\" button is clicked, shows full blog info", () => {
-    const testUser = createTestUser()
-    const testBlog = createTestBlog(testUser)
     const testComponent = render(
       <BlogListItem
         blog={ testBlog }
@@ -86,9 +90,6 @@ describe("BlogListItem,", () => {
   })
 
   test("when the Like button is pressed twice, calls the event handler twice", () => {
-    const testUser = createTestUser()
-    const testBlog = createTestBlog(testUser)
-
     const likeHandlerMock = createHandlerMock()
 
     const testComponent = render(
