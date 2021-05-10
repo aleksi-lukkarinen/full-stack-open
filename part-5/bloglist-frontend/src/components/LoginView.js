@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next"
 import { TextField } from "@material-ui/core"
 import PropTypes from "prop-types"
 
-
 import { useField } from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
@@ -22,7 +21,7 @@ const LoginView = ({
   const { reset:resetPassword, ...password } =
     useField("txtPassword", "password")
 
-  async function processLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault()
 
     try {
@@ -53,7 +52,7 @@ const LoginView = ({
         content={ t("LoginForm.title") }
         thisIsFirstHeader={ true } />
 
-      <form onSubmit={ processLogin }>
+      <form id="loginForm" onSubmit={ handleLogin }>
         <div>
           <TextField
             { ...username }
@@ -72,6 +71,7 @@ const LoginView = ({
         </div>
         <div>
           <SubmitButton
+            id="cmdLogin"
             title={ t("LoginForm.cmdLogin") }
             style={ { marginTop: "1em" } } />
         </div>

@@ -35,6 +35,7 @@ const URL_API_ROOT = URL_BASE + "api/"
 const URL_API_LOGIN = URL_API_ROOT + "login"
 const URL_API_BLOGS = URL_API_ROOT + "blogs"
 const URL_API_USERS = URL_API_ROOT + "users"
+const URL_API_TESTING = URL_API_ROOT + "testing"
 
 const EXIT_CODE_FAILURE = 1
 
@@ -131,6 +132,7 @@ module.exports = {
   URL_API_LOGIN,
   URL_API_BLOGS,
   URL_API_USERS,
+  URL_API_TESTING,
 
   EXIT_CODE_FAILURE,
 

@@ -4,9 +4,10 @@ import PropTypes from "prop-types"
 import { Button } from "@material-ui/core"
 
 
-const SubmitButton = ({ title, style }) => {
+const SubmitButton = ({ title, style, id }) => {
   return (
     <Button
+      id={ id }
       type="submit"
       color="primary"
       style={ style }>
@@ -19,6 +20,7 @@ const SubmitButton = ({ title, style }) => {
 SubmitButton.propTypes = {
   title: PropTypes.string.isRequired,
   style: PropTypes.object,
+  id: PropTypes.string,
 }
 
 export default SubmitButton
