@@ -29,7 +29,14 @@ const defaultTheme = createMuiTheme({
       focusVisibleClassName: "focusedButton",
       variant: "contained",
       size: "small",
-    }
+    },
+    MuiTextField: {
+      variant: "filled",
+      size: "small",
+    },
+    MuiInputLabel: {
+      shrink: true,
+    },
   }
 })
 

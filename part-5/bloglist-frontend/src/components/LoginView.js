@@ -1,10 +1,8 @@
 import React from "react"
 
 import { useTranslation } from "react-i18next"
+import { TextField } from "@material-ui/core"
 import PropTypes from "prop-types"
-import {
-  TextField,
-} from "@material-ui/core"
 
 
 import { useField } from "../hooks"
@@ -59,22 +57,18 @@ const LoginView = ({
         <div>
           <TextField
             { ...username }
-            variant="filled"
             label={ t("Forms.Required") }
             placeholder={ t("LoginForm.lblUsername") }
             autoFocus
-            autoComplete="username"
-            InputLabelProps={ { shrink: true } } />
+            autoComplete="username" />
         </div>
         <div>
           <TextField
             { ...password }
-            variant="filled"
             style={ { marginTop: "0.5em" } }
             label={ t("Forms.Required") }
             placeholder={ t("LoginForm.lblPassword") }
-            autoComplete="current-password"
-            InputLabelProps={ { shrink: true } } />
+            autoComplete="current-password" />
         </div>
         <div>
           <SubmitButton

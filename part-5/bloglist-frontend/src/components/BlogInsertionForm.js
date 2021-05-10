@@ -45,7 +45,7 @@ const BlogInsertionForm =
     function handleInsertionCancellation(event) {
       event.preventDefault()
 
-      hide()
+      hideForm()
       clearFields()
     }
 
@@ -53,7 +53,7 @@ const BlogInsertionForm =
       setFormVisibility(true)
     }
 
-    function hide() {
+    function hideForm() {
       setFormVisibility(false)
     }
 
@@ -66,7 +66,7 @@ const BlogInsertionForm =
     useImperativeHandle(ref, () => {
       return {
         show: showForm,
-        hide,
+        hide: hideForm,
         clearFields
       }
     })
@@ -94,36 +94,27 @@ const BlogInsertionForm =
               <TextField
                 error={ newBlogTitle.value === "" }
                 { ...newBlogTitle }
-                variant="filled"
-                size="small"
                 label={ t("Forms.Required") }
                 placeholder={ t("BlogInsertionForm.titleField.placeHolder") }
-                helperText={ t("BlogInsertionForm.titleField.helperText") }
-                InputLabelProps={ { shrink: true } } />
+                helperText={ t("BlogInsertionForm.titleField.helperText") } />
             </SimpleFormRow>
             <SimpleFormRow>
               <TextField
                 { ...newBlogAuthor }
-                variant="filled"
-                size="small"
                 hiddenLabel
                 placeholder={ t("BlogInsertionForm.authorField.placeHolder") }
                 helperText={ t("BlogInsertionForm.authorField.helperText") }
-                style={ { marginTop: "1em" } }
-                InputLabelProps={ { shrink: true } } />
+                style={ { marginTop: "1em" } } />
             </SimpleFormRow>
             <SimpleFormRow>
               <TextField
                 { ...newBlogUrl }
                 error={ newBlogUrl.value === "" }
-                variant="filled"
-                size="small"
                 autoComplete="url"
                 label={ t("Forms.Required") }
                 placeholder={ t("BlogInsertionForm.urlField.placeHolder") }
                 helperText={ t("BlogInsertionForm.urlField.helperText") }
-                style={ { marginTop: "1em" } }
-                InputLabelProps={ { shrink: true } } />
+                style={ { marginTop: "1em" } } />
             </SimpleFormRow>
           </SimpleForm>
         </Showable>
