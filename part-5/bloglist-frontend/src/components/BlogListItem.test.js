@@ -76,17 +76,17 @@ describe("BlogListItem,", () => {
     )
     const TC = testComponent.container
 
-    const btn = TC.querySelector(".btnDetailVisibility")
-    fireEvent.click(btn)
+    const btnDetailVis = TC.querySelector(".btnDetailVisibility")
+    fireEvent.click(btnDetailVis)
 
-    const e = expect(TC)
+    let e = expect(TC)
     e.toHaveTextContent(testBlog.title)
     e.toHaveTextContent(testBlog.author)
     e.toHaveTextContent(testBlog.url)
     e.toHaveTextContent(TR_KEY_LIKES)
 
-    const divLikes = TC.querySelector(".blogLikes")
-    expect(divLikes).toHaveAttribute("data-likes", String(testBlog.likes))
+    e = expect(TC.querySelector(".blogLikes"))
+    e.toHaveAttribute("data-likes", String(testBlog.likes))
   })
 
   test("when the Like button is pressed twice, calls the event handler twice", () => {
