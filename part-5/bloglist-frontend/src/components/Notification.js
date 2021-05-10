@@ -5,9 +5,11 @@ import { Alert } from "@material-ui/lab"
 
 
 const Notification = ({ content, severity }) => {
+  const id = `notification${severity}`
+
   return (
     content && (
-      <Alert severity={ severity }>
+      <Alert id={ id } severity={ severity }>
         {content}
       </Alert>
     )
