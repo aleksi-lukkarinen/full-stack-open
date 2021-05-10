@@ -1,7 +1,7 @@
 import React from "react"
 
 import "@testing-library/jest-dom/extend-expect"
-import { render, fireEvent } from "@testing-library/react"
+import { render } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import _ from "lodash"
 
@@ -9,8 +9,6 @@ import BlogListItem from "./BlogListItem"
 
 
 const TR_KEY_LIKES = "BlogListItem.likes"
-
-const createHandlerMock = (...params) => jest.fn(...params)
 
 const createTestUser = () => ({
   id: "1",
@@ -76,8 +74,7 @@ describe("BlogListItem,", () => {
     )
     const TC = testComponent.container
 
-    const btnDetailVis = TC.querySelector(".btnDetailVisibility")
-    fireEvent.click(btnDetailVis)
+    clickVisibilityButton(testComponent)
 
     let e = expect(TC)
     e.toHaveTextContent(testBlog.title)
@@ -101,15 +98,26 @@ describe("BlogListItem,", () => {
         handleDeleteBlog={ createHandlerMock() } />
     )
 
-    const btnVisibility = testComponent.container
-        .querySelector(".btnDetailVisibility")
-    userEvent.click(btnVisibility)
-
-    const btnLike = testComponent.container
-        .querySelector(".btnLike")
-
-    _.times(2, () => userEvent.click(btnLike))
+    clickVisibilityButton(testComponent)
+    clickLikeButtonTimes(testComponent, 2)
 
     expect(likeHandlerMock).toHaveBeenCalledTimes(2)
   })
 })
+
+
+const createHandlerMock = (...params) => jest.fn(...params)
+
+const clickVisibilityButton = component => {
+  const btnDetailVis =
+    component.container.querySelector(".btnDetailVisibility")
+
+  userEvent.click(btnDetailVis)
+}
+
+const clickLikeButtonTimes = (component, times) => {
+  const btnLike =
+    component.container.querySelector(".btnLike")
+
+  _.times(times, () => userEvent.click(btnLike))
+}

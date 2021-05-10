@@ -46,7 +46,7 @@ const resources = {
           placeHolder: "Internet Address",
           helperText: "For instance: http://www.blogplatform.com/this-cool-blog-post/",
         },
-        cmdInsert: "Save",
+        cmdInsert: "Add",
         cmdCancel: "Cancel",
         msgSuccessfulInsertion: "Blog \"{{blogToInsert.title}}\" was successfully inserted.",
       },
