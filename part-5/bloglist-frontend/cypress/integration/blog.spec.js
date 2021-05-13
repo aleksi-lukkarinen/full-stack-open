@@ -6,29 +6,34 @@
 */
 
 describe("A blog", function() {
-  const testBlog = {
-    title: "Test blog title",
-    author: "Test blog author",
-    url: "https://testblog.server.com/"
-  }
-
-  let testUser = undefined
-
+  let existingUsers = []
+  let loggedInUser = undefined
+  let existingBlogs = []
 
   beforeEach(function() {
     cy.resetDB()
-    cy.postDefaultUsers(2).then(existingUsers => {
-      cy.postLogin(existingUsers[0]).then(loggedInUser => {
-        testUser = loggedInUser
-        cy.postDefaultBlogs(2, testUser).then(existingBlogs => {
+
+    cy.postDefaultUsers(2).then(users => {
+      existingUsers = users
+
+      cy.postLogin(existingUsers[0]).then(u => {
+        loggedInUser = u
+
+        cy.postDefaultBlogs(2, loggedInUser).then(blogs => {
+          existingBlogs = blogs
           cy.openMainPage()
         })
       })
     })
   })
 
-
   it("can be created as well as its details shown and hidden", function() {
+    const testBlog = {
+      title: "Test blog title",
+      author: "Test blog author",
+      url: "https://testblog.server.com/"
+    }
+
     cy.get("#cmdShowBlogInsertionForm").click()
     cy.get("#txtNewBlogTitle").type(testBlog.title)
     cy.get("#txtNewBlogAuthor").type(testBlog.author)
@@ -59,6 +64,27 @@ describe("A blog", function() {
     cy.get("@visibilityButton")
         .should("contain", "Hide")
         .click()
+  })
+
+  it("can be liked", function() {
+    const { 0: testBlog } = existingBlogs
+
+    cy.get(".blogListContainer")
+        .contains(testBlog.title)
+        .parent().parent().as("blogListItem")
+
+    cy.get("@blogListItem").contains("Show").click()
+
+    cy.get("@blogListItem").find(".blogLikes").as("blogLikes")
+    cy.get("@blogListItem").contains("Like").as("btnLike")
+
+    cy.get("@blogLikes").should("contain", "0 likes")
+
+    cy.get("@btnLike").click()
+    cy.get("@blogLikes").should("contain", "1 like")
+
+    cy.get("@btnLike").click()
+    cy.get("@blogLikes").should("contain", "2 likes")
   })
 
 })
