@@ -85,8 +85,10 @@ const BlogInsertionForm =
             thisIsFirstHeader={ true } />
 
           <SimpleForm
+            submitId="cmdSubmitBlogInsertionForm"
             submitTitle={ t("BlogInsertionForm.cmdInsert") }
             onSubmit={ handleInsertionForwarding }
+            cancelId="cmdCancelBlogInsertionForm"
             cancelTitle={ t("BlogInsertionForm.cmdCancel") }
             onCancel={ handleInsertionCancellation } >
 

@@ -115,7 +115,11 @@ const BlogList = ({
     listElements.push(element)
   }
 
-  return <>{listElements}</>
+  return (
+    <div className="blogListContainer">
+      {listElements}
+    </div>
+  )
 }
 
 BlogList.propTypes = {

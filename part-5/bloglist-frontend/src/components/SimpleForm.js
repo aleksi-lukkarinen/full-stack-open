@@ -8,8 +8,8 @@ import CancelButton from "./CancelButton"
 
 
 const SimpleForm = ({
-  submitTitle, onSubmit,
-  cancelTitle, onCancel,
+  submitId, submitTitle, onSubmit,
+  cancelId, cancelTitle, onCancel,
   children }) => {
 
   const showCancel = cancelTitle !== undefined
@@ -18,10 +18,13 @@ const SimpleForm = ({
     <form className="simpleForm" onSubmit={ onSubmit }>
       {children}
       <SimpleFormRow style={ { marginTop: "1em" } }>
-        <SubmitButton title={ submitTitle } />
+        <SubmitButton
+          id={ submitId }
+          title={ submitTitle } />
 
         {showCancel &&
           <CancelButton
+            id={ cancelId }
             title={ cancelTitle }
             onClick={ onCancel } />
         }
@@ -31,8 +34,10 @@ const SimpleForm = ({
 }
 
 SimpleForm.propTypes = {
+  submitId: PropTypes.string,
   submitTitle: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  cancelId: PropTypes.string,
   cancelTitle: PropTypes.string,
   onCancel: PropTypes.func,
   children: PropTypes.any,

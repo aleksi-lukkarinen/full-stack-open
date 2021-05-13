@@ -10,16 +10,16 @@ const nonExistingUser = {
   and do not set the language when beginning
 */
 
-describe("When user tries to log in, BlogList", function() {
-  let testUser
 
-  before(async function() {
-    testUser = await cy.fixture("testUser")
-  })
+describe("When a user tries to log in, BlogList", function() {
+  let testUser
 
   beforeEach(function() {
     cy.resetDB()
-    cy.postUser(testUser)
+    cy.postDefaultUsers().then(users =>
+      // eslint-disable-next-line prefer-destructuring
+      testUser = users[0]
+    )
     cy.openMainPage()
   })
 
@@ -36,9 +36,8 @@ describe("When user tries to log in, BlogList", function() {
     enterLoginPassword(nonExistingUser.password)
     clickLoginButton()
 
-    cy.errorNotification()
-        .should("contain", "Incorrect username or password")
-        .and("have.css", "background-color", "rgb(253, 236, 234)")
+    cy.errorNotificationIsRedAndContains(
+      "Incorrect username or password")
 
     displayedUsernameShouldBe("Unknown")
   })

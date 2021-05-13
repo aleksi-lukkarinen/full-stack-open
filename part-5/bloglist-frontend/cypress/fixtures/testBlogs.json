@@ -1,0 +1,72 @@
+[
+  {
+  "title": "Apartment Therapy",
+  "author": "Maxwell Ryan",
+  "url": "https://www.apartmenttherapy.com/"
+  },
+  {
+    "title": "Say Yes",
+    "author": "Liz Stanley",
+    "url": "https://sayyes.com/"
+  },
+  {
+    "title": "Bright Bazaar",
+    "author": "Will Taylor",
+    "url": "https://www.brightbazaarblog.com/"
+  },
+  {
+    "title": "A Cup of Jo",
+    "author": "Joanna Goddard",
+    "url": "https://cupofjo.com/"
+  },
+  {
+    "title": "Tech Savvy Mama",
+    "author": "Leticia Barr",
+    "url": "https://techsavvymama.com/"
+  },
+  {
+    "title": "Smitten Kitchen",
+    "author": "Deb Perelman",
+    "url": "https://smittenkitchen.com/"
+  },
+  {
+    "title": "Tech Crack",
+    "author": "Romit Sharma",
+    "url": "https://www.techcrackblog.com/"
+  },
+  {
+    "title": "Coding Horror",
+    "author": "Jeff Atwood",
+    "url": "https://blog.codinghorror.com/"
+  },
+  {
+    "title": "CSS Tricks",
+    "author": "Chris Coyie",
+    "url": "https://css-tricks.com/"
+  },
+  {
+    "title": "martinFowler.com",
+    "author": "Martin Fowler",
+    "url": "https://martinfowler.com/"
+  },
+  {
+    "title": "Computing Education Research Blog",
+    "author": "Mark Guzdial",
+    "url": "https://computinged.wordpress.com/"
+  },
+  {
+    "title": "CS0 — A blog on Computing (Science (Education (Research)))",
+    "author": "Brett Becker",
+    "url": "https://cszero.wordpress.com/"
+  },
+  {
+    "title": "Bits and Behavior — Computing + learning + design + justice",
+    "author": "Amy J. Ko",
+    "url": "https://medium.com/bits-and-behavior"
+  },
+  {
+    "title": "(((Parenthetically Speaking)))",
+    "author": "Shriram Krishnamurthi",
+    "url": "https://parentheticallyspeaking.org/"
+  }
+]
