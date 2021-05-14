@@ -137,11 +137,6 @@ Cypress.Commands.add("postLogin", userToLogIn => {
 
   cy.request(requestData).then(response => {
     const { id, token } = response.body
-
-    localStorage.setItem(
-      "loggedBlogListUser",
-      JSON.stringify(response.body))
-
     const loggedInUser = { name, username, id, token }
 
     Cypress.log({
@@ -149,6 +144,13 @@ Cypress.Commands.add("postLogin", userToLogIn => {
       message: `User ID: ${id} Token: ${token}`,
       consoleProps: () => loggedInUser
     })
+
+    const userJson = JSON.stringify(response.body)
+    localStorage.setItem("loggedBlogListUser", userJson)
+    expect(
+      localStorage.getItem("loggedBlogListUser"),
+      "User data in local storage")
+        .to.equal(userJson)
 
     cy.wrap(loggedInUser, { log: false })
   })
@@ -162,7 +164,12 @@ Cypress.Commands.add("clearLogin", () => {
     message: "Clear login",
   })
 
-  cy.clearLocalStorage("loggedBlogListUser")
+  cy.clearLocalStorage("loggedBlogListUser", { log: false }).then(ls => {
+    expect(
+      ls.getItem("loggedBlogListUser"),
+      "User data in local storage")
+        .to.be.null
+  })
 })
 
 
@@ -270,16 +277,20 @@ Cypress.Commands.add("documentBody", () => {
 
 
 
-Cypress.Commands.add("errorNotification", () => {
-  cy.get("#notificationerror")
+Cypress.Commands.add("errorNotificationIsRedAndContains", text => {
+  cy.errorNotification().should(elNotif => {
+    expect(elNotif, "Error Notification")
+        .to.have.css("background-color", COLOR_NOTIFIC_ERROR_BG)
+
+    const elMsg = elNotif.find(`:contains('${text}')`)
+    expect(elMsg.length, "Number of Notification Elements with the Text").to.equal(1)
+  })
 })
 
 
 
-Cypress.Commands.add("errorNotificationIsRedAndContains", (text) => {
-  cy.errorNotification()
-      .and("have.css", "background-color", COLOR_NOTIFIC_ERROR_BG)
-      .should("contain", text)
+Cypress.Commands.add("errorNotification", () => {
+  cy.get("#notificationerror")
 })
 
 

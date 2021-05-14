@@ -17,11 +17,22 @@
     "react-scripts": "4.0.1",
     "web-vitals": "^0.2.4"
   },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^12.8.3",
+    "cypress": "^7.3.0",
+    "eslint-plugin-cypress": "^2.11.3",
+    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-security": "^1.4.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --verbose --runInBand",
     "test:debug": "react-scripts --inspect-brk test --no-cache --verbose --runInBand",
+    "test:jest": "set CI=true && react-scripts test --verbose --runInBand",
     "eject": "react-scripts eject",
     "eslint": "eslint .",
     "cypress:open": "cypress open",
@@ -39,15 +50,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3003",
-  "devDependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^12.8.3",
-    "cypress": "^7.3.0",
-    "eslint-plugin-cypress": "^2.11.3",
-    "eslint-plugin-jest": "^24.3.6",
-    "eslint-plugin-react": "^7.23.2",
-    "eslint-plugin-security": "^1.4.0"
-  }
+  "proxy": "http://localhost:3003"
 }
