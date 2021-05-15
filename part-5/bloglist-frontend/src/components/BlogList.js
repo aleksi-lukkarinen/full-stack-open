@@ -5,27 +5,8 @@ import { useTranslation } from "react-i18next"
 
 import BlogService from "../services/blogService"
 import BlogListItem from "./BlogListItem"
+import BlogListComparisons from "../utils/blogListComparisons"
 
-
-function compareBlogs(a, b) {
-  if (a.likes > b.likes) return -1
-  if (a.likes < b.likes) return 1
-
-  const lcTitleA = a.title.toLowerCase()
-  const lcTitleB = b.title.toLowerCase()
-  if (lcTitleA < lcTitleB) return -1
-  if (lcTitleA > lcTitleB) return 1
-
-  const authorA = a.author.toLowerCase()
-  const authorB = b.author.toLowerCase()
-  if (authorA < authorB) return -1
-  if (authorA > authorB) return 1
-
-  if (a.title < b.title) return -1
-  if (a.title > b.title) return 1
-
-  return 0
-}
 
 const BlogList = ({
   blogs, setBlogs,
@@ -94,7 +75,7 @@ const BlogList = ({
       }
 
 
-  blogs.sort(compareBlogs)
+  blogs.sort(BlogListComparisons.byLikesTitlesAuthors)
 
   const listElements = []
   const currentUserId = currentUser.id.toString()

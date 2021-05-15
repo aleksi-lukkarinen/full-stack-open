@@ -3,33 +3,37 @@
   and do not set the language when beginning
 */
 
-const nonExistingUser = {
-  username: "eiolema",
-  password: "puppu",
-}
-
 describe("Logging in should be", () => {
-  let testUser
-
   beforeEach(() => {
-    cy.resetDB()
-    cy.postDefaultUsers(2).then(users => {
-      // eslint-disable-next-line prefer-destructuring
-      testUser = users[0]
-
-      cy.openMainPage()
+    cy.resetDB().then(() => {
+      cy.postDefaultUsers(2).then(() => {
+        cy.openMainPage()
+      })
     })
   })
 
-  it("allowed when the credentials are correct", () => {
-    enterLoginUsername(testUser.username)
-    enterLoginPassword(testUser.password)
-    clickLoginButton()
+  afterEach(() => {
+    cy.logout()
+  })
 
-    displayedUsernameShouldBe(testUser.name)
+  it("allowed when the credentials are correct", () => {
+    cy.get("@existingUsers").then(existingUsers => {
+      const { 0: testUser } = existingUsers
+
+      enterLoginUsername(testUser.username)
+      enterLoginPassword(testUser.password)
+      clickLoginButton()
+
+      displayedUsernameShouldBe(testUser.name)
+    })
   })
 
   it("denied when the credentials are incorrect", () => {
+    const nonExistingUser = {
+      username: "eiolema",
+      password: "puppu",
+    }
+
     enterLoginUsername(nonExistingUser.username)
     enterLoginPassword(nonExistingUser.password)
     clickLoginButton()

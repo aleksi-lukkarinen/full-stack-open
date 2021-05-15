@@ -13,4 +13,8 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import "./commands"
+import "./dbReset"
+import "./users"
+import "./loginout"
+import "./blogs"
+import "./miscellaneous"

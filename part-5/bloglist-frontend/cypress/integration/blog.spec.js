@@ -4,26 +4,23 @@
 */
 
 describe("A blog", () => {
-  let existingUsers = []
-  let loggedInUser = undefined
-  let existingBlogs = []
-
   beforeEach(() => {
-    cy.resetDB()
-
-    cy.postDefaultUsers(2).then(users => {
-      existingUsers = users
-
-      cy.postLogin(existingUsers[0]).then(u => {
-        loggedInUser = u
-
-        cy.postDefaultBlogs(2, loggedInUser).then(blogs => {
-          existingBlogs = blogs
-
-          cy.openMainPage()
+    cy.resetDB().then(() => {
+      cy.postDefaultUsers(2)
+      cy.get("@existingUsers").then(existingUsers => {
+        cy.postLogin(existingUsers[0])
+        cy.get("@loggedInUser").then(loggedInUser => {
+          cy.postDefaultBlogs(2, loggedInUser)
+          cy.get("@existingBlogs").then(() => {
+            cy.openMainPage()
+          })
         })
       })
     })
+  })
+
+  afterEach(() => {
+    cy.logout()
   })
 
   it("can be created as well as its details shown and hidden", () => {
@@ -66,57 +63,65 @@ describe("A blog", () => {
   })
 
   it("can be liked", () => {
-    cy.get(".blogListContainer")
-        .contains(existingBlogs[0].title)
-        .parent().parent().as("blogListItem")
+    cy.get("@existingBlogs").then(blogs => {
+      cy.get(".blogListContainer")
+          .contains(blogs[0].title)
+          .parent().parent().as("blogListItem")
+    })
 
     cy.get("@blogListItem").contains("Show").click()
 
     cy.get("@blogListItem").find(".blogLikes").as("blogLikes")
-    cy.get("@blogListItem").contains("Like").as("btnLike")
+    cy.get("@blogListItem").contains("Like").as("cmdLike")
 
     cy.get("@blogLikes").should("contain", "0 likes")
 
-    cy.get("@btnLike").click()
+    cy.get("@cmdLike").click()
     cy.get("@blogLikes").should("contain", "1 like")
 
-    cy.get("@btnLike").click()
+    cy.get("@cmdLike").click()
     cy.get("@blogLikes").should("contain", "2 likes")
   })
 
   it("can be deleted by the user who inserted it", () => {
-    const { 0: blogToDelete } = existingBlogs
+    cy.get("@existingBlogs").then(existingBlogs => {
+      const { 0: { title: titleToDelete } } = existingBlogs
 
-    cy.get(".blogListContainer")
-        .contains(blogToDelete.title)
-        .parent().parent().as("blogListItem")
+      cy.get(".blogListContainer")
+          .contains(titleToDelete)
+          .parent().parent().as("blogListItem")
 
-    cy.get("@blogListItem").contains("Show").click()
-    cy.get("@blogListItem").contains("Delete").click()
+      cy.get("@blogListItem").contains("Show").click()
+      cy.get("@blogListItem").contains("Delete").click()
 
-    cy.get(".blogListContainer").then(container => {
-      const btn = container.find(`:contains('${blogToDelete.title}')`)
-      expect(btn.length, "Elements with the Title of the Deleted Blog").to.equal(0)
+      cy.get(".blogListContainer").then(container => {
+        const cmd = container.find(`:contains('${titleToDelete}')`)
+        expect(cmd.length, "Elements with the Title of the Deleted Blog").to.equal(0)
+      })
     })
   })
 
   it("can not be deleted by a user who did not insert it", () => {
-    const { 0: blogToDelete } = existingBlogs
-    const { 1: otherUser } = existingUsers
+    cy.get("@existingUsers").then(existingUsers => {
+      cy.get("@existingBlogs").then(existingBlogs => {
+        const { 1: otherUser } = existingUsers
+        const { 0: { title: titleToDelete } } = existingBlogs
 
-    cy.clearLogin()
-    cy.postLogin(otherUser).then(() => {
-      cy.openMainPage()
+        cy.logout()
+        cy.postLogin(otherUser).then(() => {
+          cy.openMainPage()
 
-      cy.get(".blogListContainer")
-          .contains(blogToDelete.title)
-          .parent().parent().as("blogListItem")
+          cy.get(".blogListContainer")
+              .contains(titleToDelete)
+              .parent().parent().as("blogListItem")
 
-      cy.get("@blogListItem").contains("Show").click()
+          cy.get("@blogListItem").contains("Show").click()
 
-      cy.get("@blogListItem").then(blItem => {
-        const btn = blItem.find("button:contains('Delete')")
-        expect(btn.length, "Number of Delete buttons").to.equal(0)
+          cy.get("@blogListItem").then(blItem => {
+            const cmd = blItem.find("button:contains('Delete')")
+            expect(cmd.length, "Number of Delete buttons").to.equal(0)
+          })
+        })
       })
     })
   })
