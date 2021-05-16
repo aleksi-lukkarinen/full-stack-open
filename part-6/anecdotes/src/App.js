@@ -1,13 +1,20 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React from "react"
+import { useSelector, useDispatch } from "react-redux"
 
 const App = () => {
   const anecdotes = useSelector(state => state)
   const dispatch = useDispatch()
 
-  const vote = (id) => {
-    console.log('vote', id)
-    dispatch({type: "VOTE", id })
+  const handleVoting = id => {
+    console.log("vote", id)
+    dispatch({type: "VOTE", data: { id } })
+  }
+
+  const handleAddition = event => {
+    event.preventDefault()
+
+    const content = event.target.content.value
+    dispatch({type: "NEW", data: { content } })
   }
 
   return (
@@ -20,14 +27,14 @@ const App = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => handleVoting(anecdote.id)}>Vote</button>
           </div>
         </div>
       )}
-      <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
+      <h2>Create New</h2>
+      <form onSubmit={handleAddition}>
+        <div><input name="content" /></div>
+        <button type="submit">Create</button>
       </form>
     </div>
   )
