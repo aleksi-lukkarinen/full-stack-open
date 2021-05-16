@@ -27,8 +27,8 @@ function reducerError(errorCode) {
   return e
 }
 
-function counterReducer(state, action) {
-  if (!state)
+function counterReducer(currentState, action) {
+  if (!currentState)
     return { ...STATE_INITIAL }
 
   try {
@@ -52,7 +52,7 @@ function counterReducer(state, action) {
     const errCode = Number.isInteger(e.code)
             ? e.code : ERRORS.UNEXPECTED_ERROR
 
-    const errorState = { ...state, error: { code: errCode, } }
+    const errorState = { ...currentState, error: { code: errCode, } }
 
     if (!Number.isInteger(e.code))
       errorState.error.reason = e
@@ -62,30 +62,33 @@ function counterReducer(state, action) {
 
   switch (action.type) {
     case ACTION_TYPES.GOOD:
-      if (state.good < Number.MAX_SAFE_INTEGER)
-        return {...state, good: state.good + 1 }
-      else
-        return {...state, good: Number.MAX_SAFE_INTEGER }
+      const good = currentState.good < Number.MAX_SAFE_INTEGER
+        ? currentState.good + 1
+        : Number.MAX_SAFE_INTEGER
+
+      return {...currentState, good }
 
     case ACTION_TYPES.OK:
-      if (state.ok < Number.MAX_SAFE_INTEGER)
-        return {...state, ok: state.ok + 1 }
-      else
-        return {...state, ok: Number.MAX_SAFE_INTEGER }
+      const ok = currentState.ok < Number.MAX_SAFE_INTEGER
+        ? currentState.ok + 1
+        : Number.MAX_SAFE_INTEGER
+
+      return {...currentState, ok }
 
     case ACTION_TYPES.BAD:
-      if (state.bad < Number.MAX_SAFE_INTEGER)
-        return {...state, bad: state.bad + 1 }
-      else
-        return {...state, bad: Number.MAX_SAFE_INTEGER }
+      const bad = currentState.bad < Number.MAX_SAFE_INTEGER
+        ? currentState.bad + 1
+        : Number.MAX_SAFE_INTEGER
+
+      return {...currentState, bad }
 
     case ACTION_TYPES.ZERO:
       return {...STATE_INITIAL }
 
     default:
       return {
-        ...state,
-        error: { code: ERRORS.UNKNOWN_ACTION, }
+        ...currentState,
+        error: { code: ERRORS.UNEXPECTED_ERROR, }
       }
   }
 }
