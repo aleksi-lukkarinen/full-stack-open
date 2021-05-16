@@ -1,7 +1,9 @@
 import React from "react"
 import { useSelector, useDispatch } from "react-redux"
 
+import { voteAnecdote, newAnecdote } from "./reducers/anecdoteReducer"
 import AnecdoteComparisons from "./utils/anecdoteComparisons"
+
 
 
 const App = () => {
@@ -10,14 +12,14 @@ const App = () => {
 
   const handleVoting = id => {
     console.log("vote", id)
-    dispatch({type: "VOTE", data: { id } })
+    dispatch(voteAnecdote(id))
   }
 
   const handleAddition = event => {
     event.preventDefault()
 
     const content = event.target.content.value
-    dispatch({type: "NEW", data: { content } })
+    dispatch(newAnecdote(content))
   }
 
   anecdotes.sort(AnecdoteComparisons.byVotesContent)
