@@ -1,6 +1,9 @@
 import React from "react"
 import { useSelector, useDispatch } from "react-redux"
 
+import AnecdoteComparisons from "./utils/anecdoteComparisons"
+
+
 const App = () => {
   const anecdotes = useSelector(state => state)
   const dispatch = useDispatch()
@@ -16,6 +19,8 @@ const App = () => {
     const content = event.target.content.value
     dispatch({type: "NEW", data: { content } })
   }
+
+  anecdotes.sort(AnecdoteComparisons.byVotesContent)
 
   return (
     <div>
