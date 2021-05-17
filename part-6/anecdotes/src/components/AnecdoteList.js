@@ -13,12 +13,10 @@ const AnecdoteList = () => {
   const filter = useSelector(state => state.filter).toLowerCase()
   const dispatch = useDispatch()
 
-  const handleVoting = id => {
-    console.log("Vote", id)
-    dispatch(voteAnecdote(id))
-
-    const content = anecdotes.find(a => a.id === id).content
-    dispatch(addNotification(`You voted anecdote "${content}".`))
+  const handleVoting = anecdote => {
+    dispatch(voteAnecdote(anecdote))
+    dispatch(addNotification(
+      `You voted anecdote "${anecdote.content}".`))
   }
 
   const anecdotesToDisplay = anecdotes
@@ -38,7 +36,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => handleVoting(anecdote.id)}>Vote</button>
+            <button onClick={() => handleVoting(anecdote)}>Vote</button>
           </div>
         </div>
       )}

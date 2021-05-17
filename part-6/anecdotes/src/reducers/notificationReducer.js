@@ -18,9 +18,6 @@ export function clearNotification() {
 
 
 const notificationReducer = (state = initialState, action) => {
-  console.log("Notification state now: ", state)
-  console.log("Notification action: ", action)
-
   switch (action.type) {
     case "ADD_NOTIFICATION":
       const timestamp = Date.now()

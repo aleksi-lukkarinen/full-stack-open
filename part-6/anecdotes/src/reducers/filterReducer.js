@@ -9,9 +9,6 @@ export function setFilter(filter) {
 }
 
 const filterReducer = (state = initialState, action) => {
-  console.log("Filter state now: ", state)
-  console.log("Filter action: ", action)
-
   switch (action.type) {
     case "SET_FILTER":
       return action.data.filter
