@@ -2,6 +2,7 @@ import React from "react"
 import { useSelector, useDispatch } from "react-redux"
 
 import { voteAnecdote } from "../reducers/anecdoteReducer"
+import { addNotification } from "../reducers/notificationReducer"
 import AnecdoteComparisons from "../utils/anecdoteComparisons"
 
 
@@ -13,6 +14,9 @@ const AnecdoteList = () => {
   const handleVoting = id => {
     console.log("vote", id)
     dispatch(voteAnecdote(id))
+
+    const content = anecdotes.find(a => a.id === id).content
+    dispatch(addNotification(`You voted anecdote "${content}".`))
   }
 
   anecdotes.sort(AnecdoteComparisons.byVotesContent)
