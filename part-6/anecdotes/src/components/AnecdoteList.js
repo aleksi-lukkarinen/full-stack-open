@@ -21,7 +21,6 @@ const AnecdoteList = () => {
     dispatch(addNotification(`You voted anecdote "${content}".`))
   }
 
-
   const anecdotesToDisplay = anecdotes
           .filter(a => a.content.toLowerCase().includes(filter))
           .sort(AnecdoteComparisons.byVotesContent)
