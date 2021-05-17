@@ -12,10 +12,15 @@ export function initAnecdotes() {
   }
 }
 
-export function addAnecdote(anecdoteToAdd) {
-  return {
-    type: "NEW_ANECDOTE",
-    data: anecdoteToAdd
+export function addAnecdote(content) {
+  return async dispatch => {
+    const createdAnecdote =
+        await AnecdoteService.createNew(content)
+
+    dispatch({
+      type: "NEW_ANECDOTE",
+      data: createdAnecdote
+    })
   }
 }
 

@@ -17,12 +17,12 @@
     },
     {
       "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-      "votes": 0,
+      "votes": 17,
       "id": "S82xUvV"
     },
     {
       "content": "Premature optimization is the root of all evil.",
-      "votes": 0,
+      "votes": 32,
       "id": "o2Ch1PX"
     },
     {
@@ -39,6 +39,11 @@
       "content": "Kumpi ja kampi tappelivat; Kumpi voitti.",
       "votes": 0,
       "id": "cjFW3jf"
+    },
+    {
+      "content": "Kaksi kaivaa kuoppaa, jota kolmas täyttää.",
+      "votes": 2,
+      "id": "xqnEQGk"
     }
   ]
 }
