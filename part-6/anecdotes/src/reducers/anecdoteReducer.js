@@ -1,8 +1,14 @@
+import AnecdoteService from "../services/anecdoteService"
 
-export function initAnecdotes(anecdotes) {
-  return {
-    type: "INIT_ANECDOTES",
-    data: { anecdotes }
+
+export function initAnecdotes() {
+  return async dispatch => {
+    const anecdotes = await AnecdoteService.getAll()
+
+    dispatch({
+      type: "INIT_ANECDOTES",
+      data: { anecdotes }
+    })
   }
 }
 
@@ -26,8 +32,10 @@ const anecdoteReducer = (state = [], action) => {
 
   switch (action.type) {
     case "INIT_ANECDOTES":
+      console.log("action:", action)
       const { data: { anecdotes: sentAnecdotes } } = action
       const lst = []
+      console.log("sentAnecdotes:", sentAnecdotes)
       sentAnecdotes.forEach(a => {
         lst.push({
           id: a.id,
