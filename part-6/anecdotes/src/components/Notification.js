@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { clearNotification } from "../reducers/notificationReducer"
 
 
-const NOTIFICATION_CLEARING_DELAY_MS = 5000
 
 
 const Notification = () => {
@@ -13,26 +12,31 @@ const Notification = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    const visibilityTimeInMs =
+        notification.visibilityInSeconds * 1000
+
     let timeoutHandle = 0
 
     function checkNotificationClearing() {
       clearTimeout(timeoutHandle)
 
-      const passedTimeMs = Date.now() - notification.timestamp
-      if (passedTimeMs > NOTIFICATION_CLEARING_DELAY_MS) {
+      const passedTimeMs =
+          Date.now() - notification.creationTimestamp
+
+      if (passedTimeMs > visibilityTimeInMs) {
         dispatch(clearNotification())
       }
       else {
         timeoutHandle = setTimeout(
-          checkNotificationClearing,
-          NOTIFICATION_CLEARING_DELAY_MS - passedTimeMs)
+            checkNotificationClearing,
+            visibilityTimeInMs - passedTimeMs)
       }
     }
 
     if (notification.content) {
       timeoutHandle = setTimeout(
-        checkNotificationClearing,
-        NOTIFICATION_CLEARING_DELAY_MS)
+          checkNotificationClearing,
+          visibilityTimeInMs)
     }
 
     return () => {

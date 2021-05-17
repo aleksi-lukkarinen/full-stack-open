@@ -1,18 +1,39 @@
+const DEF_NOTIF_CLEARING_DLY_IN_SEC = 5
+
 const initialState = {
-  timestamp: 0,
+  creationTimestamp: 0,
+  visibilityInSeconds: 0,
   content: undefined,
 }
 
-export function addNotification(content) {
-  return {
-    type: "ADD_NOTIFICATION",
-    data: { content }
+export function addNotification(
+    content, visibilityInSeconds) {
+
+  const visibilityTime =
+    Number.isInteger(visibilityInSeconds) && visibilityInSeconds > 0
+        ? visibilityInSeconds
+        : DEF_NOTIF_CLEARING_DLY_IN_SEC
+
+  return async dispatch => {
+    // Handling the visibility of the notification is performed
+    // in ./components/Notification.js in a bit better fashion than
+    // done in the assignment.
+
+    dispatch({
+      type: "ADD_NOTIFICATION",
+      data: {
+        content,
+        visibilityInSeconds: visibilityTime,
+      }
+    })
   }
 }
 
 export function clearNotification() {
-  return {
-    type: "CLEAR_NOTIFICATION",
+  return async dispatch => {
+    dispatch({
+      type: "CLEAR_NOTIFICATION",
+    })
   }
 }
 
@@ -20,12 +41,12 @@ export function clearNotification() {
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD_NOTIFICATION":
-      const timestamp = Date.now()
       const { data: sentNotification } = action
 
       return {
-        timestamp,
-        content: sentNotification.content
+        creationTimestamp: Date.now(),
+        visibilityInSeconds: sentNotification.visibilityInSeconds,
+        content: sentNotification.content,
       }
 
     case "CLEAR_NOTIFICATION":
