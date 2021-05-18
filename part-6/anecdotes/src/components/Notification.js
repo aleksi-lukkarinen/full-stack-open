@@ -1,17 +1,25 @@
 import React, { useEffect } from "react"
 
-import { useDispatch, useSelector } from "react-redux"
+import { connect } from "react-redux"
 
 import { clearNotification } from "../reducers/notificationReducer"
 
 
 
 
-const Notification = () => {
-  const notification = useSelector(state => state.notification)
-  const dispatch = useDispatch()
+const Notification = ({
+  notification, clearNotification}) => {
 
   useEffect(() => {
+    /*
+      This would be better to be in some kind of service, but
+      as there will be only one instance of the Notification
+      and it will be rerendered when a new notification comes
+      in, this works as well. Also, this should be generalized
+      to handle an array of notifications with varying types
+      and visibility times.
+    */
+
     const visibilityTimeInMs =
         notification.visibilityInSeconds * 1000
 
@@ -24,7 +32,7 @@ const Notification = () => {
           Date.now() - notification.creationTimestamp
 
       if (passedTimeMs > visibilityTimeInMs) {
-        dispatch(clearNotification())
+        clearNotification()
       }
       else {
         timeoutHandle = setTimeout(
@@ -42,7 +50,7 @@ const Notification = () => {
     return () => {
       clearTimeout(timeoutHandle)
     }
-  }, [dispatch, notification])
+  }, [notification, clearNotification])
 
   const style = !notification.content ? undefined : {
     border: "solid",
@@ -57,4 +65,9 @@ const Notification = () => {
   )
 }
 
-export default Notification
+export default connect(
+  state => {
+    return { notification: state.notification, }
+  },
+  { clearNotification }
+)(Notification)
