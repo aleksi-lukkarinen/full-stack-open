@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
-  BrowserRouter as Router,
-  Switch, Route, Link, useParams,
+  useHistory, Switch, Route, Link, useRouteMatch,
 } from "react-router-dom"
 
 
@@ -12,9 +11,9 @@ const Menu = () => {
   }
   return (
     <div>
-      <Link to="/" style={padding}>anecdotes</Link>
-      <Link to="/create" style={padding}>create new</Link>
-      <Link to="/about" style={padding}>about</Link>
+      <Link to="/" style={padding}>Anecdotes</Link>
+      <Link to="/create" style={padding}>Create New</Link>
+      <Link to="/about" style={padding}>About</Link>
     </div>
   )
 }
@@ -32,11 +31,7 @@ const AnecdoteList = ({ anecdotes }) => (
   </div>
 )
 
-const AnecdoteInfo = ({anecdotes}) => {
-  const anecdoteId = useParams().id
-  const anecdote = anecdotes.find(a =>
-            a.id === anecdoteId)
-
+const AnecdoteInfo = ({anecdote}) => {
   return (
     <div>
       <h2>{anecdote.content}</h2>
@@ -72,6 +67,7 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+  const history = useHistory()
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -85,6 +81,11 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    props.setNotification({
+      content: `The following anecdote was added: ${content}`,
+      creationTimestamp: Date.now(),
+    })
+    history.push("/")
   }
 
   return (
@@ -107,7 +108,63 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
+}
 
+const Notification = ({
+  notification, setNotification}) => {
+
+  useEffect(() => {
+    /*
+      This would be better to be in some kind of service, but
+      as there will be only one instance of the Notification
+      and it will be rerendered when a new notification comes
+      in, this works as well. Also, this should be generalized
+      to handle an array of notifications with varying types
+      and visibility times.
+    */
+
+    const visibilityTimeInMs = 10000
+
+    let timeoutHandle = 0
+
+    function checkNotificationClearing() {
+      clearTimeout(timeoutHandle)
+
+      const passedTimeMs =
+          Date.now() - notification.creationTimestamp
+
+      if (passedTimeMs > visibilityTimeInMs) {
+        setNotification({})
+      }
+      else {
+        timeoutHandle = setTimeout(
+            checkNotificationClearing,
+            visibilityTimeInMs - passedTimeMs)
+      }
+    }
+
+    if (notification.content) {
+      timeoutHandle = setTimeout(
+          checkNotificationClearing,
+          visibilityTimeInMs)
+    }
+
+    return () => {
+      clearTimeout(timeoutHandle)
+    }
+  }, [notification, setNotification])
+
+  const style = !notification.content ? undefined : {
+    border: "solid",
+    padding: 10,
+    borderWidth: 1
+  }
+
+  return (
+    <div style={style}>
+      {notification.content}
+    </div>
+  )
 }
 
 const App = () => {
@@ -128,7 +185,12 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState({})
+
+  const routeMatchAnecdote = useRouteMatch("/anecdotes/:id")
+  const anecdoteFromRoute = routeMatchAnecdote
+    ? anecdotes.find(a => a.id === routeMatchAnecdote.params.id)
+    : null
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
@@ -152,28 +214,33 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Router>
-        <Menu />
 
-        <Switch>
-          <Route path="/anecdotes/:id">
-            <AnecdoteInfo anecdotes={anecdotes} />
-          </Route>
-          <Route path="/create">
-            <CreateNew addNew={addNew} />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/">
-            <AnecdoteList anecdotes={anecdotes} />
-          </Route>
-        </Switch>
-      </Router>
+      <Menu />
+
+      <Notification
+          notification={notification}
+          setNotification={setNotification} />
+
+      <Switch>
+        <Route path="/anecdotes/:id">
+          <AnecdoteInfo anecdote={anecdoteFromRoute} />
+        </Route>
+        <Route path="/create">
+          <CreateNew
+              addNew={addNew}
+              setNotification={setNotification} />
+        </Route>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/">
+          <AnecdoteList anecdotes={anecdotes} />
+        </Route>
+      </Switch>
 
       <Footer />
     </div>
   )
 }
 
-export default App;
+export default App
