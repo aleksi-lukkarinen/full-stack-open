@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import {
   BrowserRouter as Router,
-  Switch, Route, Link
+  Switch, Route, Link, useParams,
 } from "react-router-dom"
 
 
@@ -23,10 +23,31 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {
+        anecdotes.map(anecdote =>
+          <li key={anecdote.id}><Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link></li>
+        )
+      }
     </ul>
   </div>
 )
+
+const AnecdoteInfo = ({anecdotes}) => {
+  const anecdoteId = useParams().id
+  const anecdote = anecdotes.find(a =>
+            a.id === anecdoteId)
+
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <div style={{marginBottom: "1em"}}>has {anecdote.votes} vote(s)</div>
+      <div style={{marginBottom: "2em"}}>
+        for more info,
+        see: <a href={anecdote.info}>{anecdote.info}</a>
+      </div>
+    </div>
+  )
+}
 
 const About = () => (
   <div>
@@ -135,6 +156,9 @@ const App = () => {
         <Menu />
 
         <Switch>
+          <Route path="/anecdotes/:id">
+            <AnecdoteInfo anecdotes={anecdotes} />
+          </Route>
           <Route path="/create">
             <CreateNew addNew={addNew} />
           </Route>
