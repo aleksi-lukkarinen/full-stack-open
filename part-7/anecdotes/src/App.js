@@ -4,6 +4,9 @@ import {
   useHistory, Switch, Route, Link, useRouteMatch,
 } from "react-router-dom"
 
+import { useField } from "./hooks"
+
+
 
 const Menu = () => {
   const padding = {
@@ -68,24 +71,36 @@ const Footer = () => (
 
 const CreateNew = (props) => {
   const history = useHistory()
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+
+  const { reset:resetTxtNewAnecdoteContent, ...txtNewAnecdoteContent } =
+    useField("txtNewAnecdoteContent", "text")
+  const { reset:resetTxtNewAnecdoteAuthor, ...txtNewAnecdoteAuthor } =
+    useField("txtNewAnecdoteAuthor", "text")
+  const { reset:resetTxtNewAnecdoteInfo, ...txtNewAnecdoteInfo } =
+    useField("txtNewAnecdoteInfo", "text")
 
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: txtNewAnecdoteContent.value,
+      author: txtNewAnecdoteAuthor.value,
+      info: txtNewAnecdoteInfo.value,
       votes: 0
     })
     props.setNotification({
-      content: `The following anecdote was added: ${content}`,
+      content: `The following anecdote was added: ${txtNewAnecdoteContent.value}`,
       creationTimestamp: Date.now(),
     })
     history.push("/")
+  }
+
+  const clearFields = e => {
+    e.preventDefault()
+
+    resetTxtNewAnecdoteContent()
+    resetTxtNewAnecdoteAuthor()
+    resetTxtNewAnecdoteInfo()
   }
 
   return (
@@ -94,17 +109,18 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input { ...txtNewAnecdoteContent } />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...txtNewAnecdoteAuthor} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...txtNewAnecdoteInfo} />
         </div>
         <button>create</button>
+        <button onClick={clearFields}>reset</button>
       </form>
     </div>
   )
