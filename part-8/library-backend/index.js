@@ -1,5 +1,5 @@
 const { v1: uuid } = require("uuid")
-const { ApolloServer, gql } = require("apollo-server")
+const { ApolloServer, UserInputError, gql } = require("apollo-server")
 
 let authors = [
   {
@@ -76,7 +76,7 @@ let books = [
     genres: ['classic', 'crime']
   },
   {
-    title: 'The Demon ',
+    title: 'The Demon',
     published: 1872,
     author: 'Fyodor Dostoevsky',
     id: "afa5de04-344d-11e9-a414-719c6709cf3e",
@@ -114,6 +114,7 @@ const typeDefs = gql`
       published: Int!
       genres: [String!]
     ): Book
+    editAuthor(name: String!, setBornTo: Int): Author
   }
 `
 
@@ -125,6 +126,7 @@ const resolvers = {
       return result
     }
   },
+
   Query: {
     bookCount: () => books.length,
     allBooks: (root, args) => {
@@ -154,8 +156,9 @@ const resolvers = {
       return result
     },
     authorCount: () => authors.length,
-    allAuthors: () => authors,
+    allAuthors: () => authors
   },
+
   Mutation: {
     addBook: (root, args) => {
       const bookToAdd = {id: uuid()}
@@ -196,6 +199,27 @@ const resolvers = {
       books = books.concat(bookToAdd)
 
       return bookToAdd
+    },
+    editAuthor: (root, args) => {
+      if (typeof(args.name) !== "string")
+        return null
+
+      const givenNameLC = args.name.trim().toLowerCase()
+      const authorToEdit = authors.find(a => a.name.toLowerCase() === givenNameLC)
+      if (!authorToEdit)
+        return null
+
+      if (args.setBornTo !== null) {
+        if (!Number.isInteger(args.setBornTo) || args.setBornTo < 0) {
+          throw new UserInputError("The birth year must be a non-negative integer", {
+            invalidArgs: args.setBornTo,
+          })
+        }
+
+        authorToEdit.born = args.setBornTo
+      }
+
+      return authorToEdit
     }
   }
 }
