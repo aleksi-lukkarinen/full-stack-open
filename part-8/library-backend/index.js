@@ -1,4 +1,5 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { v1: uuid } = require("uuid")
+const { ApolloServer, gql } = require("apollo-server")
 
 let authors = [
   {
@@ -105,9 +106,25 @@ const typeDefs = gql`
     authorCount: Int!
     allAuthors: [Author!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]
+    ): Book
+  }
 `
 
 const resolvers = {
+  Author: {
+    bookCount: (root) => {
+      const booksOfAuthor = books.filter(b => b.author === root.name)
+      const result = booksOfAuthor.length
+      return result
+    }
+  },
   Query: {
     bookCount: () => books.length,
     allBooks: (root, args) => {
@@ -139,11 +156,46 @@ const resolvers = {
     authorCount: () => authors.length,
     allAuthors: () => authors,
   },
-  Author: {
-    bookCount: (root) => {
-      const booksOfAuthor = books.filter(b => b.author === root.name)
-      const result = booksOfAuthor.length
-      return result
+  Mutation: {
+    addBook: (root, args) => {
+      const bookToAdd = {id: uuid()}
+
+      if (typeof(args.title) === "string") {
+        bookToAdd.title = args.title.trim()
+      }
+
+      if (typeof(args.author) === "string") {
+        const authorName = args.author.trim()
+        const authorNameLC = authorName.toLowerCase()
+
+        if (!authors.find(a => a.name.toLowerCase() === authorNameLC)) {
+          const authorToAdd = {
+            id: uuid(),
+            name: authorName,
+            born: null
+          }
+
+          authors = authors.concat(authorToAdd)
+        }
+
+        bookToAdd.author = authorName
+      }
+
+      if (Number.isInteger(args.published))
+        bookToAdd.published = args.published
+
+      bookToAdd.genres = []
+      if (Array.isArray(args.genres)) {
+        for (const g of args.genres) {
+          if (typeof(g) === "string") {
+            bookToAdd.genres = bookToAdd.genres.concat(g.trim())
+          }
+        }
+      }
+
+      books = books.concat(bookToAdd)
+
+      return bookToAdd
     }
   }
 }
