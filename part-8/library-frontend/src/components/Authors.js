@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { useQuery, useMutation } from "@apollo/client"
+import Select from "react-select"
 import { M_EDIT_AUTHOR, Q_ALL_AUTHORS } from "./queries"
 import Notify from "./Notify"
 
@@ -13,7 +14,7 @@ const Authors = (props) => {
     }, 10000)
   }
 
-  const [authorName, setAuthorName] = useState("")
+  const [authorName, setAuthorName] = useState(null)
   const [authorBirthYear, setAuthorBirthYear] = useState("")
 
   const result = useQuery(Q_ALL_AUTHORS, {
@@ -35,9 +36,11 @@ const Authors = (props) => {
 
     editAuthor({
       variables: {
-        name: authorName,
+        name: authorName.value,
         setBornTo: Number.parseInt(authorBirthYear)}
     })
+
+    setAuthorBirthYear("")
   }
 
   if (!props.show) {
@@ -49,6 +52,32 @@ const Authors = (props) => {
   }
 
   const authors = result.data.allAuthors
+
+  const authorOptions = authors.map(a =>
+    {return {value: a.name, label: a.name}}
+  )
+
+  const updatingForm = (
+    <>
+      <h3>set birthyear</h3>
+      <form onSubmit={submitBirthYear}>
+        <div>
+          name
+          <Select
+            defaultValue={authorOptions[0]}
+            onChange={setAuthorName}
+            options={authorOptions} />
+        </div>
+        <div>
+          born
+          <input
+            value={authorBirthYear}
+            onChange={({ target }) => setAuthorBirthYear(target.value)} />
+        </div>
+        <button type='submit'>update author</button>
+      </form>
+    </>
+  )
 
   return (
     <div>
@@ -76,23 +105,7 @@ const Authors = (props) => {
         </tbody>
       </table>
 
-      <h3>set birthyear</h3>
-      <form onSubmit={submitBirthYear}>
-        <div>
-          name
-          <input
-            value={authorName}
-            onChange={({ target }) => setAuthorName(target.value)} />
-        </div>
-        <div>
-          born
-          <input
-            value={authorBirthYear}
-            onChange={({ target }) => setAuthorBirthYear(target.value)} />
-        </div>
-        <button type='submit'>update author</button>
-      </form>
-
+      {Array.isArray(authors) && authors.length > 0 ? updatingForm : ""}
     </div>
   )
 }
