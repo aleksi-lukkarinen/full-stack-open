@@ -1,57 +1,61 @@
-import React from "react"
-
-import { gql, useQuery } from '@apollo/client'
-
-
-const Q_ALL_BOOKS = gql`
-  query {
-    allBooks {
-      title
-      author
-      published
-    }
-  }
-`
+import React, { useState, useEffect } from "react"
+import { useLazyQuery } from "@apollo/client"
+import { Q_ALL_BOOKS } from "./queries"
 
 
 const Books = (props) => {
-  const result = useQuery(Q_ALL_BOOKS)
+  const [getBooks, getBooksResult] = useLazyQuery(Q_ALL_BOOKS, {
+    pollInterval: 2000
+  })
+
+  const [getBooksCalled, setGetBooksCalled] = useState(false)
+  const [books, setBooks] = useState(null)
+
+  useEffect(() => {
+    if (getBooksResult.data) {
+      setBooks(getBooksResult.data.allBooks)
+    }
+  }, [getBooksResult])
+
   if (!props.show) {
     return null
   }
 
-  if (result.loading) {
-    return <div>Loading...</div>
+  if (!getBooksCalled) {
+    setGetBooksCalled(true)
+    getBooks()
   }
 
-  const books = result.data.allBooks
+  if (books) {
+    return (
+      <div>
+        <h2>books</h2>
 
-  return (
-    <div>
-      <h2>books</h2>
-
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>
-              author
-            </th>
-            <th>
-              published
-            </th>
-          </tr>
-          {books.map(a =>
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
+        <table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th>
+                author
+              </th>
+              <th>
+                published
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  )
+            {books.map(a =>
+              <tr key={a.title}>
+                <td>{a.title}</td>
+                <td>{a.author}</td>
+                <td>{a.published}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+
+  return <div>Loading...</div>
 }
 
 export default Books

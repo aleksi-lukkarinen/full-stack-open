@@ -1,11 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
+import { useMutation } from "@apollo/client"
+import { M_CREATE_BOOK } from "./queries"
+import Notify from "./Notify"
+
 
 const NewBook = (props) => {
+  const [errorMessage, setErrorMessage] = useState(null)
+  const notify = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 10000)
+  }
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+
+  const [createBook] = useMutation(M_CREATE_BOOK, {
+    onError: (error) => {
+      const msg = error.networkError
+        ? error.networkError.result.errors[0].message
+        : error.graphQLErrors[0].message
+
+      notify(msg)
+    }
+  })
 
   if (!props.show) {
     return null
@@ -13,8 +35,14 @@ const NewBook = (props) => {
 
   const submit = async (event) => {
     event.preventDefault()
-    
-    console.log('add book...')
+
+    createBook({
+      variables: {
+        title,
+        author,
+        published: Number.parseInt(published),
+        genres}
+    })
 
     setTitle('')
     setPublished('')
@@ -30,6 +58,8 @@ const NewBook = (props) => {
 
   return (
     <div>
+      <Notify errorMessage={errorMessage} />
+
       <form onSubmit={submit}>
         <div>
           title
