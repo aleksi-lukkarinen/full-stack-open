@@ -1,94 +1,46 @@
+const jwt = require("jsonwebtoken")
+
 const mongoose = require("mongoose")
+const User = require("./models/User")
 const Author = require("./models/Author")
 const Book = require("./models/Book")
-const { ApolloServer, UserInputError, gql } = require("apollo-server")
+
+const {
+  ApolloServer,
+  AuthenticationError,
+  UserInputError,
+  gql
+} = require("apollo-server")
+
+
+
+const BOOK_TITLE_MIN_LENGTH = 2
+const AUTHOR_NAME_MIN_LENGTH = 4
+const GENRE_MIN_LENGTH = 2
+const MSG_ERR_BOOK_TITLE_FORMAT =
+      "The book title must be a string of " +
+      `at least ${BOOK_TITLE_MIN_LENGTH} non-space characters.`
+const MSG_ERR_BOOK_TITLE_UNIQUE =
+      "The book title must be unique. " +
+      "However, a book with the given title already exists."
+const MSG_ERR_AUTHOR_NAME =
+      "The author's name must be a string of " +
+      `at least ${AUTHOR_NAME_MIN_LENGTH} non-space characters.`
+const MSG_ERR_GENRE =
+      "Genres must be strings of at least " +
+      `${GENRE_MIN_LENGTH} non-space characters.`
+const MSG_ERR_PUBL_YEAR =
+      "The publication year must be a non-negative integer"
+const MSG_ERR_BIRTH_YEAR =
+      "The birth year must be a non-negative integer"
+
+const JWT_SECRET = "$$IF_YOU_CAN_SEE_THIS_YOU_ARE_TOO_CLOSE$$"
 
 const MONGODB_URI =
   "mongodb+srv://Library:I2pJqAl7u5srePsR@free.vdyge.mongodb.net/" +
   "Library?retryWrites=true&w=majority"
 
-let authors = [
-  {
-    name: 'Robert Martin',
-    id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
-    born: 1952,
-  },
-  {
-    name: 'Martin Fowler',
-    id: "afa5b6f0-344d-11e9-a414-719c6709cf3e",
-    born: 1963
-  },
-  {
-    name: 'Fyodor Dostoevsky',
-    id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
-    born: 1821
-  },
-  {
-    name: 'Joshua Kerievsky', // birthyear not known
-    id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
-  },
-  {
-    name: 'Sandi Metz', // birthyear not known
-    id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
-  },
-]
 
-/*
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
-*/
-
-let books = [
-  {
-    title: 'Clean Code',
-    published: 2008,
-    author: 'Robert Martin',
-    id: "afa5b6f4-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring']
-  },
-  {
-    title: 'Agile software development',
-    published: 2002,
-    author: 'Robert Martin',
-    id: "afa5b6f5-344d-11e9-a414-719c6709cf3e",
-    genres: ['agile', 'patterns', 'design']
-  },
-  {
-    title: 'Refactoring, edition 2',
-    published: 2018,
-    author: 'Martin Fowler',
-    id: "afa5de00-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring']
-  },
-  {
-    title: 'Refactoring to patterns',
-    published: 2008,
-    author: 'Joshua Kerievsky',
-    id: "afa5de01-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring', 'patterns']
-  },
-  {
-    title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby',
-    published: 2012,
-    author: 'Sandi Metz',
-    id: "afa5de02-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring', 'design']
-  },
-  {
-    title: 'Crime and punishment',
-    published: 1866,
-    author: 'Fyodor Dostoevsky',
-    id: "afa5de03-344d-11e9-a414-719c6709cf3e",
-    genres: ['classic', 'crime']
-  },
-  {
-    title: 'The Demon',
-    published: 1872,
-    author: 'Fyodor Dostoevsky',
-    id: "afa5de04-344d-11e9-a414-719c6709cf3e",
-    genres: ['classic', 'revolution']
-  },
-]
 
 
 console.log("Connecting to ", MONGODB_URI)
@@ -106,6 +58,16 @@ mongoose.connect(MONGODB_URI, {
   })
 
 const typeDefs = gql`
+  type User {
+    id: ID!
+    username: String!
+    favoriteGenre: String!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Book {
     id: ID!
     title: String!
@@ -122,6 +84,7 @@ const typeDefs = gql`
   }
 
   type Query {
+    me: User
     bookCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     authorCount: Int!
@@ -129,13 +92,27 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+
+    login(
+      username: String!
+      password: String!
+    ): Token
+
     addBook(
       title: String!
       author: String!
       published: Int!
       genres: [String!]
     ): Book
-    editAuthor(name: String!, setBornTo: Int): Author
+
+    editAuthor(
+      name: String!,
+      setBornTo: Int
+    ): Author
   }
 `
 
@@ -159,6 +136,10 @@ const resolvers = {
   },
 
   Query: {
+    me: (root, args, context) => {
+      return context.currentUser
+    },
+
     bookCount: () => Book.collection.countDocuments(),
 
     allBooks: async (root, args) => {
@@ -182,24 +163,41 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: async (root, args) => {
-      const BOOK_TITLE_MIN_LENGTH = 2
-      const AUTHOR_NAME_MIN_LENGTH = 4
-      const GENRE_MIN_LENGTH = 2
-      const MSG_ERR_BOOK_TITLE_FORMAT =
-            "The book title must be a string of " +
-            `at least ${BOOK_TITLE_MIN_LENGTH} non-space characters.`
-      const MSG_ERR_BOOK_TITLE_UNIQUE =
-            "The book title must be unique. " +
-            "However, a book with the given title already exists."
-      const MSG_ERR_AUTHOR_NAME =
-            "The author's name must be a string of " +
-            `at least ${AUTHOR_NAME_MIN_LENGTH} non-space characters.`
-      const MSG_ERR_GENRE =
-            "Genres must be strings of at least " +
-            `${GENRE_MIN_LENGTH} non-space characters.`
-      const MSG_ERR_PUBL_YEAR =
-            "The publication year must be a non-negative integer"
+    createUser: async (root, args) => {
+      const user = new User({
+        username: args.username,
+        favoriteGenre: args.favoriteGenre
+      })
+
+      return user.save()
+        .catch(error => {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        })
+    },
+
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+
+      if ( !user || args.password !== "secret" ) {
+        throw new UserInputError("Wrong credentials")
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      }
+      const token = jwt.sign(userForToken, JWT_SECRET, { expiresIn: "1h" })
+      const result = { value: token }
+
+      return result
+    },
+
+    addBook: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
 
       const bookToAdd = {}
 
@@ -266,7 +264,7 @@ const resolvers = {
       if (authorName.length < AUTHOR_NAME_MIN_LENGTH) { raiseAuthorError() }
 
 
-      // The rest should be an atomic operation
+      // The rest *should* be an atomic operation (but isn't)
 
       const authorInfo = { name: authorName }
       let author = await Author.findOne(authorInfo)
@@ -280,7 +278,11 @@ const resolvers = {
       return book.save()
     },
 
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
+
       if (typeof(args.name) !== "string")
         return null
 
@@ -288,9 +290,9 @@ const resolvers = {
         || !Number.isInteger(args.setBornTo)
         || args.setBornTo < 0) {
 
-        throw new UserInputError("The birth year must be a non-negative integer", {
-          invalidArgs: args.setBornTo,
-        })
+        throw new UserInputError(
+          MSG_ERR_BIRTH_YEAR,
+          { invalidArgs: args.setBornTo })
       }
 
       const searchCriteria = {name: args.name.trim()}
@@ -305,12 +307,33 @@ const resolvers = {
   }
 }
 
+const createServerContext = async ({ req }) => {
+  const context = {}
+
+  const auth = req ? req.headers.authorization : null
+  if (auth && auth.toLowerCase().startsWith("bearer ")) {
+    try {
+      const token = auth.substring(7)
+      const decodedToken = jwt.verify(token, JWT_SECRET)
+      const currentUser = await User.findById(decodedToken.id)
+      context.currentUser = currentUser
+    }
+    catch (e) {
+      if (e.name !== "JsonWebTokenError") {
+        console.error(`Current user not identified: ${e.message}`)
+      }
+    }
+  }
+
+  return context
+}
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: createServerContext,
 })
 
 server.listen().then(({ url }) => {
   console.log(`Server ready at ${url}`)
 })
-
