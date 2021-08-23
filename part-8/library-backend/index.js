@@ -1,5 +1,11 @@
-const { v1: uuid } = require("uuid")
+const mongoose = require("mongoose")
+const Author = require("./models/Author")
+const Book = require("./models/Book")
 const { ApolloServer, UserInputError, gql } = require("apollo-server")
+
+const MONGODB_URI =
+  "mongodb+srv://Library:I2pJqAl7u5srePsR@free.vdyge.mongodb.net/" +
+  "Library?retryWrites=true&w=majority"
 
 let authors = [
   {
@@ -84,13 +90,28 @@ let books = [
   },
 ]
 
+
+console.log("Connecting to ", MONGODB_URI)
+
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true
+}).then(() => {
+    console.log("Connected to MongoDB.")
+  })
+  .catch((error) => {
+    console.log("An error occurred while connecting to MongoDB:\n", error.message)
+  })
+
 const typeDefs = gql`
   type Book {
     id: ID!
     title: String!
-    author: String!
-    genres: [String]
-    published: Int
+    author: Author!
+    published: Int!
+    genres: [String!]!
   }
 
   type Author {
@@ -119,107 +140,167 @@ const typeDefs = gql`
 `
 
 const resolvers = {
+  Book: {
+    author: (book) => {
+      return {
+        id: book.author.id,
+        name: book.author.name,
+        born: book.author.born,
+        bookCount: book.author.bookCount
+      }
+    }
+  },
+
   Author: {
-    bookCount: (root) => {
-      const booksOfAuthor = books.filter(b => b.author === root.name)
-      const result = booksOfAuthor.length
-      return result
+    bookCount: async (author) => {
+      const booksOfAuthor = await Book.find({author: author.id})
+      return booksOfAuthor.length
     }
   },
 
   Query: {
-    bookCount: () => books.length,
-    allBooks: (root, args) => {
-      const testTerminator = (b) => true
+    bookCount: () => Book.collection.countDocuments(),
 
-      function authorTest(authorToSearch, next) {
-        const cmp = authorToSearch.toLowerCase()
-        return (b) => b.author.toLowerCase() === cmp ? next(b) : false
-      }
-
-      function genreTest(genreToSearch, next) {
-        const cmp = genreToSearch.toLowerCase()
-        return (b) => b.genres.find(g => g.toLowerCase() === cmp) ? next(b) : false
-      }
-
-      let composedTest = testTerminator
+    allBooks: async (root, args) => {
+      const searchCriteria = {}
 
       if (typeof(args.genre) === "string") {
-        composedTest = genreTest(args.genre, composedTest)
+        const genreToFind = args.genre.trim().toLowerCase()
+        searchCriteria.genres = {$in: [genreToFind]}
       }
 
-      if (typeof(args.author) === "string") {
-        composedTest = authorTest(args.author, composedTest)
-      }
-
-      const result = books.filter(composedTest)
-      return result
+      let books = await Book.find(searchCriteria).populate("author")
+      return books
     },
-    authorCount: () => authors.length,
-    allAuthors: () => authors
+
+    authorCount: () => Author.collection.countDocuments(),
+
+    allAuthors: async () => {
+      const authors = await Author.find({})
+      return authors
+    }
   },
 
   Mutation: {
-    addBook: (root, args) => {
-      const bookToAdd = {id: uuid()}
+    addBook: async (root, args) => {
+      const BOOK_TITLE_MIN_LENGTH = 2
+      const AUTHOR_NAME_MIN_LENGTH = 4
+      const GENRE_MIN_LENGTH = 2
+      const MSG_ERR_BOOK_TITLE_FORMAT =
+            "The book title must be a string of " +
+            `at least ${BOOK_TITLE_MIN_LENGTH} non-space characters.`
+      const MSG_ERR_BOOK_TITLE_UNIQUE =
+            "The book title must be unique. " +
+            "However, a book with the given title already exists."
+      const MSG_ERR_AUTHOR_NAME =
+            "The author's name must be a string of " +
+            `at least ${AUTHOR_NAME_MIN_LENGTH} non-space characters.`
+      const MSG_ERR_GENRE =
+            "Genres must be strings of at least " +
+            `${GENRE_MIN_LENGTH} non-space characters.`
+      const MSG_ERR_PUBL_YEAR =
+            "The publication year must be a non-negative integer"
 
-      if (typeof(args.title) === "string") {
-        bookToAdd.title = args.title.trim()
+      const bookToAdd = {}
+
+      const raiseInputErr = (msg, invalidArgs) => {
+        throw new UserInputError(msg, {invalidArgs})
       }
 
-      if (typeof(args.author) === "string") {
-        const authorName = args.author.trim()
-        const authorNameLC = authorName.toLowerCase()
 
-        if (!authors.find(a => a.name.toLowerCase() === authorNameLC)) {
-          const authorToAdd = {
-            id: uuid(),
-            name: authorName,
-            born: null
-          }
+      // Book's title
 
-          authors = authors.concat(authorToAdd)
+      const raiseBookTitleFormatError = () =>
+        raiseInputErr(MSG_ERR_BOOK_TITLE_FORMAT, args.title)
+
+      let title = args.title
+      if (typeof(title) !== "string") { raiseBookTitleFormatError() }
+      title = title.trim()
+      if (title.length < BOOK_TITLE_MIN_LENGTH) { raiseBookTitleFormatError() }
+      bookToAdd.title = title
+
+      let existingBook = await Book.findOne({ title })
+      if (existingBook) {
+        raiseInputErr(MSG_ERR_BOOK_TITLE_UNIQUE, args.title)
+      }
+
+
+      // Book's publication year
+      if (Number.isInteger(args.published)) {
+        if (args.published < 0) {
+          raiseInputErr(MSG_ERR_PUBL_YEAR, args.published)
         }
 
-        bookToAdd.author = authorName
+        bookToAdd.published = args.published
       }
 
-      if (Number.isInteger(args.published))
-        bookToAdd.published = args.published
 
+      // Book's genres
       bookToAdd.genres = []
       if (Array.isArray(args.genres)) {
         for (const g of args.genres) {
-          if (typeof(g) === "string") {
-            bookToAdd.genres = bookToAdd.genres.concat(g.trim())
+          const raiseGenreError =
+                  () => raiseInputErr(MSG_ERR_GENRE, g)
+
+          if (typeof(g) !== "string") { raiseGenreError() }
+
+          const genre = g.trim()
+          if (genre.length < GENRE_MIN_LENGTH) { raiseGenreError() }
+
+          const genreLC = genre.toLowerCase()
+          if (!bookToAdd.genres.find(x => x === genreLC)) {
+            bookToAdd.genres = bookToAdd.genres.concat(genreLC)
           }
         }
       }
 
-      books = books.concat(bookToAdd)
 
-      return bookToAdd
+      // Author's name
+
+      const raiseAuthorError = () =>
+        raiseInputErr(MSG_ERR_AUTHOR_NAME, args.author)
+
+      let authorName = args.author
+      if (typeof(authorName) !== "string") { raiseAuthorError() }
+      authorName = authorName.trim()
+      if (authorName.length < AUTHOR_NAME_MIN_LENGTH) { raiseAuthorError() }
+
+
+      // The rest should be an atomic operation
+
+      const authorInfo = { name: authorName }
+      let author = await Author.findOne(authorInfo)
+      if (!author) {
+        author = new Author(authorInfo)
+        author.save()
+      }
+      bookToAdd.author = author
+
+      const book = new Book(bookToAdd)
+      return book.save()
     },
-    editAuthor: (root, args) => {
+
+    editAuthor: async (root, args) => {
       if (typeof(args.name) !== "string")
         return null
 
-      const givenNameLC = args.name.trim().toLowerCase()
-      const authorToEdit = authors.find(a => a.name.toLowerCase() === givenNameLC)
+      if (args.setBornTo === null
+        || !Number.isInteger(args.setBornTo)
+        || args.setBornTo < 0) {
+
+        throw new UserInputError("The birth year must be a non-negative integer", {
+          invalidArgs: args.setBornTo,
+        })
+      }
+
+      const searchCriteria = {name: args.name.trim()}
+      const authorToEdit = await Author.findOne(searchCriteria)
       if (!authorToEdit)
         return null
 
-      if (args.setBornTo !== null) {
-        if (!Number.isInteger(args.setBornTo) || args.setBornTo < 0) {
-          throw new UserInputError("The birth year must be a non-negative integer", {
-            invalidArgs: args.setBornTo,
-          })
-        }
+      authorToEdit.born = args.setBornTo
 
-        authorToEdit.born = args.setBornTo
-      }
-
-      return authorToEdit
+      return authorToEdit.save()
     }
   }
 }
