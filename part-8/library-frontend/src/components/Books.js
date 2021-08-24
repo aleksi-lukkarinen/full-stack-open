@@ -3,7 +3,7 @@ import { useLazyQuery } from "@apollo/client"
 import { Q_ALL_BOOKS } from "./queries"
 
 
-const Books = (props) => {
+const Books = ({ showForm }) => {
   const [getBooks, getBooksResult] = useLazyQuery(Q_ALL_BOOKS, {
     pollInterval: 2000
   })
@@ -17,7 +17,7 @@ const Books = (props) => {
     }
   }, [getBooksResult])
 
-  if (!props.show) {
+  if (!showForm) {
     return null
   }
 

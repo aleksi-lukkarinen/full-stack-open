@@ -2,22 +2,13 @@ import React, { useState } from "react"
 import { useQuery, useMutation } from "@apollo/client"
 import Select from "react-select"
 import { M_EDIT_AUTHOR, Q_ALL_AUTHORS } from "./queries"
-import Notify from "./Notify"
 
 
-const Authors = (props) => {
-  const [errorMessage, setErrorMessage] = useState(null)
-  const notify = (message) => {
-    setErrorMessage(message)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 10000)
-  }
-
+const Authors = ({ showForm, isLoggedIn, notify }) => {
   const [authorName, setAuthorName] = useState(null)
   const [authorBirthYear, setAuthorBirthYear] = useState("")
 
-  const result = useQuery(Q_ALL_AUTHORS, {
+  const allAuthorsResult = useQuery(Q_ALL_AUTHORS, {
     pollInterval: 2000
   })
 
@@ -31,31 +22,40 @@ const Authors = (props) => {
     }
   })
 
+  if (!showForm) {
+    return null
+  }
+
+  if (allAuthorsResult.loading) {
+    return <div>Loading...</div>
+  }
+
+  // Error handling for the query is missing
+
+  const allAuthors = Array.isArray(allAuthorsResult.data.allAuthors)
+    ? allAuthorsResult.data.allAuthors : []
+
+  const authorDropdownOptions = allAuthors.map(a =>
+    {return {value: a.name, label: a.name}}
+  )
+
   const submitBirthYear = async (event) => {
     event.preventDefault()
 
+    const author = authorName
+            ? authorName.value
+            : authorDropdownOptions[0].value
+
     editAuthor({
       variables: {
-        name: authorName.value,
+        name: author,
         setBornTo: Number.parseInt(authorBirthYear)}
     })
 
     setAuthorBirthYear("")
   }
 
-  if (!props.show) {
-    return null
-  }
-
-  if (result.loading) {
-    return <div>Loading...</div>
-  }
-
-  const authors = result.data.allAuthors
-
-  const authorOptions = authors.map(a =>
-    {return {value: a.name, label: a.name}}
-  )
+  const showUpdatingForm = isLoggedIn && allAuthors.length > 0
 
   const updatingForm = (
     <>
@@ -64,9 +64,9 @@ const Authors = (props) => {
         <div>
           name
           <Select
-            defaultValue={authorOptions[0]}
+            defaultValue={authorDropdownOptions[0]}
             onChange={setAuthorName}
-            options={authorOptions} />
+            options={authorDropdownOptions} />
         </div>
         <div>
           born
@@ -81,8 +81,6 @@ const Authors = (props) => {
 
   return (
     <div>
-      <Notify errorMessage={errorMessage} />
-
       <h2>authors</h2>
       <table>
         <tbody>
@@ -95,7 +93,7 @@ const Authors = (props) => {
               books
             </th>
           </tr>
-          {authors.map(a =>
+          {allAuthors.map(a =>
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
@@ -105,7 +103,7 @@ const Authors = (props) => {
         </tbody>
       </table>
 
-      {Array.isArray(authors) && authors.length > 0 ? updatingForm : ""}
+      {showUpdatingForm ? updatingForm : ""}
     </div>
   )
 }

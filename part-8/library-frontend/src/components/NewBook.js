@@ -1,18 +1,9 @@
 import React, { useState } from "react"
 import { useMutation } from "@apollo/client"
 import { M_CREATE_BOOK } from "./queries"
-import Notify from "./Notify"
 
 
-const NewBook = (props) => {
-  const [errorMessage, setErrorMessage] = useState(null)
-  const notify = (message) => {
-    setErrorMessage(message)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 10000)
-  }
-
+const NewBook = ({ showForm, notify }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
@@ -29,7 +20,7 @@ const NewBook = (props) => {
     }
   })
 
-  if (!props.show) {
+  if (!showForm) {
     return null
   }
 
@@ -58,8 +49,7 @@ const NewBook = (props) => {
 
   return (
     <div>
-      <Notify errorMessage={errorMessage} />
-
+      <h2>add a new book</h2>
       <form onSubmit={submit}>
         <div>
           title
