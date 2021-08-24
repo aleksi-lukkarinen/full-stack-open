@@ -7,7 +7,6 @@ const Recommend = ({ showForm }) => {
   const getUserResult = useQuery(Q_ME, {
     fetchPolicy: "no-cache",
   })
-  console.log("getUserResult.data ", getUserResult.data)
   const favGenre =
     getUserResult.data
       ? (getUserResult.data.me
