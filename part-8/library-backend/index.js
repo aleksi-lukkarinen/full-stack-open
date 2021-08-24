@@ -319,7 +319,10 @@ const createServerContext = async ({ req }) => {
       context.currentUser = currentUser
     }
     catch (e) {
-      if (e.name !== "JsonWebTokenError") {
+      const exceptionType = e.name.toLowerCase()
+      if (exceptionType !== "jsonwebtokenerror" &&
+          exceptionType !== "tokenexpirederror") {
+        console.log(e.name)
         console.error(`Current user not identified: ${e.message}`)
       }
     }
