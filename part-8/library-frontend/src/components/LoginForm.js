@@ -3,7 +3,7 @@ import { M_LOGIN } from "./queries"
 import { useMutation } from "@apollo/client"
 
 
-const LoginForm = ({ showForm, setToken, setDefaultPage, notify }) => {
+const LoginForm = ({ showForm, applyLogin, notify }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
@@ -22,10 +22,7 @@ const LoginForm = ({ showForm, setToken, setDefaultPage, notify }) => {
 
   useEffect(() => {
     if (loginResult.data) {
-      const token = loginResult.data.login.value
-      setToken(token)
-      localStorage.setItem("Library-user-token", token)
-      setDefaultPage()
+      applyLogin(loginResult.data.login.value)
     }
   }, [loginResult.data]) // eslint-disable-line
 

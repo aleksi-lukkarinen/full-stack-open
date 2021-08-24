@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 
 import { useApolloClient } from '@apollo/client'
 
+import { Q_ME } from "./components/queries"
 import LoginForm from "./components/LoginForm"
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Notify from "./components/Notify"
+import Recommend from './components/Recommend'
 
 
 const App = () => {
@@ -30,13 +32,23 @@ const App = () => {
     }, 10000)
   }
 
+  function applyLogin(token) {
+    setToken(token)
+    localStorage.setItem("Library-user-token", token)
+    client.refetchQueries({
+      include: [ Q_ME ]
+    })
+    setDefaultPage()
+  }
+
   function logout() {
     setToken(null)
     localStorage.clear()
     client.resetStore()
 
-    if (page === "add")
-      setPage("authors")
+    if (page === "add" || page === "recommend") {
+      setDefaultPage()
+    }
   }
 
   const loginButton =
@@ -53,6 +65,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         {token ? <button onClick={() => setPage('add')}>add book</button> : ""}
+        {token ? <button onClick={() => setPage('recommend')}>recommend</button> : ""}
         {token ? logoutButton : loginButton}
       </div>
 
@@ -72,10 +85,11 @@ const App = () => {
         notify={notify}
       />
 
+      <Recommend showForm={page === 'recommend'} />
+
       <LoginForm
         showForm={page === 'login'}
-        setToken={setToken}
-        setDefaultPage={setDefaultPage}
+        applyLogin={applyLogin}
         notify={notify} />
     </div>
   )
