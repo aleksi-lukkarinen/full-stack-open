@@ -1,35 +1,62 @@
 import React, { useState, useEffect } from "react"
 import { useLazyQuery } from "@apollo/client"
-import { Q_ALL_BOOKS } from "./queries"
+import { Q_ALL_GENRES_AND_BOOKS } from "./queries"
 
 
 const Books = ({ showForm }) => {
-  const [getBooks, getBooksResult] = useLazyQuery(Q_ALL_BOOKS, {
-    pollInterval: 2000
-  })
+  const [currentGenre, setCurrentGenre] = useState(null)
+  const [getGenresAndBooks, getGenresAndBooksResult] =
+    useLazyQuery(Q_ALL_GENRES_AND_BOOKS, {
+      pollInterval: 2000
+    })
 
-  const [getBooksCalled, setGetBooksCalled] = useState(false)
+  const [getGenresAndBooksCalled,
+    setGetGenresAndBooksCalled] = useState(false)
   const [books, setBooks] = useState(null)
+  const [genres, setGenres] = useState(null)
 
   useEffect(() => {
-    if (getBooksResult.data) {
-      setBooks(getBooksResult.data.allBooks)
+    getGenresAndBooks({
+      variables: {genre: currentGenre}
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentGenre])
+
+  useEffect(() => {
+    if (getGenresAndBooksResult.data) {
+      setGenres(getGenresAndBooksResult.data.allGenres)
+      setBooks(getGenresAndBooksResult.data.allBooks)
     }
-  }, [getBooksResult])
+  }, [getGenresAndBooksResult])
 
   if (!showForm) {
     return null
   }
 
-  if (!getBooksCalled) {
-    setGetBooksCalled(true)
-    getBooks()
+  if (!getGenresAndBooksCalled) {
+    setGetGenresAndBooksCalled(true)
+    getGenresAndBooks()
   }
 
   if (books) {
+    const genreButtons = (
+      <>
+        <div style={{marginTop: "0.5em", marginBottom: "0.25em"}}>Genres:</div>
+        <button onClick={()=>setCurrentGenre(null)}>All</button>
+        {genres.map(g =>
+          <button
+            style={{marginLeft: "0.5em"}}
+            onClick={()=>setCurrentGenre(g)}
+            key={g}>{g}</button>
+        )}
+      </>
+    )
+
     return (
       <div>
         <h2>books</h2>
+
+        {currentGenre ? <div>in genre <b>{currentGenre}</b></div> : ""}
 
         <table>
           <tbody>
@@ -51,6 +78,7 @@ const Books = ({ showForm }) => {
             )}
           </tbody>
         </table>
+        {genres ? genreButtons : ""}
       </div>
     )
   }
