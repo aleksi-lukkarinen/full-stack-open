@@ -17,7 +17,8 @@ const Books = ({ showForm }) => {
 
   useEffect(() => {
     getGenresAndBooks({
-      variables: {genre: currentGenre}
+      variables: {genre: currentGenre},
+      fetchPolicy: "network-only"
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentGenre])
@@ -39,6 +40,7 @@ const Books = ({ showForm }) => {
   }
 
   if (books) {
+    const showGenres = Array.isArray(genres) && genres.length > 1
     const genreButtons = (
       <>
         <div style={{marginTop: "0.5em", marginBottom: "0.25em"}}>Genres:</div>
@@ -56,7 +58,9 @@ const Books = ({ showForm }) => {
       <div>
         <h2>books</h2>
 
-        {currentGenre ? <div>in genre <b>{currentGenre}</b></div> : ""}
+        <div>
+          {currentGenre ? <>Books in genre <b>{currentGenre}</b></> : "All books"}
+        </div>
 
         <table>
           <tbody>
@@ -78,7 +82,7 @@ const Books = ({ showForm }) => {
             )}
           </tbody>
         </table>
-        {genres ? genreButtons : ""}
+        {showGenres ? genreButtons : ""}
       </div>
     )
   }

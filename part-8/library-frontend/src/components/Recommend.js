@@ -17,7 +17,7 @@ const Recommend = ({ showForm }) => {
       : undefined
   const getRecommendationsResult =
     useQuery(Q_ALL_BOOKS_OF_GENRE, {
-      variables: { genre: favGenre},
+      variables: { genre: favGenre },
       skip: typeof(favGenre) !== "string",
       pollInterval: 2000
     })
