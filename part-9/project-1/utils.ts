@@ -12,16 +12,18 @@ export const errorExit = (message: string) => {
 }
 
 export const readNonNegativeFloat = (s: string, errMsg: string): number => {
+  let n: number = -999
+
   try {
-    const n: number = Number.parseFloat(s);
-
-    if (Number.isNaN(n) || n < 0) {
-      errorExit(errMsg)
-    }
-
-    return n
+    n = Number.parseFloat(s);
   }
   catch (e) {
     errorExit(`Error: ${e.name}: ${e.message}`)
   }
+
+  if (Number.isNaN(n) || n < 0) {
+    errorExit(errMsg)
+  }
+
+  return n
 }
