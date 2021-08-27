@@ -1,5 +1,5 @@
 import express from "express";
-import { calculateBmiCLI } from "./bmiCalculator"
+import { calculateBmiCLI } from "./bmiCalculator";
 
 
 const app = express();
@@ -12,12 +12,17 @@ app.get("/bmi", (req, res) => {
   const heightInCm = req.query.height ? String(req.query.height) : "";
   const weightInKg = req.query.weight ? String(req.query.weight) : "";
 
-  let result: string = ""
+  let result = "";
   try {
-    result = calculateBmiCLI([heightInCm, weightInKg])
+    result = calculateBmiCLI([heightInCm, weightInKg]);
   }
   catch (e) {
-    result = e.message
+    if (e instanceof Error) {
+      result = e.message;
+    }
+    else {
+      result = "An unknown error occurred";
+    }
   }
 
   res.send(result);

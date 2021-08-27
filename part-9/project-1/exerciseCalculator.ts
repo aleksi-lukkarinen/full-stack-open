@@ -1,9 +1,9 @@
-import _ from "lodash"
+import _ from "lodash";
 
 import {
   errorExit,
   readNonNegativeFloat
-} from "./utils"
+} from "./utils";
 
 
 const ratingDescriptions = [
@@ -57,16 +57,16 @@ const calculateExercises =
   };
 
   return assessment;
-}
+};
 
 
-const ERR_MSG_TARGET_ARG_MANDATORY: string =
+const ERR_MSG_TARGET_ARG_MANDATORY =
   "Error: Giving the target hours is mandatory.";
-const ERR_MSG_DAILY_ARGS_MANDATORY: string =
+const ERR_MSG_DAILY_ARGS_MANDATORY =
   "Error: Giving the realized daily hours is mandatory.";
-const ERR_MSG_TARGET_ARG_FORMAT: string =
+const ERR_MSG_TARGET_ARG_FORMAT =
   "Error: The target hours argument must be a non-negative number.";
-const ERR_MSG_DAILY_ARGS_FORMAT: string =
+const ERR_MSG_DAILY_ARGS_FORMAT =
   "Error: Daily hour arguments must be non-negative numbers.";
 
 const processCommandline = (): ExerciseAssessment => {
@@ -75,13 +75,13 @@ const processCommandline = (): ExerciseAssessment => {
   if (args.length < 1) { errorExit(ERR_MSG_TARGET_ARG_MANDATORY); }
   if (args.length < 2) { errorExit(ERR_MSG_DAILY_ARGS_MANDATORY); }
 
-  let target: number = Number.NaN
+  let target: number = Number.NaN;
   const dailyHours: number[] = [];
   try {
     target = readNonNegativeFloat(
                 args[0], ERR_MSG_TARGET_ARG_FORMAT);
 
-    for (let i:number=1; i<args.length; i++) {
+    for (let i=1; i<args.length; i++) {
       const h: number = readNonNegativeFloat(
                   args[i], ERR_MSG_DAILY_ARGS_FORMAT);
 
@@ -89,11 +89,15 @@ const processCommandline = (): ExerciseAssessment => {
     }
   }
   catch (e) {
-    errorExit(e.message)
+    let message = "An unknown error occurred";
+    if (e instanceof Error) {
+      message = e.message;
+    }
+    errorExit(message);
   }
 
   return calculateExercises(dailyHours, target);
-}
+};
 
 
 console.log(processCommandline());
