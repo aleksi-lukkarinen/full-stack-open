@@ -8,7 +8,7 @@
     "dev": "ts-node-dev index.ts",
     "lint": "eslint --ext .ts .",
     "calculateBmi": "ts-node -e \"import executeFromCLI from './bmiCalculator'; executeFromCLI()\"",
-    "calculateExercises": "ts-node exerciseCalculator.ts",
+    "calculateExercises": "ts-node -e \"import executeFromCLI from './exerciseCalculator'; executeFromCLI()\"",
     "ts-node": "ts-node",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

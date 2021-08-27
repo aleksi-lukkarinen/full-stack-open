@@ -24,7 +24,7 @@ interface ExerciseAssessment {
 
 
 
-const calculateExercises =
+export const calculateExercises =
   (dailyHoursOfPeriod: number[],
     targetHours: number): ExerciseAssessment => {
 
@@ -69,35 +69,43 @@ const ERR_MSG_TARGET_ARG_FORMAT =
 const ERR_MSG_DAILY_ARGS_FORMAT =
   "Error: Daily hour arguments must be non-negative numbers.";
 
-const processCommandline = (): ExerciseAssessment => {
-  const args: string[] = _.drop(process.argv, 2);
-
+const calculateExercisesCLI = (args: string[]): ExerciseAssessment => {
   if (args.length < 1) { errorExit(ERR_MSG_TARGET_ARG_MANDATORY); }
   if (args.length < 2) { errorExit(ERR_MSG_DAILY_ARGS_MANDATORY); }
 
-  let target: number = Number.NaN;
+  const target: number = readNonNegativeFloat(
+            args[0], ERR_MSG_TARGET_ARG_FORMAT);
+
   const dailyHours: number[] = [];
+  for (let i=1; i<args.length; i++) {
+    const h: number = readNonNegativeFloat(
+                args[i], ERR_MSG_DAILY_ARGS_FORMAT);
+
+    dailyHours.push(h);
+  }
+
+  const result: ExerciseAssessment =
+      calculateExercises(dailyHours, target);
+
+  return result;
+};
+
+
+
+const executeFromCLI = () => {
+  const args: string[] = _.drop(process.argv, 1);
   try {
-    target = readNonNegativeFloat(
-                args[0], ERR_MSG_TARGET_ARG_FORMAT);
-
-    for (let i=1; i<args.length; i++) {
-      const h: number = readNonNegativeFloat(
-                  args[i], ERR_MSG_DAILY_ARGS_FORMAT);
-
-      dailyHours.push(h);
-    }
+    const result: ExerciseAssessment =
+            calculateExercisesCLI(args);
+    console.log(result);
   }
   catch (e) {
     let message = "An unknown error occurred";
     if (e instanceof Error) {
       message = e.message;
     }
-    errorExit(message);
+    console.log(message);
   }
-
-  return calculateExercises(dailyHours, target);
 };
 
-
-console.log(processCommandline());
+export default executeFromCLI;

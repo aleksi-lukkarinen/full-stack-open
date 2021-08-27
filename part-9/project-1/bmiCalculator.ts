@@ -68,7 +68,7 @@ const executeFromCLI = () => {
     console.log(result);
   }
   catch (e) {
-    let message = "En unknown error occurred";
+    let message = "An unknown error occurred";
     if (e instanceof Error) {
       message = e.message;
     }
