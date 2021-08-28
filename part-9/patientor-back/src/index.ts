@@ -1,6 +1,6 @@
 import express from "express";
-import pingRouter from "./routes/ping";
-import diagnoseRouter from "./routes/diagnoses";
+import pingRouter from "./routes/pingRouter";
+import diagnoseRouter from "./routes/diagnoseRouter";
 
 const PORT = 3000;
 
