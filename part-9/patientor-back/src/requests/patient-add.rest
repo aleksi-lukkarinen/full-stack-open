@@ -1,0 +1,10 @@
+POST http://localhost:3000/api/patients
+Content-Type: application/json
+
+{
+  "name": "  Roger Wilco ",
+  "dateOfBirth": "  1974-10-25",
+  "ssn": "251074-004B   ",
+  "gender": "male",
+  "occupation": "  Senior Janitor "
+}

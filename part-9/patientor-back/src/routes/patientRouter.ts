@@ -1,22 +1,38 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import express from "express";
 
 import patientService from "../services/patientService";
+import { toNewPatient } from "../utils";
 
 
 const router = express.Router();
 
 router.get("/", (_req, res) => {
-  res.json(patientService.getPatientsNonSensitive());
+  try {
+    res.json(patientService.getPatientsNonSensitive());
+  }
+  catch (e) {
+    let message = "An unexpected error occurred.";
+    if (e instanceof Error) {
+      message = e.message;
+    }
+    res.status(400).send(message);
+  }
 });
 
 router.post("/", (req, res) => {
-  const { ssn, name, dateOfBirth, gender, occupation } = req.body;
-  const p = {ssn, name, dateOfBirth, gender, occupation};
-  const addedPatient = patientService.addPatient(p);
+  try {
+    const p = toNewPatient(req.body);
+    const addedPatient = patientService.addPatient(p);
 
-  res.json(addedPatient);
+    res.json(addedPatient);
+  }
+  catch (e) {
+    let message = "An unexpected error occurred.";
+    if (e instanceof Error) {
+      message = e.message;
+    }
+    res.status(400).send(message);
+  }
 });
 
 export default router;
