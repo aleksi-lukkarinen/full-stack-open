@@ -1,7 +1,7 @@
 import {v1 as uuid} from "uuid";
 
 import patientData from "../../data/patients.json";
-import { Patient, NewPatient, PatientNonSensitive } from "../types";
+import { Entry, Patient, NewPatient, PatientNonSensitive } from "../types";
 import { toNewPatient } from "../utils";
 
 
@@ -12,7 +12,7 @@ const patients: Patient[] = patientData.map(o => {
 });
 
 
-const getPatients = (): Patient[] => {
+const getPatientsSensitive = (): Patient[] => {
   return patients;
 };
 
@@ -24,9 +24,23 @@ const getPatientsNonSensitive = (): PatientNonSensitive[] => {
   return nonSensitiveEntries;
 };
 
+const getPatientSensitive = (patientId: string): Patient => {
+  const patientSensitive = patients.find(p => p.id === patientId);
+  if (patientSensitive === undefined) {
+    throw new Error(`A patient with id "${patientId}" does not exist.`);
+  }
+
+  return patientSensitive;
+};
+
 const addPatient = (p: NewPatient): Patient => {
   const id = uuid();
-  const patientToAdd: Patient = {id, ...p};
+  const entries: Entry[] = [];
+  const patientToAdd: Patient = {
+    id,
+    ...p,
+    entries,
+  };
 
   patients.push(patientToAdd);
 
@@ -35,7 +49,8 @@ const addPatient = (p: NewPatient): Patient => {
 
 
 export default {
-  getPatients,
+  getPatientsSensitive,
   getPatientsNonSensitive,
-  addPatient
+  getPatientSensitive,
+  addPatient,
 };

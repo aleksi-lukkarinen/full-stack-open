@@ -1,14 +1,18 @@
 import express from "express";
 
 import patientService from "../services/patientService";
-import { toNewPatient } from "../utils";
+import { toId, toNewPatient } from "../utils";
 
 
 const router = express.Router();
 
+
 router.get("/", (_req, res) => {
   try {
-    res.json(patientService.getPatientsNonSensitive());
+    const patientsSensitive =
+      patientService.getPatientsNonSensitive();
+
+    res.json(patientsSensitive);
   }
   catch (e) {
     let message = "An unexpected error occurred.";
@@ -18,6 +22,25 @@ router.get("/", (_req, res) => {
     res.status(400).send(message);
   }
 });
+
+
+router.get("/:id", (req, res) => {
+  try {
+    const patientId: string = toId(req.params.id);
+    const patientSensitive =
+      patientService.getPatientSensitive(patientId);
+
+    res.json(patientSensitive);
+  }
+  catch (e) {
+    let message = "An unexpected error occurred.";
+    if (e instanceof Error) {
+      message = e.message;
+    }
+    res.status(400).send(message);
+  }
+});
+
 
 router.post("/", (req, res) => {
   try {

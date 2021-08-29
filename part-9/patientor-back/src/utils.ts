@@ -6,7 +6,7 @@ type NewPatientFields = {
   dateOfBirth: unknown,
   ssn: unknown,
   gender: unknown,
-  occupation: unknown
+  occupation: unknown,
 };
 
 export const toNewPatient = (o: NewPatientFields): NewPatient => {
@@ -15,10 +15,27 @@ export const toNewPatient = (o: NewPatientFields): NewPatient => {
     dateOfBirth: parseDateOfBirth(o.dateOfBirth),
     ssn: parseSSN(o.ssn),
     gender: parseGender(o.gender),
-    occupation: parseOccupation(o.occupation)
+    occupation: parseOccupation(o.occupation),
+    entries: [],
   };
 
   return patient;
+};
+
+
+
+export const toId = (o: unknown): string => {
+  return parseId(o);
+};
+
+
+
+const parseId = (id: unknown): string => {
+  if (!isString(id)) {
+    throw new Error(`Missing or malformatted id: "${id}"`);
+  }
+
+  return id.trim();
 };
 
 
