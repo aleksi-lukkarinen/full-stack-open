@@ -1,6 +1,6 @@
 import express from "express";
 
-import diagnoseService from "../services/diagnoseService";
+import diagnoseService from "../services/diagnosisService";
 
 
 const router = express.Router();

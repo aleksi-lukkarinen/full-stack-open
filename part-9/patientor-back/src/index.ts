@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import pingRouter from "./routes/pingRouter";
 import patientRouter from "./routes/patientRouter";
-import diagnoseRouter from "./routes/diagnoseRouter";
+import diagnoseRouter from "./routes/diagnosisRouter";
 
 
 const PORT = 3000;

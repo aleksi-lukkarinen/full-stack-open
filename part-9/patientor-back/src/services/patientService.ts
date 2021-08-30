@@ -1,13 +1,23 @@
 import {v1 as uuid} from "uuid";
 
-import patientData from "../../data/patients.json";
+import patientData from "../../data/patients";
 import { Entry, Patient, NewPatient, PatientNonSensitive } from "../types";
-import { toNewPatient } from "../utils";
+import { toNewPatient, toNewEntry } from "../utils";
 
 
 const patients: Patient[] = patientData.map(o => {
   const p = toNewPatient(o) as Patient;
   p.id = o.id;
+
+  if (Array.isArray(o.entries)) {
+    o.entries.map(e => {
+      const entry = toNewEntry(e) as Entry;
+      entry.id = e.id;
+      return entry;
+    });
+  }
+
+  p.entries = o.entries;
   return p;
 });
 

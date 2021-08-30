@@ -1,4 +1,11 @@
-import { Gender, NewPatient } from "./types";
+import { Gender, NewPatient, Entry, NewEntry, } from "./types";
+
+
+export const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
 
 
 type NewPatientFields = {
@@ -7,6 +14,7 @@ type NewPatientFields = {
   ssn: unknown,
   gender: unknown,
   occupation: unknown,
+  entries: unknown,
 };
 
 export const toNewPatient = (o: NewPatientFields): NewPatient => {
@@ -102,9 +110,40 @@ const parseOccupation = (occupation: unknown): string => {
 
 
 
+export const toNewEntry = (e: unknown): NewEntry => {
+  if (typeof(e) !== "object") {
+    throw new Error(`Missing or malformatted entry: ${e}`);
+  }
+
+  type ObjWithEntryType = {type: Entry["type"]};
+  parseEntryType((e as ObjWithEntryType).type);
+
+  return e as NewEntry;
+};
+
+
+
+const entryTypes = [
+  "HealthCheck",
+  "OccupationalHealthcare",
+  "Hospital",
+];
+
+const parseEntryType = (type: unknown): string => {
+  if (!isString(type)
+    || !entryTypes.find(t => type === t)) {
+
+    throw new Error(`Unknown entry type: ${type}`);
+  }
+
+  return type;
+};
+
+
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isGender = (o: any): o is Gender => {
-  return Object.values(Gender).includes(o);
+const isGender = (object: any): object is Gender => {
+  return Object.values(Gender).includes(object);
 };
 
 const isString = (o: unknown): o is string => {
@@ -113,10 +152,4 @@ const isString = (o: unknown): o is string => {
 
 const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
-};
-
-
-
-export default {
-  toNewPatient
 };
