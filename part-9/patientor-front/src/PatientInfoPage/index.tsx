@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Table } from "semantic-ui-react";
 
 import axios from "axios";
 
@@ -9,6 +8,7 @@ import { useStateValue, updatePatient } from "../state";
 import { Patient } from "../types";
 
 import GenderIcon from "../components/GenderIcon";
+import PatientEntry from "../components/PatientEntry";
 
 
 const PatientInfoPage = () => {
@@ -55,22 +55,14 @@ const PatientInfoPage = () => {
           <GenderIcon gender={patientSensitive.gender} />
         </span>
       </div>
-      <Table celled>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell><b>Date of Birth:</b></Table.Cell>
-            <Table.Cell>{patientSensitive.dateOfBirth}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell><b>SSN:</b></Table.Cell>
-            <Table.Cell>{patientSensitive.ssn}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell><b>Occupation:</b></Table.Cell>
-            <Table.Cell>{patientSensitive.occupation}</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
+      <div><b>Date of Birth:</b> {patientSensitive.dateOfBirth}</div>
+      <div><b>SSN:</b> {patientSensitive.ssn}</div>
+      <div><b>Occupation:</b> {patientSensitive.occupation}</div>
+
+      <div style={{marginTop: "1.5em"}}>
+        <h3>Entries</h3>
+      </div>
+      {patientSensitive.entries.map(e => <PatientEntry key={e.id} entry={e} />)}
     </>
   );
 };

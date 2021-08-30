@@ -9,7 +9,7 @@ interface GenderIconProps {
   gender: Gender,
 }
 
-const GenderIcon = ({gender}: GenderIconProps) => {
+const GenderIcon = ({gender}: GenderIconProps): JSX.Element => {
   const IconGenderMale = () =>
     <Icon color="blue" name='mars' />;
 
