@@ -47,6 +47,10 @@ const PatientInfoPage = () => {
     return <div>Loading...</div>;
   }
 
+  const entries = patientSensitive.entries.length === 0
+      ? <div style={{marginTop: "1.0em", fontStyle: "italic", color: "gray"}}>No entries</div>
+      : patientSensitive.entries.map(e => <PatientEntry key={e.id} entry={e} />);
+
   return (
     <>
       <div>
@@ -59,10 +63,10 @@ const PatientInfoPage = () => {
       <div><b>SSN:</b> {patientSensitive.ssn}</div>
       <div><b>Occupation:</b> {patientSensitive.occupation}</div>
 
-      <div style={{marginTop: "1.5em"}}>
+      <div style={{marginTop: "2.0em"}}>
         <h3>Entries</h3>
       </div>
-      {patientSensitive.entries.map(e => <PatientEntry key={e.id} entry={e} />)}
+      {entries}
     </>
   );
 };

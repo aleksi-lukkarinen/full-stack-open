@@ -10,11 +10,11 @@ interface EntryProps {
 const PatientEntry = ({ entry }: EntryProps): JSX.Element => {
   return (
     <>
-      <div key={entry.id} style={{marginTop: "0.2em"}}>
+      <div key={entry.id} style={{marginTop: "1.0em"}}>
         <div><b>{entry.date}</b> — <em>{entry.description}</em></div>
         {!entry.diagnosisCodes
           ? ""
-          : <ul className="diagnoseList" style={{marginTop: "0.5em"}}>
+          : <ul className="diagnoseList" style={{marginTop: "0.3em"}}>
               {entry.diagnosisCodes.map(c =>
                 <li key={c}><Diagnosis code={c} /></li>)}
             </ul>
