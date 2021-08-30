@@ -5,7 +5,7 @@ import { Table } from "semantic-ui-react";
 import axios from "axios";
 
 import { apiBaseUrl } from "../constants";
-import { useStateValue } from "../state";
+import { useStateValue, updatePatient } from "../state";
 import { Patient } from "../types";
 
 import GenderIcon from "../components/GenderIcon";
@@ -31,7 +31,7 @@ const PatientInfoPage = () => {
         else {
           const { data: patientSensitiveFromApi } =
             await axios.get<Patient>(`${apiBaseUrl}/patients/${patientId}`);
-          dispatch({ type: "UPDATE_PATIENT", payload: patientSensitiveFromApi });
+          dispatch(updatePatient(patientSensitiveFromApi));
           setPatientSensitive(patientSensitiveFromApi);
         }
       }
