@@ -1,13 +1,12 @@
 import React from "react";
 import { useStateValue } from "../state";
-//import { Diagnosis } from "../types";
 
 
-interface PatientDiagnosisProps {
+interface DiagnosisListItemProps {
   code: string,
 }
 
-const PatientDiagnosis = ({ code }: PatientDiagnosisProps): JSX.Element => {
+const DiagnosisListItem = ({ code }: DiagnosisListItemProps): JSX.Element => {
   const [{ diagnoses }] = useStateValue();
   const diagnosisCode = <span style={{fontWeight: "bold"}}>{ code }</span>;
   const diagnosis = diagnoses[code];
@@ -24,11 +23,11 @@ const PatientDiagnosis = ({ code }: PatientDiagnosisProps): JSX.Element => {
     : <></>;
 
   return (
-    <div>
+    <div className="diagnosis">
       {diagnosisCode} {diagnosisName}
       {diagnosisLatin}
     </div>
   );
 };
 
-export default PatientDiagnosis;
+export default DiagnosisListItem;

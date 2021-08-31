@@ -10,33 +10,12 @@ interface GenderIconProps {
 }
 
 const GenderIcon = ({gender}: GenderIconProps): JSX.Element => {
-  const IconGenderMale = () =>
-    <Icon color="blue" name='mars' />;
-
-  const IconGenderFemale = () =>
-    <Icon color="pink" name='venus' />;
-
-  const IconGenderOther = () =>
-    <Icon color="black" name='genderless' />;
-
-
-  let genderIcon: JSX.Element = <></>;
-
   switch (gender) {
-    case Gender.Male:
-      genderIcon = <IconGenderMale />;
-      break;
-    case Gender.Female:
-      genderIcon = <IconGenderFemale />;
-      break;
-    case Gender.Other:
-      genderIcon = <IconGenderOther />;
-      break;
-    default:
-      assertNever(gender);
+    case Gender.Male:   return <Icon color="blue" name="mars" />;
+    case Gender.Female: return <Icon color="pink" name="venus" />;
+    case Gender.Other:  return <Icon color="black" name="genderless" />;
+    default:            return assertNever(gender);
   }
-
-  return genderIcon;
 };
 
 export default GenderIcon;

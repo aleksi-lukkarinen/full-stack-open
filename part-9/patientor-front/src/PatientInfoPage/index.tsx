@@ -8,7 +8,7 @@ import { useStateValue, updatePatient } from "../state";
 import { Patient } from "../types";
 
 import GenderIcon from "../components/GenderIcon";
-import PatientEntry from "../components/PatientEntry";
+import EntryListItem from "../components/EntryListItem";
 
 
 const PatientInfoPage = () => {
@@ -48,8 +48,8 @@ const PatientInfoPage = () => {
   }
 
   const entries = patientSensitive.entries.length === 0
-      ? <div style={{marginTop: "1.0em", fontStyle: "italic", color: "gray"}}>No entries</div>
-      : patientSensitive.entries.map(e => <PatientEntry key={e.id} entry={e} />);
+      ? <div style={{marginTop: "1.0em", fontStyle: "italic", color: "gray"}}>No entries.</div>
+      : patientSensitive.entries.map(e => <EntryListItem key={e.id} entry={e} />);
 
   return (
     <>
