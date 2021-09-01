@@ -18,7 +18,13 @@ const entryDetails = (entry: Entry): JSX.Element => {
           showText={true} />;
 
     case "OccupationalHealthcare":
-      return <>Employer: {entry.employerName}</>;
+      const employer = <div>Employer: {entry.employerName}</div>;
+      const sickleave = !entry.sickLeave ? <></>
+        : <div>
+            Sickleave: {entry.sickLeave.startDate}—{entry.sickLeave.endDate}
+          </div>;
+
+      return <>{employer}{sickleave}</>;
 
     case "Hospital":
       if (entry.discharge) {
