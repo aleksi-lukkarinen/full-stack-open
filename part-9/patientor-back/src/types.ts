@@ -20,38 +20,42 @@ export interface Diagnosis {
   latin?: string,
 }
 
+export interface SickLeave {
+  startDate: string,
+  endDate: string,
+}
+
+export interface Discharge {
+  date: string,
+  criteria: string,
+}
+
 interface BaseEntry {
   id: string,
   date: string,
   type: string,
   specialist: string,
   description: string,
-  diagnosisCodes?: Array<Diagnosis['code']>,
+  diagnosisCodes?: Array<Diagnosis["code"]>,
 }
 
-interface HealthCheckEntry
+export interface HealthCheckEntry
     extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
 
-interface OccupationalHealthcareEntry
+export interface OccupationalHealthcareEntry
     extends BaseEntry {
   type: "OccupationalHealthcare",
   employerName: string,
-  sickLeave?: {
-    startDate: string,
-    endDate: string,
-  },
+  sickLeave?: SickLeave,
 }
 
-interface HospitalEntry
+export interface HospitalEntry
     extends BaseEntry {
   type: "Hospital",
-  discharge: {
-    date: string,
-    criteria: string,
-  }
+  discharge: Discharge,
 }
 
 export type Entry =

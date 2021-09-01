@@ -1,0 +1,16 @@
+POST http://localhost:3000/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{
+  "id": "d811e46d-70b3-4d90-b090-4535c7cf8fb1",
+  "date": "1992-11-27",
+  "type": "OccupationalHealthcare",
+  "specialist": "MD Leonard H. McCoy",
+  "employerName": "Starfleet Command",
+  "diagnosisCodes": ["S62.5"],
+  "description": "Hurt his thumb while trying to stop aliens from leaving the hospital with a patient, who was going to be operated in a moment.",
+  "sickLeave": {
+    "startDate": "1992-11-28",
+    "endDate": "1992-12-17"
+  }
+}

@@ -1,7 +1,7 @@
 import express from "express";
 
 import patientService from "../services/patientService";
-import { toId, toNewPatient } from "../utils";
+import { toId, toNewEntry, toNewPatient } from "../utils";
 
 
 const router = express.Router();
@@ -13,6 +13,23 @@ router.get("/", (_req, res) => {
       patientService.getPatientsNonSensitive();
 
     res.json(patientsSensitive);
+  }
+  catch (e) {
+    let message = "An unexpected error occurred.";
+    if (e instanceof Error) {
+      message = e.message;
+    }
+    res.status(400).send(message);
+  }
+});
+
+
+router.post("/", (req, res) => {
+  try {
+    const p = toNewPatient(req.body);
+    const addedPatient = patientService.addPatient(p);
+
+    res.json(addedPatient);
   }
   catch (e) {
     let message = "An unexpected error occurred.";
@@ -42,12 +59,14 @@ router.get("/:id", (req, res) => {
 });
 
 
-router.post("/", (req, res) => {
+router.post("/:id/entries", (req, res) => {
   try {
-    const p = toNewPatient(req.body);
-    const addedPatient = patientService.addPatient(p);
+    const patientId: string = toId(req.params.id);
+    const e = toNewEntry(req.body);
+    const addedEntry =
+        patientService.addEntryForPatient(patientId, e);
 
-    res.json(addedPatient);
+    res.json(addedEntry);
   }
   catch (e) {
     let message = "An unexpected error occurred.";
@@ -57,5 +76,6 @@ router.post("/", (req, res) => {
     res.status(400).send(message);
   }
 });
+
 
 export default router;
