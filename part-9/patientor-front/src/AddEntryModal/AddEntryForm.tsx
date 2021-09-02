@@ -43,19 +43,42 @@ const initialValues: EntryFormValues = {
   dischargeCriteria: "",
 };
 
+const isString = (o: unknown): o is string => {
+  return typeof(o) === "string" || o instanceof String;
+};
+
+const isNonWhitespaceString = (o: unknown): o is string => {
+  return isString(o) && o.trim().length > 0;
+};
+
+const isDate = (date: string): boolean => {
+  const re = /^\d{4}-\d{2}-\d{2}$/;
+  if (!(re.test(date))) {
+    return false;
+  }
+
+  return Boolean(Date.parse(date));
+};
+
+
+const MSG_ERR_INCORRECT_DATE = "Incorrect or malformatted date. Please give a valid date of the form YYYY-MM-DD.";
+
 const validator = (values: EntryFormValues) => {
   const requiredError = "Field is required";
   const errors: { [field: string]: string } = {};
 
-  if (!values.date) {
+  if (!isNonWhitespaceString(values.date)) {
     errors.date = requiredError;
   }
+  else if (!isDate(values.date)) {
+    errors.date = MSG_ERR_INCORRECT_DATE;
+  }
 
-  if (!values.specialist) {
+  if (!isNonWhitespaceString(values.specialist)) {
     errors.specialist = requiredError;
   }
 
-  if (!values.description) {
+  if (!isNonWhitespaceString(values.description)) {
     errors.description = requiredError;
   }
 
@@ -68,27 +91,40 @@ const validator = (values: EntryFormValues) => {
       break;
 
     case "OccupationalHealthcare":
-      if (!values.employerName) {
+      if (!isNonWhitespaceString(values.employerName)) {
         errors.employerName = requiredError;
       }
 
       if (values.sickLeaveStartDate || values.sickLeaveEndDate) {
-        if (!values.sickLeaveStartDate) {
+        if (!isNonWhitespaceString(values.sickLeaveStartDate)) {
           errors.sickLeaveStartDate = requiredError;
         }
-        if (!values.sickLeaveEndDate) {
+        else if (!isDate(values.date)) {
+          errors.sickLeaveStartDate = MSG_ERR_INCORRECT_DATE;
+        }
+
+        if (!isNonWhitespaceString(values.sickLeaveEndDate)) {
           errors.sickLeaveEndDate = requiredError;
         }
+        else if (!isDate(values.date)) {
+          errors.sickLeaveEndDate = MSG_ERR_INCORRECT_DATE;
+        }
       }
+
       break;
 
     case "Hospital":
-      if (!values.dischargeDate) {
+      if (!isNonWhitespaceString(values.dischargeDate)) {
         errors.dischargeDate = requiredError;
       }
-      if (!values.dischargeCriteria) {
+      else if (!isDate(values.date)) {
+        errors.dischargeDate = MSG_ERR_INCORRECT_DATE;
+      }
+
+      if (!isNonWhitespaceString(values.dischargeCriteria)) {
         errors.dischargeCriteria = requiredError;
       }
+
       break;
 
     default:
