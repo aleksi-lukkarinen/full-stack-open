@@ -42,7 +42,7 @@ const App = () => {
         content={ infoMessage }
         severity="success" />
 
-      { currentUser === null
+      { !currentUser?.id
         ? <LoginView
             setCurrentUser={ setCurrentUser }
             setErrorMessage={ setErrorMessage } />
