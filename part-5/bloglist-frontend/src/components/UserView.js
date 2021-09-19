@@ -44,7 +44,7 @@ const UserView = ({ userToView, isLoggedIn }) => {
       variant="body1"
       component="span"
       className={ classes.loggedInBadge }>
-      Logged In
+      { t("UserView.loggedInLabel") }
     </Typography>
   )
 

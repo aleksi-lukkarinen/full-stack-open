@@ -85,6 +85,7 @@ const resources = {
 
       UserView: {
         subTitleUserProfile: "User Profile",
+        loggedInLabel: "Logged In",
         sectionTitleAddedBlogs: "Added Blogs",
       },
     }
@@ -167,6 +168,7 @@ const resources = {
 
       UserView: {
         subTitleUserProfile: "Käyttäjäprofiili",
+        loggedInLabel: "Kirjautuneena",
         sectionTitleAddedBlogs: "Lisätyt blogit",
       },
     }
