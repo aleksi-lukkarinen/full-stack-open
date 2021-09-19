@@ -1,28 +1,39 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useRef } from "react"
 
 import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
 
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
-import BlogList from "./BlogList"
 import BlogInsertionForm from "./BlogInsertionForm"
+import { Link } from "react-router-dom"
+import { makeStyles, Typography } from "@material-ui/core"
 
+// eslint-disable-next-line no-unused-vars
+import BlogList from "./BlogList"
+
+
+
+const useStyles = makeStyles((theme) => ({
+  blogName: {
+    textDecoration: "initial",
+    "&:hover": {
+      color: "red",
+    },
+  }
+}))
 
 const BlogListView = ({
   setInfoMessage,
   setErrorMessage,
-  currentUser }) => {
+  blogs,
+  setBlogs,
+  users,
+  setUsers }) => {
 
   const { t } = useTranslation()
-  const [blogs, setBlogs] = useState([])
+  const classes = useStyles()
   const insertionForm = useRef(null)
-
-  useEffect(() => {
-    blogService.getAll().then(foundBlogs =>
-      setBlogs(foundBlogs)
-    )
-  }, [])
 
   function showInfoMessage(content) {
     setInfoMessage(content)
@@ -41,6 +52,8 @@ const BlogListView = ({
         .insert(blogToInsert)
         .then(data => {
           setBlogs(blogs.concat(data))
+          setUsers(users.map(u => u.id !== data.user.id ? u :
+              { ...u, blogs: u.blogs.concat(data) }))
 
           const msg = t("BlogInsertionForm.msgSuccessfulInsertion", { blogToInsert })
           showInfoMessage(msg)
@@ -108,20 +121,42 @@ const BlogListView = ({
 
   return (
     <>
-      <BlogInsertionForm
-        ref={ insertionForm }
-        handleBlogInsertion={ handleBlogInsertion } />
+      <SectionHeader
+        style={ { paddingBottom: "0.2em" } }
+        variant="h1"
+        content={ t("BlogList.title") } />
 
-      <SectionHeader content={ t("BlogList.title") } />
+      { !blogs ? <></> :
+          <>
+            <BlogInsertionForm
+              ref={ insertionForm }
+              handleBlogInsertion={ handleBlogInsertion } />
 
-      <BlogList
-        blogs={ blogs }
-        setBlogs={ setBlogs }
-        currentUser={ currentUser }
-        setInfoMessage={ setInfoMessage }
-        setErrorMessage={ setErrorMessage } />
+            <div style={ { marginTop: "1em" } }>
+              {blogs.map(blog => (
+                <Link key={ blog.id }
+                  to={ `/blogs/${blog.id}` }
+                  className={ classes.blogName } >
+
+                  <Typography className={ classes.blogName }>{ blog.title }</Typography>
+                </Link>
+              ))}
+            </div>
+          </>
+      }
     </>
   )
+
+  /* eslint-disable capitalized-comments */
+  //  The old blog list with expandable blog entries:
+  //    <BlogList
+  //      blogs={ blogs }
+  //      setBlogs={ setBlogs }
+  //      currentUser={ currentUser }
+  //      setInfoMessage={ setInfoMessage }
+  //      setErrorMessage={ setErrorMessage } />
+  /* eslint-enable capitalized-comments */
+
 }
 
 BlogListView.propTypes = {

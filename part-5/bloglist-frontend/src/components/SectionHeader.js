@@ -8,16 +8,13 @@ const SectionHeader = ({ content, variant, component, className, style }) => {
   const effectiveVariant =
     variant ? variant : "h6"
 
-  const effectiveComponent =
-    component ? component : variant
-
   const effectiveClassName =
     "sectionHeader" + (className ? " " + className : "")
 
   return (
     <Typography
       variant={ effectiveVariant }
-      component={ effectiveComponent }
+      component={ component }
       className={ effectiveClassName }
       style={ style }>
 

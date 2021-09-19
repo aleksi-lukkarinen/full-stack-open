@@ -3,6 +3,7 @@ import { initReactI18next } from "react-i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 
 
+
 const resources = {
   en: {
     translation: {
@@ -14,6 +15,10 @@ const resources = {
       SiteHeader: {
         unknownUser: "Unknown",
         knownUser: "{{currentUser.name}}",
+        sections: {
+          blogs: "Blogs",
+          users: "Users",
+        }
       },
 
       UserMenu: {
@@ -29,6 +34,10 @@ const resources = {
         lblPassword: "Password",
         cmdLogin: "Log in",
         errInvalidCreds: "Incorrect username or password.",
+      },
+
+      BlogView: {
+        subTitleBlog: "Blog",
       },
 
       BlogInsertionForm: {
@@ -66,7 +75,18 @@ const resources = {
         btnDelete: "Delete",
         confirmDeletionWithAuthor: "Delete blog \"{{title}}\" written by {{author}}?",
         confirmDeletionWithoutAuthor: "Delete blog \"{{title}}\"?",
-      }
+      },
+
+      UserList: {
+        title: "Users",
+        columnTitleUser: "User",
+        columnTitleBlogsCreated: "Blogs Created",
+      },
+
+      UserView: {
+        subTitleUserProfile: "User Profile",
+        sectionTitleAddedBlogs: "Added Blogs",
+      },
     }
   },
   fi: {
@@ -79,6 +99,10 @@ const resources = {
       SiteHeader: {
         unknownUser: "Tuntematon",
         knownUser: "{{currentUser.name}}",
+        sections: {
+          blogs: "Blogit",
+          users: "Käyttäjät",
+        }
       },
 
       UserMenu: {
@@ -92,6 +116,10 @@ const resources = {
         lblPassword: "Salasana",
         cmdLogin: "Kirjaudu",
         errInvalidCreds: "Väärä käyttäjätunnus tai salasana",
+      },
+
+      BlogView: {
+        subTitleBlog: "Blogi",
       },
 
       BlogInsertionForm: {
@@ -129,7 +157,18 @@ const resources = {
         btnDelete: "Poista",
         confirmDeletionWithAuthor: "Poistetaanko kirjoittajan {{author}} blogi \"{{title}}\"?",
         confirmDeletionWithoutAuthor: "Poistetaanko blogi \"{{title}}\"?",
-      }
+      },
+
+      UserList: {
+        title: "Käyttäjät",
+        columnTitleUser: "Käyttäjä",
+        columnTitleBlogsCreated: "Luodut blogit",
+      },
+
+      UserView: {
+        subTitleUserProfile: "Käyttäjäprofiili",
+        sectionTitleAddedBlogs: "Lisätyt blogit",
+      },
     }
   }
 }

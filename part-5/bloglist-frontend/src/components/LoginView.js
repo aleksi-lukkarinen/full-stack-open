@@ -49,6 +49,7 @@ const LoginView = ({
   return (
     <>
       <SectionHeader
+        variant="h1"
         content={ t("LoginForm.title") }
         thisIsFirstHeader={ true } />
 

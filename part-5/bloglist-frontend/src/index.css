@@ -45,6 +45,10 @@
   width: 30em;
 }
 
+.blogListContainer {
+  margin-top: 2em;
+}
+
 .blogListItem {
   width: 30em;
   background: lightYellow;

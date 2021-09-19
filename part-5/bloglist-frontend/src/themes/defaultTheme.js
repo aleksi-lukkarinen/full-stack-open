@@ -7,8 +7,24 @@ const defaultTheme = createMuiTheme({
       main: "#ff0077",
     }
   },
+  components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: "Roboto,Helvetica,Arial,sans-serif",
+    h1: {
+      fontSize: "20pt",
+      fontWeight: "bold",
+    },
+    h2: {
+      fontSize: "16pt",
+      paddingTop: "0em",
+    },
   },
   shape: {
     borderRadius: 3,
