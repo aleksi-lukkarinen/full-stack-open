@@ -67,15 +67,18 @@ const UserView = ({ userToView, isLoggedIn }) => {
         className={ classes.sectionTitle }
         content={ t("UserView.sectionTitleAddedBlogs") } />
 
-      { userToView.blogs.map(b => (
-        <Link key={ b.id }
-          to={ `/blogs/${b.id}` }
-          className={ classes.blogName } >
+      { !Array.isArray(userToView?.blogs)
+          || userToView.blogs.length < 1
+        ? <Typography style={ { fontStyle: "italic" } }>No blogs</Typography>
+        : userToView.blogs.map(b => (
+          <Link key={ b.id }
+            to={ `/blogs/${b.id}` }
+            className={ classes.blogName } >
 
-          <Typography className={ classes.blogName }>{ b.title }</Typography>
-        </Link>
-      ))}
-
+            <Typography className={ classes.blogName }>{ b.title }</Typography>
+          </Link>
+        ))
+      }
     </>
   )
 }
