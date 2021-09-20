@@ -1,9 +1,14 @@
 import React from "react"
 
+import { useDispatch } from "react-redux"
 import { useTranslation } from "react-i18next"
 import { TextField } from "@material-ui/core"
 import PropTypes from "prop-types"
 
+import {
+  setErrorNotification,
+  clearErrorNotification,
+} from "../reducers/notificationReducer"
 import { useField } from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
@@ -11,10 +16,9 @@ import SectionHeader from "./SectionHeader"
 import SubmitButton from "./SubmitButton"
 
 
-const LoginView = ({
-  setCurrentUser,
-  setErrorMessage }) => {
 
+const LoginView = ({ setCurrentUser }) => {
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const { reset:resetUsername, ...username } =
     useField("txtUsername", "text")
@@ -38,9 +42,9 @@ const LoginView = ({
       blogService.setAuthToken(loggedInUser.token)
     }
     catch (error) {
-      setErrorMessage(t("LoginForm.errInvalidCreds"))
+      dispatch(setErrorNotification(t("LoginForm.errInvalidCreds")))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearErrorNotification())
       }, 5000)
       username.inputRef.current.focus()
     }
@@ -83,7 +87,6 @@ const LoginView = ({
 
 LoginView.propTypes = {
   setCurrentUser: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired,
 }
 
 export default LoginView

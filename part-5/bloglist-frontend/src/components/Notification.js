@@ -8,11 +8,12 @@ const Notification = ({ content, severity }) => {
   const id = `notification${severity}`
 
   return (
-    content && (
-      <Alert id={ id } severity={ severity }>
-        {content}
-      </Alert>
-    )
+    !content ? <></> :
+      content && (
+        <Alert id={ id } severity={ severity }>
+          {content}
+        </Alert>
+      )
   )
 }
 

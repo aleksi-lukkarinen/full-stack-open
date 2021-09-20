@@ -1,8 +1,15 @@
 import React, { useRef } from "react"
 
+import { useDispatch } from "react-redux"
 import { useTranslation } from "react-i18next"
 import PropTypes from "prop-types"
 
+import {
+  setInfoNotification,
+  clearInfoNotification,
+  setErrorNotification,
+  clearErrorNotification,
+} from "../reducers/notificationReducer"
 import blogService from "../services/blogService"
 import SectionHeader from "./SectionHeader"
 import BlogInsertionForm from "./BlogInsertionForm"
@@ -24,25 +31,24 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const BlogListView = ({
-  setInfoMessage,
-  setErrorMessage,
   blogs,
   setBlogs,
   users,
   setUsers }) => {
 
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const classes = useStyles()
   const insertionForm = useRef(null)
 
   function showInfoMessage(content) {
-    setInfoMessage(content)
-    setTimeout(() => setInfoMessage(null), 5000)
+    dispatch(setInfoNotification(content))
+    setTimeout(() => dispatch(clearInfoNotification()), 5000)
   }
 
   function showErrorMessage(content) {
-    setErrorMessage(content)
-    setTimeout(() => setErrorMessage(null), 5000)
+    dispatch(setErrorNotification(content))
+    setTimeout(() => dispatch(clearErrorNotification()), 5000)
   }
 
   function handleBlogInsertion(title, author, url) {
@@ -160,9 +166,10 @@ const BlogListView = ({
 }
 
 BlogListView.propTypes = {
-  setInfoMessage: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired,
-  currentUser: PropTypes.object,
+  blogs: PropTypes.array,
+  setBlogs: PropTypes.func,
+  users: PropTypes.array,
+  setUsers: PropTypes.func,
 }
 
 export default BlogListView

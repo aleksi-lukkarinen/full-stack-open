@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom"
 
+import { useSelector } from "react-redux"
 import Container from "@material-ui/core/Container"
 
 import * as C from "./utils/constants"
@@ -16,9 +17,6 @@ import BlogView from "./components/BlogView"
 
 
 
-
-
-
 const App = () => {
   const [users, setUsers] = useState([])
   const [currentUser, setCurrentUser] = useState(null)
@@ -26,8 +24,11 @@ const App = () => {
 
   const [blogs, setBlogs] = useState([])
 
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [infoMessage, setInfoMessage] = useState(null)
+  const infoNotification =
+      useSelector(state => state.notifications.info)
+
+  const errorNotification =
+      useSelector(state => state.notifications.error)
 
   const handleAddLike = blog => event => {
     event.preventDefault()
@@ -99,7 +100,6 @@ const App = () => {
     blogs.find(blog => blog.id === routeMatchBlog.params.id)
 
   const redirectToLogin = <Redirect to="/login" />
-  const messageParams = { setInfoMessage, setErrorMessage }
 
   return (
     <Container maxWidth="sm">
@@ -108,11 +108,11 @@ const App = () => {
         setCurrentUser={ setCurrentUser } />
 
       <Notification
-        content={ errorMessage }
+        content={ errorNotification }
         severity="error" />
 
       <Notification
-        content={ infoMessage }
+        content={ infoNotification }
         severity="success" />
 
       { !currentUserChecked ? <></> :
@@ -127,7 +127,7 @@ const App = () => {
 
             <Route exact path="/users">
               { !currentUser ? redirectToLogin
-                : <UserListView { ...messageParams }
+                : <UserListView
                     users={ users }
                     currentUser={ currentUser } />
               }
@@ -143,19 +143,17 @@ const App = () => {
 
             <Route exact path="/blogs">
               { !currentUser ? redirectToLogin
-                : <BlogListView { ...messageParams }
+                : <BlogListView
                     blogs={ blogs }
                     setBlogs={ setBlogs }
                     users={ users }
-                    setUsers={ setUsers }
-                    currentUser={ currentUser } />
+                    setUsers={ setUsers } />
               }
             </Route>
 
             <Route exact path="/login">
               { currentUser ? <Redirect to="/blogs" />
-                : <LoginView { ...messageParams }
-                    setCurrentUser={ setCurrentUser } />
+                : <LoginView setCurrentUser={ setCurrentUser } />
               }
             </Route>
 

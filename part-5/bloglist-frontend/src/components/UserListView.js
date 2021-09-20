@@ -72,8 +72,7 @@ const UserListView = ({ users, currentUser }) => {
 }
 
 UserListView.propTypes = {
-  setInfoMessage: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired,
+  users: PropTypes.array,
   currentUser: PropTypes.object,
 }
 
