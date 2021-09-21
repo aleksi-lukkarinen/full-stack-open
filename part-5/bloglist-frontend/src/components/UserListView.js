@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const UserListView = ({ users, currentUser }) => {
+const UserListView = ({ users }) => {
   const classes = useStyles()
   const { t } = useTranslation()
 
@@ -73,7 +73,6 @@ const UserListView = ({ users, currentUser }) => {
 
 UserListView.propTypes = {
   users: PropTypes.array,
-  currentUser: PropTypes.object,
 }
 
 export default UserListView

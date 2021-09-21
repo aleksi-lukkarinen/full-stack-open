@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom"
 
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import Container from "@material-ui/core/Container"
 
 import * as C from "./utils/constants"
+import { setCurrentUser, clearCurrentUser } from "./reducers/currentUserReducer"
 import userService from "./services/userService"
 import blogService from "./services/blogService"
 import LoginView from "./components/LoginView"
@@ -18,8 +19,10 @@ import BlogView from "./components/BlogView"
 
 
 const App = () => {
+  const dispatch = useDispatch()
+
   const [users, setUsers] = useState([])
-  const [currentUser, setCurrentUser] = useState(null)
+  const currentUser = useSelector(state => state.currentUser)
   const [currentUserChecked, setCurrentUserChecked] = useState(false)
 
   const [blogs, setBlogs] = useState([])
@@ -49,18 +52,18 @@ const App = () => {
         })
   }
 
-  const initCurrentUser = (user) => {
-    if (user) {
-      blogService.setAuthToken(user.token)
-      setCurrentUser(user)
-    }
-    else {
-      window.localStorage.removeItem(C.LS_ID_USER_JSON)
-      setCurrentUser(null)
-    }
-  }
-
   useEffect(() => {
+    const initCurrentUser = (user) => {
+      if (user) {
+        blogService.setAuthToken(user.token)
+        dispatch(setCurrentUser(user))
+      }
+      else {
+        window.localStorage.removeItem(C.LS_ID_USER_JSON)
+        dispatch(clearCurrentUser())
+      }
+    }
+
     const checkForCurrentUser = () => {
       const loggedUserJSON =
       window.localStorage.getItem(C.LS_ID_USER_JSON)
@@ -89,7 +92,7 @@ const App = () => {
     blogService.getAll().then(foundBlogs => {
       setBlogs(foundBlogs)
     })
-  }, [])
+  }, [dispatch])
 
   const routeMatchUser = useRouteMatch("/users/:id")
   const userToView = !routeMatchUser ? null :
@@ -103,9 +106,7 @@ const App = () => {
 
   return (
     <Container maxWidth="sm">
-      <SiteHeader
-        currentUser={ currentUser }
-        setCurrentUser={ setCurrentUser } />
+      <SiteHeader />
 
       <Notification
         content={ errorNotification }
@@ -127,9 +128,7 @@ const App = () => {
 
             <Route exact path="/users">
               { !currentUser ? redirectToLogin
-                : <UserListView
-                    users={ users }
-                    currentUser={ currentUser } />
+                : <UserListView users={ users } />
               }
             </Route>
 
@@ -152,9 +151,7 @@ const App = () => {
             </Route>
 
             <Route exact path="/login">
-              { currentUser ? <Redirect to="/blogs" />
-                : <LoginView setCurrentUser={ setCurrentUser } />
-              }
+              { currentUser ? <Redirect to="/blogs" /> : <LoginView /> }
             </Route>
 
             <Redirect to="/blogs" />

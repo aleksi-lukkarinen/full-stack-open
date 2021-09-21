@@ -1,9 +1,10 @@
 import React, { useState } from "react"
 
+import { useDispatch, useSelector } from "react-redux"
 import { useTranslation } from "react-i18next"
-import PropTypes from "prop-types"
 import { Button, Divider, Menu, MenuItem } from "@material-ui/core"
 import AccountCircle from "@material-ui/icons/AccountCircle"
+import { clearCurrentUser } from "../reducers/currentUserReducer"
 
 
 const ACTION_NONE = "none"
@@ -16,10 +17,10 @@ const languageInfo = {
   fi: { label: "Suomeksi", },
 }
 
-const SiteHeaderUserMenu = ({
-  currentUser,
-  setCurrentUser }) => {
+const SiteHeaderUserMenu = () => {
+  const dispatch = useDispatch()
 
+  const currentUser = useSelector(state => state.currentUser)
   const { t, i18n } = useTranslation()
   const [userMenuAnchor, setUserMenuAnchor] = useState(null)
 
@@ -40,7 +41,7 @@ const SiteHeaderUserMenu = ({
 
       case ACTION_LOGOUT:
         window.localStorage.removeItem("loggedBlogListUser")
-        setCurrentUser(null)
+        dispatch(clearCurrentUser())
         break
 
       case ACTION_SWITCH_LANGUAGE:
@@ -97,11 +98,6 @@ const SiteHeaderUserMenu = ({
       </Menu>
     </>
   )
-}
-
-SiteHeaderUserMenu.propTypes = {
-  currentUser: PropTypes.object,
-  setCurrentUser: PropTypes.func.isRequired,
 }
 
 export default SiteHeaderUserMenu

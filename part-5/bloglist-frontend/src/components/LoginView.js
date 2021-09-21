@@ -3,12 +3,12 @@ import React from "react"
 import { useDispatch } from "react-redux"
 import { useTranslation } from "react-i18next"
 import { TextField } from "@material-ui/core"
-import PropTypes from "prop-types"
 
 import {
   setErrorNotification,
   clearErrorNotification,
 } from "../reducers/notificationReducer"
+import { setCurrentUser } from "../reducers/currentUserReducer"
 import { useField } from "../hooks"
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
@@ -17,7 +17,7 @@ import SubmitButton from "./SubmitButton"
 
 
 
-const LoginView = ({ setCurrentUser }) => {
+const LoginView = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { reset:resetUsername, ...username } =
@@ -38,7 +38,7 @@ const LoginView = ({ setCurrentUser }) => {
       window.localStorage.setItem(
         "loggedBlogListUser", jsonUserData)
 
-      setCurrentUser(loggedInUser)
+      dispatch(setCurrentUser(loggedInUser))
       blogService.setAuthToken(loggedInUser.token)
     }
     catch (error) {
@@ -83,10 +83,6 @@ const LoginView = ({ setCurrentUser }) => {
       </form>
     </>
   )
-}
-
-LoginView.propTypes = {
-  setCurrentUser: PropTypes.func.isRequired,
 }
 
 export default LoginView

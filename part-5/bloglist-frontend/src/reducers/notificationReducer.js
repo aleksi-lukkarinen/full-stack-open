@@ -1,36 +1,30 @@
 
-const DEFAULT_VALUE = { info: null, error: null }
+const DEFAULT_STATE = { info: null, error: null }
 
-const ACTION_SET_INFO = "SET_ERROR_NOTIFICATION"
-const ACTION_CLEAR_INFO = "CLEAR_ERROR_NOTIFICATION"
-const ACTION_SET_ERROR = "SET_INFO_NOTIFICATION"
-const ACTION_CLEAR_ERROR = "CLEAR_INFO_NOTIFICATION"
+const ACTION_SET_INFO = "SET_INFO_NOTIFICATION"
+const ACTION_CLEAR_INFO = "CLEAR_INFO_NOTIFICATION"
+const ACTION_SET_ERROR = "SET_ERROR_NOTIFICATION"
+const ACTION_CLEAR_ERROR = "CLEAR_ERROR_NOTIFICATION"
 
 
-const notificationReducer = (state, action) => {
-  let newState = undefined
+
+const notificationReducer = (state = DEFAULT_STATE, action = null) => {
   switch (action.type) {
     case ACTION_SET_INFO:
-      newState = { ...state, info: action.text }
-      break
+      return { ...state, info: action.text }
 
     case ACTION_SET_ERROR:
-      newState = { ...state, error: action.text }
-      break
+      return { ...state, error: action.text }
 
     case ACTION_CLEAR_INFO:
-      newState = { ...state, info: null }
-      break
+      return { ...state, info: null }
 
     case ACTION_CLEAR_ERROR:
-      newState = { ...state, error: null }
-      break
+      return { ...state, error: null }
 
     default:
-      newState = DEFAULT_VALUE
+      return state
   }
-
-  return newState
 }
 
 

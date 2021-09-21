@@ -1,7 +1,6 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
 import { AppBar, Toolbar, Typography } from "@material-ui/core"
 
@@ -24,9 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const SiteHeader = ({
-  currentUser,
-  setCurrentUser }) => {
+const SiteHeader = () => {
 
   const { t } = useTranslation()
   const classes = useStyles()
@@ -53,19 +50,12 @@ const SiteHeader = ({
 
           <div className={ classes.divider } />
 
-          <SiteHeaderUserMenu
-            currentUser={ currentUser }
-            setCurrentUser={ setCurrentUser } />
+          <SiteHeaderUserMenu />
         </Toolbar>
       </AppBar>
       <Toolbar />
     </>
   )
-}
-
-SiteHeader.propTypes = {
-  currentUser: PropTypes.object,
-  setCurrentUser: PropTypes.func.isRequired,
 }
 
 export default SiteHeader
