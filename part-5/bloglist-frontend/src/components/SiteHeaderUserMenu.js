@@ -89,12 +89,13 @@ const SiteHeaderUserMenu = () => {
             )
           })
         }
-        <Divider />
 
-        {currentUser
-          ? <MenuItem onClick={ handleUserMenuSelection(ACTION_LOGOUT) }>{t("UserMenu.logout")}</MenuItem>
-          : <MenuItem onClick={ handleUserMenuSelection(ACTION_LOGIN) }>{t("UserMenu.login")}</MenuItem>
-        }
+        {!currentUser ? null : [
+          <Divider key="div1" />,
+          <MenuItem key="logout" onClick={ handleUserMenuSelection(ACTION_LOGOUT) }>
+            { t("UserMenu.logout") }
+          </MenuItem>
+        ]}
       </Menu>
     </>
   )
